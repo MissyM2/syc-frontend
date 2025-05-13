@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../../app/store.ts';
 
@@ -8,25 +8,48 @@ export interface User {
   email: string;
 }
 
-// Define the initial state using that type
-const initialState: Array<User> = [
-  {
-    id: '1',
-    name: 'John Doe',
-    email: 'john@test.com',
-  },
-];
+export interface UserState {
+  loading: boolean;
+  users: Array<User>;
+  error: string | undefined;
+}
 
-export const userSlice = createSlice({
-  name: 'users',
-  initialState,
-  reducers: {
-    addUser: (state, action: PayloadAction<User>) => {
-      state.push(action.payload);
-    },
-  },
+// Define the initial state using that type
+const initialState: UserState = {
+  loading: false,
+  users: [],
+  error: undefined,
+};
+
+export const fetchUsers = createAsyncThunk('users/fetchUsers', () => {
+  const res = fetch('https://jsonplaceholder.typicode.com/users').then((data) =>
+    data.json()
+  );
+  return res;
 });
 
-export const { addUser } = userSlice.actions;
+const userSlice = createSlice({
+  name: 'users',
+  initialState,
+  extraReducers: (builder) => {
+    builder.addCase(fetchUsers.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(
+      fetchUsers.fulfilled,
+      (state, action: PayloadAction<Array<User>>) => {
+        state.loading = false;
+        state.users = action.payload;
+      }
+    );
+    builder.addCase(fetchUsers.rejected, (state, action) => {
+      state.loading = false;
+      state.users = [];
+      state.error = action.error.message;
+    });
+  },
+  reducers: {},
+});
+
 export const userSelector = (state: RootState) => state.userReducer;
 export default userSlice.reducer;
