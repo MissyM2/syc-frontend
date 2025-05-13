@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useAuthSelector} from '/store/hooks.ts';
+import { login } from './store/auth-slice.ts';
 
-const SignInSignUp = () => {
+const SignInSignUp:React.FC = () => {
   const [isSignup, setIsSignup] = useState(false);
+    const isAuth = useAuthSelector(login);
 
   return (
     <div

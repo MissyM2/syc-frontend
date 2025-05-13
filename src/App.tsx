@@ -1,11 +1,8 @@
-import SignInSignUp from './components/SignInSignUp';
+//import Header from './components/HeaderPage.tsx';
+import UserPage from './features/users/user.tsx';
 
 const App = () => {
-  return (
-    <div>
-      <SignInSignUp />
-    </div>
-  );
+  return <UserPage />;
 };
 
 export default App;
