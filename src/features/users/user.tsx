@@ -1,27 +1,28 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { fetchUsers, userSelector } from './userSlice';
+import { fetchUsers } from './userSlice';
 import type { User } from './userSlice';
 import './user.css';
 
 function UserPage() {
   const [users, setUsers] = useState<Array<User>>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | undefined>(undefined);
-  const selectedUsers = useAppSelector(userSelector);
+  // const [loading, setLoading] = useState<boolean>(false);
+  // const [error, setError] = useState<string | undefined>(undefined);
+  // const selectedUsers = useAppSelector(userSelector);
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    setLoading(selectedUsers.loading);
-    setError(selectedUsers.error);
-    setUsers(selectedUsers.users);
-    return () => {
-      console.log('component unmounting...');
-    };
-  }, [selectedUsers]);
+  // useEffect(() => {
+  //   setLoading(selectedUsers.loading);
+  //   setError(selectedUsers.error);
+  //   setUsers(selectedUsers.users);
+  //   return () => {
+  //     console.log('component unmounting...');
+  //   };
+  // }, [selectedUsers]);
 
   function handleFetchUser() {
-    dispatch(fetchUsers());
+    const res = dispatch(fetchUsers());
+    console.log('users are ' + JSON.stringify(res));
   }
 
   return (

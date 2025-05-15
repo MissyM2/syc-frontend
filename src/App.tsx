@@ -1,8 +1,8 @@
 //import Header from './components/HeaderPage.tsx';
-import UserPage from './features/users/user.tsx';
+import UserRegistrationPage from './features/users/user-reg.tsx';
 
 const App = () => {
-  return <UserPage />;
+  return <UserRegistrationPage />;
 };
 
 export default App;

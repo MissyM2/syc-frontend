@@ -1,54 +1,72 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../../app/store.ts';
+import axios from 'axios';
 
 export interface User {
-  id: string;
+  id: number;
   name: string;
   email: string;
 }
 
-export interface UserState {
-  loading: boolean;
-  users: Array<User>;
-  error: string | undefined;
+export interface UsersState {
+  users: User[];
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error: string | null;
 }
 
 // Define the initial state using that type
-const initialState: UserState = {
-  loading: false,
+const initialState: UsersState = {
   users: [],
-  error: undefined,
+  status: 'idle',
+  error: null,
 };
 
-export const fetchUsers = createAsyncThunk('users/fetchUsers', () => {
-  const res = fetch('https://jsonplaceholder.typicode.com/users').then((data) =>
-    data.json()
-  );
-  return res;
+const USERS_URL =
+  'mongodb+srv://fdmaloney:Daisl9515$!#@@fdmclustersandbox.0zdlunl.mongodb.net/syc-backend?retryWrites=true&w=majority&appName=FDMClusterSandbox/users';
+export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
+  const response = await axios.get(USERS_URL);
+  return response.data as User[];
 });
+
+// async thunk for making the POST request
+export const postNewUser = createAsyncThunk(
+  'users/postUser',
+  async (newUser: Omit<User, 'id'>) => {
+    const response = await axios.post(USERS_URL, newUser);
+    return response.data as User;
+  }
+);
 
 const userSlice = createSlice({
   name: 'users',
   initialState,
-  extraReducers: (builder) => {
-    builder.addCase(fetchUsers.pending, (state) => {
-      state.loading = true;
-    });
-    builder.addCase(
-      fetchUsers.fulfilled,
-      (state, action: PayloadAction<Array<User>>) => {
-        state.loading = false;
-        state.users = action.payload;
-      }
-    );
-    builder.addCase(fetchUsers.rejected, (state, action) => {
-      state.loading = false;
-      state.users = [];
-      state.error = action.error.message;
-    });
-  },
   reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUsers.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchUsers.fulfilled, (state, action: PayloadAction<User[]>) => {
+        state.status = 'succeeded';
+        state.users = action.payload;
+      })
+      .addCase(fetchUsers.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Failed to fetch users.';
+      })
+      .addCase(postNewUser.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(postNewUser.fulfilled, (state, action: PayloadAction<User>) => {
+        state.status = 'succeeded';
+        state.users.push(action.payload);
+      })
+      .addCase(postNewUser.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Failed to create user.';
+      });
+  },
 });
 
 export const userSelector = (state: RootState) => state.userReducer;
