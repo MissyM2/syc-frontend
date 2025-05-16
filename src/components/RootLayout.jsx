@@ -1,4 +1,4 @@
-//import { Navbar } from './Navbar';
+import { Navbar } from './Navbar';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
@@ -14,7 +14,7 @@ export const RootLayout = () => {
 
   return (
     <>
-      {/* <Navbar/> */}
+      <Navbar />
       <main className="flex first-letter:w-screen justify-center mt-24">
         <Outlet />
       </main>

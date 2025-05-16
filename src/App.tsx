@@ -12,17 +12,17 @@ import { ViewItemDetailPage } from './pages/ViewItemDetailPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { CreateClosetItemPage } from './pages/CreateClosetItemPage';
 import { RootLayout } from './components/RootLayout';
-import UserRegistrationPage from './features/users/user-reg.tsx';
+//import UserRegistrationPage from './features/users/user-reg.tsx';
 
 const router = createBrowserRouter([
   {
     path: '/',
+    element: <LandingPage />,
+  },
+  {
+    path: '/',
     element: <RootLayout />,
     children: [
-      {
-        path: '/',
-        element: <LandingPage />,
-      },
       {
         path: '/home',
         element: <HomePage />,
