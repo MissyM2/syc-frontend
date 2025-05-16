@@ -35,16 +35,6 @@ export const getUsers = async () => {
     }
   }
 };
-// export async function getUsers() {
-//   //"http://localhost:3000/syc/users"
-//   const response = await axios.get(`${URL}/syc/users`);
-
-//   if (response.status === 200) {
-//     return response.data;
-//   } else {
-//     return;
-//   }
-// }
 
 export async function getUser(id: number) {
   //"http://localhost:3000/syc/users/12345"

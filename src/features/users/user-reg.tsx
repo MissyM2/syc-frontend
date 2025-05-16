@@ -16,14 +16,14 @@ const UserRegistrationPage: React.FC = () => {
     emailAddress: string;
   }
 
-  // const handlePostUser = () => {
-  //   const postObject: User = {
-  //     name: 'Becky Mancuso',
-  //     emailAddress: 'becky@example.com',
-  //   };
+  const handlePostUser = () => {
+    const postObject: User = {
+      name: 'Jordan Peel',
+      emailAddress: 'jordan@example.com',
+    };
 
-  //   axios.post('http://localhost:3000/syc/users', postObject);
-  // };
+    createUser(postObject);
+  };
 
   // useEffect(() => {
   //   async function grabData() {
@@ -40,27 +40,27 @@ const UserRegistrationPage: React.FC = () => {
 
   //return <>{JSON.stringify(data)}</>;
 
-  useEffect(() => {
-    async function loadAllUsers() {
-      const data = await getUsers();
-      console.log(data);
-      if (data) {
-        setUsers(data);
-      }
-    }
-    loadAllUsers();
-  }, []);
+  // useEffect(() => {
+  //   async function loadAllUsers() {
+  //     const data = await getUsers();
+  //     console.log(data);
+  //     if (data) {
+  //       setUsers(data);
+  //     }
+  //   }
+  //   loadAllUsers();
+  // }, []);
 
   return (
     <div className="flex h-screen my-auto items-center">
       <div className="m-auto">
-        {JSON.stringify(users)}
-        {/* <button
+        {/* {JSON.stringify(users)} */}
+        <button
           className="inline-block align-middle bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           onClick={handlePostUser}
         >
           Post User
-        </button> */}
+        </button>
       </div>
     </div>
   );
