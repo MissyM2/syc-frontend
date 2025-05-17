@@ -36,6 +36,7 @@ export const Navbar: React.FC = () => {
           {pageData.map((page) => {
             return (
               <Link
+                key={page.path}
                 to={page.path}
                 className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
               >
