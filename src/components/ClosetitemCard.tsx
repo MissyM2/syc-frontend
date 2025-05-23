@@ -19,33 +19,22 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
   closetitem,
 }): React.JSX.Element => {
   return (
-    <div className="max-w-sm w-auto lg:max-w-full lg:flex mb-4 bg-red-50">
+    <div className="w-57 flex flex-col lg:flex-row border border-gray-400 rounded-lg shadow-md m-6 overflow-hidden lg:w-118">
       <div
-        className="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l border border-gray-400  text-center overflow-hidden mr-0"
+        className="h-48 lg:h-auto lg:w-70 flex-none bg-cover border-b lg:border-b-0 lg:border-r border-gray-400 text-center overflow-hidden mr-0"
         style={{ backgroundImage: `url(${clothingImg})` }}
         title="Princess Di"
-      ></div>
-      <div className="border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
+      />
+
+      <div className="h-70 lg:w-55 bg-white p-4 flex flex-col justify-between leading-normal">
         <div className="mb-8">
-          <p className="text-sm text-gray-600 flex items-center">
-            <svg
-              className="fill-current text-gray-500 w-3 h-3 mr-2"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-            >
-              <path d="M4 8V6a6 6 0 1 1 12 0v2h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-8c0-1.1.9-2 2-2h1zm5 6.73V17h2v-2.27a2 2 0 1 0-2 0zM7 6v2h6V6a3 3 0 0 0-6 0z" />
-            </svg>
-            Members only
-          </p>
           <div className="text-gray-900 font-bold text-xl mb-2">
             {closetitem.name}
           </div>
-          <div className="flex flex-row gap-2">
-            <div>{closetitem.category}</div>
-            <div>{closetitem.season}</div>
-            <div>{closetitem.size}</div>
-            <div>{closetitem.rating}</div>
-          </div>
+          <div>{closetitem.category}</div>
+          <div>Season: {closetitem.season}</div>
+          <div>Size: {closetitem.size}</div>
+          <div>Rating: {closetitem.rating}</div>
           <p className="text-gray-700 text-base">{closetitem.desc}</p>
         </div>
         <div className="flex items-center">

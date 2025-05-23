@@ -49,10 +49,10 @@ export const HomePage: React.FC = () => {
   }
 
   return (
-    <>
+    <div className="flex flex-wrap justify-center bg-red-50">
       {closetitems.map((closetitem) => (
         <ClosetitemCard closetitem={closetitem} />
       ))}
-    </>
+    </div>
   );
 };
