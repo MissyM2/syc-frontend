@@ -5,9 +5,6 @@ import axios from 'axios';
 import type { Closetitem, FilterObject } from '../interfaces/Interfaces.tsx';
 import { FilterMenu } from '../components/FilterMenu.tsx';
 import { OutputList } from '../components/OutputList.tsx';
-import { CheckBox } from '../components/CheckBox.tsx';
-import { categoryItems } from '../components/Datas.ts';
-import type { Category } from '../types/Types.tsx';
 
 const URL = 'http://localhost:3000';
 
@@ -23,9 +20,20 @@ export const HomePage: React.FC = () => {
     searchTerm: '',
     category: [],
     season: [],
-    size: [],
+    // size: [],
     sort: 'asc',
   });
+
+  // const handleFilterButtonClick = (selectedCategory: string) => {
+  //   console.log('inside handleFilterButtonClick');
+  //   if (selectedFilters.includes(selectedCategory)) {
+  //     console.log('what is selectedCategory? ' + selectedCategory);
+  //     let filters = selectedFilters.filter((el) => el !== selectedCategory);
+  //     setSelectedFilters(filters);
+  //   } else {
+  //     setSelectedFilters([...selectedFilters, selectedCategory]);
+  //   }
+  // };
 
   const sortAndFilterClosetitems = (filterObj: FilterObject) => {
     console.log(filterObj.searchTerm);
@@ -49,7 +57,7 @@ export const HomePage: React.FC = () => {
         const seasonA = a.season.toLowerCase();
         const seasonB = b.season.toLowerCase();
         if (filterObj.sort === 'desc') {
-          return seasonB.localeCompare(seasonA); // returns 1 if nameB > nameA and returns -1 if nameB < nameA
+          //return seasonB.localeCompare(seasonA); // returns 1 if nameB > nameA and returns -1 if nameB < nameA
         } else if (filterObj.sort === 'asc') {
           return seasonA.localeCompare(seasonB); // returns 1 if nameA > nameB and returns -1 if nameA < nameB
         }
@@ -88,15 +96,10 @@ export const HomePage: React.FC = () => {
     return <p>Error: {error}</p>;
   }
 
-  // const handleFilters = (filters, category)=> {
-  //   const newFilters = {...filters}
-  //   newFilters[category] = filters
-  // }
-
   return (
     <div className="home">
       <FilterMenu filters={filters} setFilters={setFilters} />
-      {/* <CheckBox handleFilters={filters => handleFilters(filters, "categoryItems")/> */}
+
       <OutputList data={filteredData} />
     </div>
   );

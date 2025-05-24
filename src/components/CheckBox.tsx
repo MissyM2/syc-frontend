@@ -1,19 +1,27 @@
 import React, { useState, type ChangeEvent } from 'react';
 import { Checkbox, Collapse } from 'antd';
+import { categoryItems } from './Datas.ts';
+import type { CheckBoxProps } from '../interfaces/Interfaces.tsx';
 
 const { Panel } = Collapse;
 
-export const CheckBox: React.FC = () => {
+export const CheckBox: React.FC<CheckBoxProps> = ({ handleFilters }) => {
   const [checkedValues, setCheckedValues] = useState<number[]>([]);
 
   const handleToggle = (itemId: number) => {
-    if (checkedValues.includes(itemId)) {
-      // If already checked, remove it from the array
-      setCheckedValues(checkedValues.filter((id) => id != itemId));
+    const currentIndex = checkedValues.indexOf(itemId);
+    const newChecked = [...checkedValues];
+
+    if (currentIndex === -1) {
+      newChecked.push(itemId);
     } else {
-      // If not checked, add it to the array
-      setCheckedValues([...checkedValues, itemId]);
+      newChecked.splice(currentIndex, 1);
     }
+
+    setCheckedValues(newChecked);
+    console.log('inside handleToggle: after setCheckedValues' + checkedValues);
+    handleFilters(newChecked);
+    //update this checked information into Parent Component
   };
 
   const renderCheckboxLists = () =>

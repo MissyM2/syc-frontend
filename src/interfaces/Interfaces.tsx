@@ -1,7 +1,7 @@
-import type { Category, Season, Size, SortOption } from '../types/Types.tsx';
+import type { Category, Season, SortOption } from '../types/Types.tsx';
 
 export interface Closetitem {
-  _id: string;
+  //_id: string;
   category: string;
   name: string;
   season: string;
@@ -23,11 +23,15 @@ export interface FilterObject {
   searchTerm: string;
   category: Category[];
   season: Season[];
-  size: Size[];
+  // size: Size[];
   sort: SortOption;
 }
 
 export interface CategoryItem {
   _id: number;
   name: string;
+}
+
+export interface CheckBoxProps {
+  handleFilters: (selected:number[])
 }
