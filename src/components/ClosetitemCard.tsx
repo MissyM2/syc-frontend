@@ -19,7 +19,7 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
   closetitem,
 }): React.JSX.Element => {
   return (
-    <div className="w-57 flex flex-col lg:flex-row border border-gray-400 rounded-lg shadow-md m-6 overflow-hidden lg:w-118">
+    <div className="w-57 flex flex-col lg:flex-row border border-gray-400 rounded-lg shadow-md m-6 overflow-hidden lg:w-118 cursor-pointer">
       <div
         className="h-48 lg:h-auto lg:w-70 flex-none bg-cover border-b lg:border-b-0 lg:border-r border-gray-400 text-center overflow-hidden mr-0"
         style={{ backgroundImage: `url(${clothingImg})` }}

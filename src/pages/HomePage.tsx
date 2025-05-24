@@ -1,26 +1,61 @@
 import { useState, useEffect } from 'react';
 //import { getClosetitems } from '../api-functions';
-import { ClosetitemCard } from '../components/ClosetitemCard.tsx';
+//import { ClosetitemCard } from '../components/ClosetitemCard.tsx';
 import axios from 'axios';
+import type { Closetitem, FilterObject } from '../interfaces/Interfaces.tsx';
+import { FilterMenu } from '../components/FilterMenu.tsx';
+import { OutputList } from '../components/OutputList.tsx';
+import { CheckBox } from '../components/CheckBox.tsx';
+import { categoryItems } from '../components/Datas.ts';
+import type { Category } from '../types/Types.tsx';
 
 const URL = 'http://localhost:3000';
 
-interface ClosetitemType {
-  _id: string;
-  category: string;
-  name: string;
-  season: string;
-  size: string;
-  desc: string;
-  rating: string;
-}
-
-export type TClosetitemList = ClosetitemType[];
+export type TClosetitemList = Closetitem[];
 
 export const HomePage: React.FC = () => {
-  const [closetitems, setClosetitems] = useState<ClosetitemType[]>([]);
+  const [data, setData] = useState<Closetitem[]>([]);
+  const [filteredData, setFilteredData] = useState<Closetitem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [filters, setFilters] = useState<FilterObject>({
+    searchTerm: '',
+    category: [],
+    season: [],
+    size: [],
+    sort: 'asc',
+  });
+
+  const sortAndFilterClosetitems = (filterObj: FilterObject) => {
+    console.log(filterObj.searchTerm);
+    console.log(filterObj.category);
+    return data
+      .filter((item) => {
+        return (
+          // filter by search term - check if item.name includes the current search term
+          item.name &&
+          item.name.toLowerCase().indexOf(filterObj.searchTerm.toLowerCase()) >
+            -1 &&
+          //filter by category - check if item.category is part of the options inside the filters.category array
+          (filterObj.category.length > 0
+            ? filterObj.category.includes(item.category)
+            : true)
+        );
+        // expand with more checks to fit your data
+      })
+      .sort((a: any, b: any) => {
+        // first, get the name parameter
+        const seasonA = a.season.toLowerCase();
+        const seasonB = b.season.toLowerCase();
+        if (filterObj.sort === 'desc') {
+          return seasonB.localeCompare(seasonA); // returns 1 if nameB > nameA and returns -1 if nameB < nameA
+        } else if (filterObj.sort === 'asc') {
+          return seasonA.localeCompare(seasonB); // returns 1 if nameA > nameB and returns -1 if nameA < nameB
+        }
+        return 0;
+      });
+  };
 
   useEffect(() => {
     const loadAllClosetitems = async () => {
@@ -30,7 +65,7 @@ export const HomePage: React.FC = () => {
         const response = await axios.get<TClosetitemList>(
           `${URL}/syc/closetitems`
         );
-        setClosetitems(response.data);
+        setData(response.data);
       } catch (e: any) {
         setError(e.message);
       } finally {
@@ -40,6 +75,11 @@ export const HomePage: React.FC = () => {
     loadAllClosetitems();
   }, []);
 
+  useEffect(() => {
+    const data = sortAndFilterClosetitems(filters); // call the `sortAndFilterData`function and set its returned value to `filteredData`
+    setFilteredData(data);
+  }, [filters, data]);
+
   if (loading) {
     return <p>Loading data...</p>;
   }
@@ -48,11 +88,16 @@ export const HomePage: React.FC = () => {
     return <p>Error: {error}</p>;
   }
 
+  // const handleFilters = (filters, category)=> {
+  //   const newFilters = {...filters}
+  //   newFilters[category] = filters
+  // }
+
   return (
-    <div className="flex flex-wrap justify-center bg-red-50">
-      {closetitems.map((closetitem) => (
-        <ClosetitemCard closetitem={closetitem} />
-      ))}
+    <div className="home">
+      <FilterMenu filters={filters} setFilters={setFilters} />
+      {/* <CheckBox handleFilters={filters => handleFilters(filters, "categoryItems")/> */}
+      <OutputList data={filteredData} />
     </div>
   );
 };
