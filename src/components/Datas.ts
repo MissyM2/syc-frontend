@@ -7,3 +7,5 @@ export const categoryItems: string[] = [
   'Sportswear',
   'Accessories',
 ];
+
+export const seasonItems: string[] = ['Winter', 'Spring', 'Summer', 'Fall'];

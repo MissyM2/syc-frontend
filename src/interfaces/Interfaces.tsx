@@ -32,6 +32,11 @@ export interface CategoryItem {
   name: string;
 }
 
+export interface SeasonItem {
+  _id: number;
+  name: string;
+}
+
 // export interface CheckBoxProps {
 //   handleFilters: (selected:number[])
 // }

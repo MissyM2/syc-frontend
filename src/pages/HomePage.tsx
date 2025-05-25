@@ -32,13 +32,22 @@ export const HomePage: React.FC = () => {
   });
 
   const handleCheckboxChange = useCallback(
-    (value: string, isChecked: boolean) => {
-      setFilters((prevFilter) => {
-        const updatedValues = isChecked
-          ? [...prevFilter.categories, value]
-          : prevFilter.categories.filter((item) => item !== value);
-        return { ...prevFilter, categories: updatedValues };
-      });
+    (filterName: string, value: string, isChecked: boolean) => {
+      if (filterName === 'categories') {
+        setFilters((prevFilter) => {
+          const updatedValues = isChecked
+            ? [...prevFilter.categories, value]
+            : prevFilter.categories.filter((item) => item !== value);
+          return { ...prevFilter, categories: updatedValues };
+        });
+      } else if (filterName === 'seasons') {
+        setFilters((prevFilter) => {
+          const updatedValues = isChecked
+            ? [...prevFilter.seasons, value]
+            : prevFilter.seasons.filter((item) => item !== value);
+          return { ...prevFilter, seasons: updatedValues };
+        });
+      }
     },
     []
   );
@@ -55,6 +64,9 @@ export const HomePage: React.FC = () => {
         //filter by category - check if item.category is part of the options inside the filters.category array
         (filterObj.categories.length > 0
           ? filterObj.categories.includes(item.category)
+          : true) &&
+        (filterObj.seasons.length > 0
+          ? filterObj.seasons.includes(item.season)
           : true)
       );
       // expand with more checks to fit your data
@@ -109,6 +121,7 @@ export const HomePage: React.FC = () => {
         filters={filters}
         setFilters={setFilters}
         categories={filters.categories}
+        seasons={filters.seasons}
         onCheckboxChange={handleCheckboxChange}
       />
       Filters: {JSON.stringify(filters)}

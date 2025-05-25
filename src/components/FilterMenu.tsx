@@ -3,7 +3,7 @@ import { FiSearch } from 'react-icons/fi';
 import { Checkbox, Collapse } from 'antd';
 //import { CheckboxGroup } from './CheckboxGroup.tsx';
 import type { ChangeEvent } from 'react';
-import { categoryItems } from './Datas.ts';
+import { categoryItems, seasonItems } from './Datas.ts';
 import React, { useState } from 'react';
 import type { FilterObject } from '../interfaces/Interfaces';
 
@@ -13,13 +13,19 @@ interface FilterMenuProps {
   filters: FilterObject;
   setFilters: (data: any) => void;
   categories: string[];
-  onCheckboxChange: (value: string, isChecked: boolean) => void;
+  seasons: string[];
+  onCheckboxChange: (
+    filterName: string,
+    value: string,
+    isChecked: boolean
+  ) => void;
 }
 
 export const FilterMenu: React.FC<FilterMenuProps> = ({
   filters,
   setFilters,
   categories,
+  seasons,
   onCheckboxChange,
 }) => {
   const handleInput = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -60,7 +66,11 @@ export const FilterMenu: React.FC<FilterMenuProps> = ({
                         value={option}
                         checked={categories.includes(option)}
                         onChange={(e) =>
-                          onCheckboxChange(option, e.target.checked)
+                          onCheckboxChange(
+                            'categories',
+                            option,
+                            e.target.checked
+                          )
                         }
                       />
                       {option}
@@ -74,7 +84,26 @@ export const FilterMenu: React.FC<FilterMenuProps> = ({
               onSelectionChange={handleFilterChange}
             /> */}
 
-            <div>Season</div>
+            <div>
+              <Collapse defaultActiveKey={['0']}>
+                <Panel header="Seasons" key="1">
+                  {seasonItems.map((option) => (
+                    <label key={option}>
+                      <input
+                        id={option}
+                        type="checkbox"
+                        value={option}
+                        checked={seasons.includes(option)}
+                        onChange={(e) =>
+                          onCheckboxChange('seasons', option, e.target.checked)
+                        }
+                      />
+                      {option}
+                    </label>
+                  ))}
+                </Panel>
+              </Collapse>
+            </div>
           </div>
           <div>
             <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 w-47 border-2  border-gray-300 hover:border-transparent rounded-lg">
