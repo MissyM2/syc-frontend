@@ -1,14 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 //import { getClosetitems } from '../api-functions';
 //import { ClosetitemCard } from '../components/ClosetitemCard.tsx';
 import axios from 'axios';
-import type { Closetitem, FilterObject } from '../interfaces/Interfaces.tsx';
+import type { Closetitem } from '../interfaces/Interfaces.tsx';
 import { FilterMenu } from '../components/FilterMenu.tsx';
 import { OutputList } from '../components/OutputList.tsx';
+import type { ChangeEvent } from 'react';
 
 const URL = 'http://localhost:3000';
 
 export type TClosetitemList = Closetitem[];
+
+interface FilterObject {
+  searchTerm: string;
+  categories: string[];
+  seasons: string[];
+  // size: Size[];
+}
 
 export const HomePage: React.FC = () => {
   const [data, setData] = useState<Closetitem[]>([]);
@@ -18,51 +26,50 @@ export const HomePage: React.FC = () => {
 
   const [filters, setFilters] = useState<FilterObject>({
     searchTerm: '',
-    category: [],
-    season: [],
+    categories: [],
+    seasons: [],
     // size: [],
-    sort: 'asc',
   });
 
-  // const handleFilterButtonClick = (selectedCategory: string) => {
-  //   console.log('inside handleFilterButtonClick');
-  //   if (selectedFilters.includes(selectedCategory)) {
-  //     console.log('what is selectedCategory? ' + selectedCategory);
-  //     let filters = selectedFilters.filter((el) => el !== selectedCategory);
-  //     setSelectedFilters(filters);
-  //   } else {
-  //     setSelectedFilters([...selectedFilters, selectedCategory]);
-  //   }
-  // };
+  const handleCheckboxChange = useCallback(
+    (value: string, isChecked: boolean) => {
+      setFilters((prevFilter) => {
+        const updatedValues = isChecked
+          ? [...prevFilter.categories, value]
+          : prevFilter.categories.filter((item) => item !== value);
+        return { ...prevFilter, categories: updatedValues };
+      });
+    },
+    []
+  );
 
   const sortAndFilterClosetitems = (filterObj: FilterObject) => {
-    console.log(filterObj.searchTerm);
-    console.log(filterObj.category);
-    return data
-      .filter((item) => {
-        return (
-          // filter by search term - check if item.name includes the current search term
-          item.name &&
-          item.name.toLowerCase().indexOf(filterObj.searchTerm.toLowerCase()) >
-            -1 &&
-          //filter by category - check if item.category is part of the options inside the filters.category array
-          (filterObj.category.length > 0
-            ? filterObj.category.includes(item.category)
-            : true)
-        );
-        // expand with more checks to fit your data
-      })
-      .sort((a: any, b: any) => {
-        // first, get the name parameter
-        const seasonA = a.season.toLowerCase();
-        const seasonB = b.season.toLowerCase();
-        if (filterObj.sort === 'desc') {
-          //return seasonB.localeCompare(seasonA); // returns 1 if nameB > nameA and returns -1 if nameB < nameA
-        } else if (filterObj.sort === 'asc') {
-          return seasonA.localeCompare(seasonB); // returns 1 if nameA > nameB and returns -1 if nameA < nameB
-        }
-        return 0;
-      });
+    //console.log(filterObj.searchTerm);
+    //console.log(filterObj.category);
+    return data.filter((item) => {
+      return (
+        // filter by search term - check if item.name includes the current search term
+        item.name &&
+        item.name.toLowerCase().indexOf(filterObj.searchTerm.toLowerCase()) >
+          -1 &&
+        //filter by category - check if item.category is part of the options inside the filters.category array
+        (filterObj.categories.length > 0
+          ? filterObj.categories.includes(item.category)
+          : true)
+      );
+      // expand with more checks to fit your data
+    });
+    // .sort((a: any, b: any) => {
+    //   // first, get the name parameter
+    //   const seasonA = a.season.toLowerCase();
+    //   const seasonB = b.season.toLowerCase();
+    //   if (filterObj.sort === 'desc') {
+    //     //return seasonB.localeCompare(seasonA); // returns 1 if nameB > nameA and returns -1 if nameB < nameA
+    //   } else if (filterObj.sort === 'asc') {
+    //     return seasonA.localeCompare(seasonB); // returns 1 if nameA > nameB and returns -1 if nameA < nameB
+    //   }
+    //   return 0;
+    //});
   };
 
   useEffect(() => {
@@ -98,8 +105,13 @@ export const HomePage: React.FC = () => {
 
   return (
     <div className="home">
-      <FilterMenu filters={filters} setFilters={setFilters} />
-
+      <FilterMenu
+        filters={filters}
+        setFilters={setFilters}
+        categories={filters.categories}
+        onCheckboxChange={handleCheckboxChange}
+      />
+      Filters: {JSON.stringify(filters)}
       <OutputList data={filteredData} />
     </div>
   );

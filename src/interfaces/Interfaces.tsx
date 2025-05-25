@@ -1,4 +1,4 @@
-import type { Category, Season, SortOption } from '../types/Types.tsx';
+//import type { Category, Season, SortOption } from '../types/Types.tsx';
 
 export interface Closetitem {
   //_id: string;
@@ -14,24 +14,24 @@ export interface ClosetitemCardProp {
   closetitem: Closetitem;
 }
 
-export interface FilterMenuProps {
-  filters: FilterObject;
-  setFilters: (data: any) => void;
-}
+// export interface FilterMenuProps {
+//   filters: FilterObject;
+//   setFilters: (data: any) => void;
+// }
 
-export interface FilterObject {
-  searchTerm: string;
-  category: Category[];
-  season: Season[];
-  // size: Size[];
-  sort: SortOption;
-}
+// export interface FilterObject {
+//   searchTerm: string;
+//   category: Category[];
+//   season: Season[];
+//   // size: Size[];
+//   sort: SortOption;
+// }
 
 export interface CategoryItem {
   _id: number;
   name: string;
 }
 
-export interface CheckBoxProps {
-  handleFilters: (selected:number[])
-}
+// export interface CheckBoxProps {
+//   handleFilters: (selected:number[])
+// }

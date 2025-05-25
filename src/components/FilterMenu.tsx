@@ -1,29 +1,32 @@
 import type { FilterMenuProps } from '../interfaces/Interfaces';
 import { FiSearch } from 'react-icons/fi';
-import { Button } from '../components/MainButton.tsx';
-import { CheckBox } from '../components/CheckBox.tsx';
+import { Checkbox, Collapse } from 'antd';
+//import { CheckboxGroup } from './CheckboxGroup.tsx';
 import type { ChangeEvent } from 'react';
+import { categoryItems } from './Datas.ts';
+import React, { useState } from 'react';
+import type { FilterObject } from '../interfaces/Interfaces';
+
+const { Panel } = Collapse;
+
+interface FilterMenuProps {
+  filters: FilterObject;
+  setFilters: (data: any) => void;
+  categories: string[];
+  onCheckboxChange: (value: string, isChecked: boolean) => void;
+}
 
 export const FilterMenu: React.FC<FilterMenuProps> = ({
   filters,
   setFilters,
+  categories,
+  onCheckboxChange,
 }) => {
   const handleInput = (e: ChangeEvent<HTMLInputElement>): void => {
     setFilters({
       ...filters,
       searchTerm: e.target.value,
     });
-  };
-
-  const handleFilters = (filters, category) => {
-    const newFilters = { ...filters };
-
-    newFilters[category] = filters;
-
-    console.log(newFilters);
-
-    //showFilteredResults(newFilters);
-    setFilters(newFilters);
   };
 
   return (
@@ -46,7 +49,30 @@ export const FilterMenu: React.FC<FilterMenuProps> = ({
             <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 w-47 border-2  border-gray-300 hover:border-transparent rounded-lg">
               Filter
             </button>
-            <CheckBox handleFilters={() => handleInput} />
+            <div>
+              <Collapse defaultActiveKey={['0']}>
+                <Panel header="Categories" key="1">
+                  {categoryItems.map((option) => (
+                    <label key={option}>
+                      <input
+                        id={option}
+                        type="checkbox"
+                        value={option}
+                        checked={categories.includes(option)}
+                        onChange={(e) =>
+                          onCheckboxChange(option, e.target.checked)
+                        }
+                      />
+                      {option}
+                    </label>
+                  ))}
+                </Panel>
+              </Collapse>
+            </div>
+            {/* <CheckboxGroup
+              options={categoryItems}
+              onSelectionChange={handleFilterChange}
+            /> */}
 
             <div>Season</div>
           </div>
@@ -57,31 +83,8 @@ export const FilterMenu: React.FC<FilterMenuProps> = ({
             <div>Asc A to Z</div>
             <div>Dsc Z to A</div>
           </div>
-
-          {/* <div className="flex justify-center mt-2">
-            {categoryItems.map((category, idx) => (
-              <div className="mr-2">
-                <Button
-                  variant="primary"
-                  size="small"
-                  // onClick={() => handleFilterButtonClick(category)}
-                  onClick={() => handleFilterButtonClick(category)}
-                  key={`filters-${idx}`}
-                >
-                  ?{category}
-                </Button>
-              </div>
-            ))}
-          </div> */}
         </div>
-        {/* <div className="rl-row">
-           <CheckBox handleFilters={filters => handleFilters(filters, "categoryItems")/>
-        </div> */}
       </div>
     </div>
   );
 };
-
-{
-  /* <CheckBox handleFilters={filters => handleFilters(filters, "categoryItems")/> */
-}
