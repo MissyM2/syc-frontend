@@ -4,11 +4,15 @@ import { Checkbox, Collapse } from 'antd';
 const { Panel } = Collapse;
 
 interface CheckboxGroupProps {
+  paneltitle: string;
+  propertyname: string;
   options: string[];
   onSelectionChange: (selectedOptions: string[]) => void;
 }
 
 export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
+  paneltitle,
+  propertyname,
   options,
   onSelectionChange,
 }) => {
@@ -25,19 +29,32 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
     onSelectionChange(selectedOptions);
   };
 
-  const renderCheckboxLists = () =>
-    options.map((option) => (
-      <label key={option}>
-        <input type="checkbox" value={option} onChange={handleCheckboxChange} />
-        {option}
-      </label>
-    ));
+  // const renderCheckboxLists = () =>
+  //   options.map((option) => (
+  //     <label key={option}>
+  //       <input type="checkbox" value={option} onChange={handleCheckboxChange} />
+  //       {option}
+  //     </label>
+  //   ));
 
   return (
     <div>
       <Collapse defaultActiveKey={['0']}>
-        <Panel header="Categories" key="1">
-          {renderCheckboxLists()}
+        <Panel header={paneltitle} key="1">
+          {options.map((option) => (
+            <label key={option}>
+              <input
+                id={option}
+                type="checkbox"
+                value={option}
+                checked={(propertyname as any).includes(option)}
+                onChange={(e) =>
+                  onCheckboxChange(`${propertyname}`, option, e.target.checked)
+                }
+              />
+              {option}
+            </label>
+          ))}
         </Panel>
       </Collapse>
     </div>

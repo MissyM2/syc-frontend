@@ -1,7 +1,7 @@
 //import type { FilterMenuProps } from '../interfaces/Interfaces';
 import { FiSearch } from 'react-icons/fi';
 import { Checkbox, Collapse } from 'antd';
-//import { CheckboxGroup } from './CheckboxGroup.tsx';
+import { CheckboxGroup } from './CheckboxGroup.tsx';
 import type { ChangeEvent } from 'react';
 import { categoryItems, seasonItems, sizeItems } from './Datas.ts';
 //import React, { useState } from 'react';
@@ -61,47 +61,53 @@ export const FilterMenu: React.FC<FilterMenuProps> = ({
               <Collapse defaultActiveKey={['0']}>
                 <Panel header="Categories" key="1">
                   {categoryItems.map((option) => (
-                    <label key={option}>
-                      <input
-                        id={option}
-                        type="checkbox"
-                        value={option}
-                        checked={categories.includes(option)}
-                        onChange={(e) =>
-                          onCheckboxChange(
-                            'categories',
-                            option,
-                            e.target.checked
-                          )
-                        }
-                      />
-                      {option}
-                    </label>
+                    <div className="flex items-center">
+                      <label htmlFor={option} key={option}>
+                        <input
+                          className="appearance-none w-4 h-4 border border-gray-300 rounded checked:bg-blue-500 checked:border-blue-500 focus:outline-none transition-all duration-200 mr-2"
+                          id={option}
+                          type="checkbox"
+                          value={option}
+                          checked={categories.includes(option)}
+                          onChange={(e) =>
+                            onCheckboxChange(
+                              'categories',
+                              option,
+                              e.target.checked
+                            )
+                          }
+                        />
+                        <span className="text-gray-700">{option}</span>
+                      </label>
+                    </div>
                   ))}
                 </Panel>
               </Collapse>
             </div>
-            {/* <CheckboxGroup
-              options={categoryItems}
-              onSelectionChange={handleFilterChange}
-            /> */}
 
             <div>
               <Collapse defaultActiveKey={['1']}>
                 <Panel header="Seasons" key="2">
                   {seasonItems.map((option) => (
-                    <label key={option}>
-                      <input
-                        id={option}
-                        type="checkbox"
-                        value={option}
-                        checked={seasons.includes(option)}
-                        onChange={(e) =>
-                          onCheckboxChange('seasons', option, e.target.checked)
-                        }
-                      />
-                      {option}
-                    </label>
+                    <div className="flex items-center">
+                      <label key={option}>
+                        <input
+                          className="appearance-none w-4 h-4 border border-gray-300 rounded checked:bg-blue-500 checked:border-blue-500 focus:outline-none transition-all duration-200 mr-2"
+                          id={option}
+                          type="checkbox"
+                          value={option}
+                          checked={seasons.includes(option)}
+                          onChange={(e) =>
+                            onCheckboxChange(
+                              'seasons',
+                              option,
+                              e.target.checked
+                            )
+                          }
+                        />
+                        <span className="text-gray-700">{option}</span>
+                      </label>
+                    </div>
                   ))}
                 </Panel>
               </Collapse>
@@ -110,18 +116,21 @@ export const FilterMenu: React.FC<FilterMenuProps> = ({
               <Collapse defaultActiveKey={['2']}>
                 <Panel header="Sizes" key="3">
                   {sizeItems.map((option) => (
-                    <label key={option}>
-                      <input
-                        id={option}
-                        type="checkbox"
-                        value={option}
-                        checked={sizes.includes(option)}
-                        onChange={(e) =>
-                          onCheckboxChange('sizes', option, e.target.checked)
-                        }
-                      />
-                      {option}
-                    </label>
+                    <div className="flex items-center">
+                      <label key={option}>
+                        <input
+                          className="appearance-none w-4 h-4 border border-gray-300 rounded checked:bg-blue-500 checked:border-blue-500 focus:outline-none transition-all duration-200 mr-2"
+                          id={option}
+                          type="checkbox"
+                          value={option}
+                          checked={sizes.includes(option)}
+                          onChange={(e) =>
+                            onCheckboxChange('sizes', option, e.target.checked)
+                          }
+                        />
+                        <span className="text-gray-700">{option}</span>
+                      </label>
+                    </div>
                   ))}
                 </Panel>
               </Collapse>
