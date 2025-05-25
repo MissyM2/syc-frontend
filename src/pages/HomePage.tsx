@@ -15,6 +15,7 @@ interface FilterObject {
   searchTerm: string;
   categories: string[];
   seasons: string[];
+  sizes: string[];
   // size: Size[];
 }
 
@@ -28,7 +29,7 @@ export const HomePage: React.FC = () => {
     searchTerm: '',
     categories: [],
     seasons: [],
-    // size: [],
+    sizes: [],
   });
 
   const handleCheckboxChange = useCallback(
@@ -46,6 +47,13 @@ export const HomePage: React.FC = () => {
             ? [...prevFilter.seasons, value]
             : prevFilter.seasons.filter((item) => item !== value);
           return { ...prevFilter, seasons: updatedValues };
+        });
+      } else if (filterName === 'sizes') {
+        setFilters((prevFilter) => {
+          const updatedValues = isChecked
+            ? [...prevFilter.sizes, value]
+            : prevFilter.sizes.filter((item) => item !== value);
+          return { ...prevFilter, sizes: updatedValues };
         });
       }
     },
@@ -67,6 +75,9 @@ export const HomePage: React.FC = () => {
           : true) &&
         (filterObj.seasons.length > 0
           ? filterObj.seasons.includes(item.season)
+          : true) &&
+        (filterObj.sizes.length > 0
+          ? filterObj.sizes.includes(item.size)
           : true)
       );
       // expand with more checks to fit your data
@@ -122,6 +133,7 @@ export const HomePage: React.FC = () => {
         setFilters={setFilters}
         categories={filters.categories}
         seasons={filters.seasons}
+        sizes={filters.sizes}
         onCheckboxChange={handleCheckboxChange}
       />
       Filters: {JSON.stringify(filters)}

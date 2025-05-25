@@ -19,13 +19,13 @@ export interface ClosetitemCardProp {
 //   setFilters: (data: any) => void;
 // }
 
-// export interface FilterObject {
-//   searchTerm: string;
-//   category: Category[];
-//   season: Season[];
-//   // size: Size[];
-//   sort: SortOption;
-// }
+export interface FilterObject {
+  searchTerm: string;
+  categories: string[];
+  seasons: string[];
+  sizes: string[];
+  //sort: SortOption;
+}
 
 export interface CategoryItem {
   _id: number;

@@ -1,10 +1,10 @@
-import type { FilterMenuProps } from '../interfaces/Interfaces';
+//import type { FilterMenuProps } from '../interfaces/Interfaces';
 import { FiSearch } from 'react-icons/fi';
 import { Checkbox, Collapse } from 'antd';
 //import { CheckboxGroup } from './CheckboxGroup.tsx';
 import type { ChangeEvent } from 'react';
-import { categoryItems, seasonItems } from './Datas.ts';
-import React, { useState } from 'react';
+import { categoryItems, seasonItems, sizeItems } from './Datas.ts';
+//import React, { useState } from 'react';
 import type { FilterObject } from '../interfaces/Interfaces';
 
 const { Panel } = Collapse;
@@ -14,18 +14,20 @@ interface FilterMenuProps {
   setFilters: (data: any) => void;
   categories: string[];
   seasons: string[];
+  sizes: string[];
   onCheckboxChange: (
     filterName: string,
     value: string,
     isChecked: boolean
   ) => void;
-}
+} //
 
 export const FilterMenu: React.FC<FilterMenuProps> = ({
   filters,
   setFilters,
   categories,
   seasons,
+  sizes,
   onCheckboxChange,
 }) => {
   const handleInput = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -85,8 +87,8 @@ export const FilterMenu: React.FC<FilterMenuProps> = ({
             /> */}
 
             <div>
-              <Collapse defaultActiveKey={['0']}>
-                <Panel header="Seasons" key="1">
+              <Collapse defaultActiveKey={['1']}>
+                <Panel header="Seasons" key="2">
                   {seasonItems.map((option) => (
                     <label key={option}>
                       <input
@@ -96,6 +98,26 @@ export const FilterMenu: React.FC<FilterMenuProps> = ({
                         checked={seasons.includes(option)}
                         onChange={(e) =>
                           onCheckboxChange('seasons', option, e.target.checked)
+                        }
+                      />
+                      {option}
+                    </label>
+                  ))}
+                </Panel>
+              </Collapse>
+            </div>
+            <div>
+              <Collapse defaultActiveKey={['2']}>
+                <Panel header="Sizes" key="3">
+                  {sizeItems.map((option) => (
+                    <label key={option}>
+                      <input
+                        id={option}
+                        type="checkbox"
+                        value={option}
+                        checked={sizes.includes(option)}
+                        onChange={(e) =>
+                          onCheckboxChange('sizes', option, e.target.checked)
                         }
                       />
                       {option}

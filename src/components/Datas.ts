@@ -9,3 +9,15 @@ export const categoryItems: string[] = [
 ];
 
 export const seasonItems: string[] = ['Winter', 'Spring', 'Summer', 'Fall'];
+
+export const sizeItems: string[] = [
+  'S',
+  'M',
+  'L',
+  'One Size',
+  '2',
+  '4',
+  '6',
+  '8',
+  '10',
+];
