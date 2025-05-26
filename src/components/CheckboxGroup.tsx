@@ -1,7 +1,8 @@
 import React from 'react';
 interface CheckboxGroupProps {
+  selectedFilterName: string;
+  selectedFilter: string[];
   options: string[];
-  categories: string[];
   onCheckboxChange: (
     filterName: string,
     value: string,
@@ -10,8 +11,10 @@ interface CheckboxGroupProps {
 }
 
 export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
+  selectedFilterName,
+  selectedFilter,
   options,
-  categories,
+
   onCheckboxChange,
 }) => {
   return (
@@ -23,9 +26,9 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
               id={option}
               type="checkbox"
               value={option}
-              checked={categories.includes(option)}
+              checked={selectedFilter.includes(option)}
               onChange={(e) =>
-                onCheckboxChange('categories', option, e.target.checked)
+                onCheckboxChange(selectedFilterName, option, e.target.checked)
               }
             />
             <span className="text-gray-600 ms-2">{option}</span>

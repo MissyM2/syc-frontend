@@ -24,6 +24,7 @@ export interface FilterObject {
   categories: string[];
   seasons: string[];
   sizes: string[];
+  // size: Size[];
   //sort: SortOption;
 }
 

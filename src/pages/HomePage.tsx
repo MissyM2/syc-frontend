@@ -7,17 +7,11 @@ import { FilterMenu } from '../components/FilterMenu.tsx';
 import { OutputList } from '../components/OutputList.tsx';
 import type { ChangeEvent } from 'react';
 
+import type { FilterObject } from '../interfaces/Interfaces';
+
 const URL = 'http://localhost:3000';
 
 export type TClosetitemList = Closetitem[];
-
-interface FilterObject {
-  searchTerm: string;
-  categories: string[];
-  seasons: string[];
-  sizes: string[];
-  // size: Size[];
-}
 
 export const HomePage: React.FC = () => {
   const [data, setData] = useState<Closetitem[]>([]);
@@ -132,8 +126,8 @@ export const HomePage: React.FC = () => {
         filters={filters}
         setFilters={setFilters}
         categories={filters.categories}
-        // seasons={filters.seasons}
-        // sizes={filters.sizes}
+        seasons={filters.seasons}
+        sizes={filters.sizes}
         onCheckboxChange={handleCheckboxChange}
       />
       Filters: {JSON.stringify(filters)}
