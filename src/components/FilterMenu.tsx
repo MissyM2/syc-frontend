@@ -15,21 +15,21 @@ interface FilterMenuProps {
   filters: FilterObject;
   setFilters: (data: any) => void;
   categories: string[];
-  seasons: string[];
-  sizes: string[];
+  // seasons: string[];
+  // sizes: string[];
   onCheckboxChange: (
     filterName: string,
     value: string,
     isChecked: boolean
   ) => void;
-} //
+}
 
 export const FilterMenu: React.FC<FilterMenuProps> = ({
   filters,
   setFilters,
   categories,
-  seasons,
-  sizes,
+  // seasons,
+  // sizes,
   onCheckboxChange,
 }) => {
   const handleInput = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -50,74 +50,79 @@ export const FilterMenu: React.FC<FilterMenuProps> = ({
       key: '1',
       label: 'Categories',
       children: (
-        <div className="ms-4">
-          {categoryItems.map((option) => (
-            <div>
-              <label htmlFor={option} key={option}>
-                <input
-                  id={option}
-                  type="checkbox"
-                  value={option}
-                  checked={categories.includes(option)}
-                  onChange={(e) =>
-                    onCheckboxChange('categories', option, e.target.checked)
-                  }
-                />
-                <span className="text-gray-600 ms-2">{option}</span>
-              </label>
-            </div>
-          ))}
-        </div>
+        <CheckboxGroup
+          categories={filters.categories}
+          options={categoryItems}
+          onCheckboxChange={onCheckboxChange}
+        />
+        // <div className="ms-4">
+        //   {categoryItems.map((option) => (
+        //     <div>
+        //       <label htmlFor={option} key={option}>
+        //         <input
+        //           id={option}
+        //           type="checkbox"
+        //           value={option}
+        //           checked={categories.includes(option)}
+        //           onChange={(e) =>
+        //             onCheckboxChange(propertyName, option, e.target.checked)
+        //           }
+        //         />
+        //         <span className="text-gray-600 ms-2">{option}</span>
+        //       </label>
+        //     </div>
+        //   ))}
+        // </div>
       ),
     },
-    {
-      key: '2',
-      label: 'Seasons',
-      children: (
-        <div>
-          {seasonItems.map((option) => (
-            <div className="ms-4">
-              <label key={option}>
-                <input
-                  id={option}
-                  type="checkbox"
-                  value={option}
-                  checked={seasons.includes(option)}
-                  onChange={(e) =>
-                    onCheckboxChange('seasons', option, e.target.checked)
-                  }
-                />
-                <span className="text-gray-600 ms-2">{option}</span>
-              </label>
-            </div>
-          ))}
-        </div>
-      ),
-    },
-    {
-      key: '3',
-      label: 'Sizes',
-      children: (
-        <div>
-          {sizeItems.map((option) => (
-            <div className="ms-4">
-              <label key={option}>
-                <input
-                  id={option}
-                  type="checkbox"
-                  value={option}
-                  checked={sizes.includes(option)}
-                  onChange={(e) =>
-                    onCheckboxChange('sizes', option, e.target.checked)
-                  }
-                />
-                <span className="text-gray-600 ms-2">{option}</span>
-              </label>
-            </div>
-          ))}
-        </div>
-      ),
-    },
+    // {
+    //   key: '2',
+    //   label: 'Seasons',
+    //   children: (
+    //     <div>
+    //       {seasonItems.map((option) => (
+    //         <div className="ms-4">
+    //           <label key={option}>
+    //             <input
+    //               id={option}
+    //               type="checkbox"
+    //               value={option}
+    //               checked={seasons.includes(option)}
+    //               onChange={(e) =>
+    //                 onCheckboxChange('seasons', option, e.target.checked)
+    //               }
+    //             />
+    //             <span className="text-gray-600 ms-2">{option}</span>
+    //           </label>
+    //         </div>
+    //       ))}
+    //     </div>
+    //   ),
+    // },
+    // {
+    //   key: '3',
+    //   label: 'Sizes',
+    //   children: (
+    //     <div>
+    //       {sizeItems.map((option) => (
+    //         <div className="ms-4">
+    //           <label key={option}>
+    //             <input
+    //               id={option}
+    //               type="checkbox"
+    //               value={option}
+    //               checked={sizes.includes(option)}
+    //               onChange={(e) =>
+    //                 onCheckboxChange('sizes', option, e.target.checked)
+    //               }
+    //             />
+    //             <span className="text-gray-600 ms-2">{option}</span>
+    //           </label>
+    //         </div>
+    //       ))}
+    //     </div>
+    //   ),
+    // },
   ];
 
   const panelStyle: React.CSSProperties = {

@@ -132,8 +132,8 @@ export const HomePage: React.FC = () => {
         filters={filters}
         setFilters={setFilters}
         categories={filters.categories}
-        seasons={filters.seasons}
-        sizes={filters.sizes}
+        // seasons={filters.seasons}
+        // sizes={filters.sizes}
         onCheckboxChange={handleCheckboxChange}
       />
       Filters: {JSON.stringify(filters)}
