@@ -1,11 +1,13 @@
 //import type { FilterMenuProps } from '../interfaces/Interfaces';
 import { FiSearch } from 'react-icons/fi';
-import { Checkbox, Collapse } from 'antd';
+import { Checkbox, Collapse, ConfigProvider, theme, Divider } from 'antd';
+import type { CollapseProps } from 'antd';
 import { CheckboxGroup } from './CheckboxGroup.tsx';
 import type { ChangeEvent } from 'react';
 import { categoryItems, seasonItems, sizeItems } from './Datas.ts';
-//import React, { useState } from 'react';
+import React, { useState } from 'react';
 import type { FilterObject } from '../interfaces/Interfaces';
+import type { CSSProperties } from 'react';
 
 const { Panel } = Collapse;
 
@@ -37,6 +39,105 @@ export const FilterMenu: React.FC<FilterMenuProps> = ({
     });
   };
 
+  const { token } = theme.useToken();
+
+  const onChange = (key: string | string[]) => {
+    console.log(key);
+  };
+
+  const itemsNest: CollapseProps['items'] = [
+    {
+      key: '1',
+      label: 'Categories',
+      children: (
+        <div className="ms-4">
+          {categoryItems.map((option) => (
+            <div>
+              <label htmlFor={option} key={option}>
+                <input
+                  id={option}
+                  type="checkbox"
+                  value={option}
+                  checked={categories.includes(option)}
+                  onChange={(e) =>
+                    onCheckboxChange('categories', option, e.target.checked)
+                  }
+                />
+                <span className="text-gray-600 ms-2">{option}</span>
+              </label>
+            </div>
+          ))}
+        </div>
+      ),
+    },
+    {
+      key: '2',
+      label: 'Seasons',
+      children: (
+        <div>
+          {seasonItems.map((option) => (
+            <div className="ms-4">
+              <label key={option}>
+                <input
+                  id={option}
+                  type="checkbox"
+                  value={option}
+                  checked={seasons.includes(option)}
+                  onChange={(e) =>
+                    onCheckboxChange('seasons', option, e.target.checked)
+                  }
+                />
+                <span className="text-gray-600 ms-2">{option}</span>
+              </label>
+            </div>
+          ))}
+        </div>
+      ),
+    },
+    {
+      key: '3',
+      label: 'Sizes',
+      children: (
+        <div>
+          {sizeItems.map((option) => (
+            <div className="ms-4">
+              <label key={option}>
+                <input
+                  id={option}
+                  type="checkbox"
+                  value={option}
+                  checked={sizes.includes(option)}
+                  onChange={(e) =>
+                    onCheckboxChange('sizes', option, e.target.checked)
+                  }
+                />
+                <span className="text-gray-600 ms-2">{option}</span>
+              </label>
+            </div>
+          ))}
+        </div>
+      ),
+    },
+  ];
+
+  const panelStyle: React.CSSProperties = {
+    marginBottom: 24,
+    borderRadius: token.borderRadiusLG,
+    border: '2px solid #cbd5e0',
+  };
+
+  const getItems: (panelStyle: CSSProperties) => CollapseProps['items'] = (
+    panelStyle
+  ) => [
+    {
+      key: '1',
+      label: 'Filters',
+      children: <Collapse defaultActiveKey="1" items={itemsNest} />,
+      showArrow: false,
+      style: panelStyle,
+    },
+  ];
+
   return (
     <div className="flex flex-column">
       <div className="">
@@ -52,97 +153,34 @@ export const FilterMenu: React.FC<FilterMenuProps> = ({
             </button>
           </fieldset>
         </form>
-        <div className="flex flex-row justify-between">
-          <div className="">
-            <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 w-47 border-2  border-gray-300 hover:border-transparent rounded-lg">
-              Filter
-            </button>
-            <div>
-              <Collapse defaultActiveKey={['0']}>
-                <Panel header="Categories" key="1">
-                  {categoryItems.map((option) => (
-                    <div className="flex items-center">
-                      <label htmlFor={option} key={option}>
-                        <input
-                          className="appearance-none w-4 h-4 border border-gray-300 rounded checked:bg-blue-500 checked:border-blue-500 focus:outline-none transition-all duration-200 mr-2"
-                          id={option}
-                          type="checkbox"
-                          value={option}
-                          checked={categories.includes(option)}
-                          onChange={(e) =>
-                            onCheckboxChange(
-                              'categories',
-                              option,
-                              e.target.checked
-                            )
-                          }
-                        />
-                        <span className="text-gray-700">{option}</span>
-                      </label>
-                    </div>
-                  ))}
-                </Panel>
-              </Collapse>
-            </div>
+        <div>
+          <ConfigProvider
+            theme={{
+              token: {},
+              components: {
+                Collapse: {
+                  borderlessContentPadding: 0,
+                  colorBorder: 'none',
+                  headerBg: 'none',
+                },
+              },
+            }}
+          >
+            <Collapse
+              size="large"
+              onChange={onChange}
+              bordered={false}
+              items={getItems(panelStyle)}
+            />
+          </ConfigProvider>
 
-            <div>
-              <Collapse defaultActiveKey={['1']}>
-                <Panel header="Seasons" key="2">
-                  {seasonItems.map((option) => (
-                    <div className="flex items-center">
-                      <label key={option}>
-                        <input
-                          className="appearance-none w-4 h-4 border border-gray-300 rounded checked:bg-blue-500 checked:border-blue-500 focus:outline-none transition-all duration-200 mr-2"
-                          id={option}
-                          type="checkbox"
-                          value={option}
-                          checked={seasons.includes(option)}
-                          onChange={(e) =>
-                            onCheckboxChange(
-                              'seasons',
-                              option,
-                              e.target.checked
-                            )
-                          }
-                        />
-                        <span className="text-gray-700">{option}</span>
-                      </label>
-                    </div>
-                  ))}
-                </Panel>
-              </Collapse>
-            </div>
-            <div>
-              <Collapse defaultActiveKey={['2']}>
-                <Panel header="Sizes" key="3">
-                  {sizeItems.map((option) => (
-                    <div className="flex items-center">
-                      <label key={option}>
-                        <input
-                          className="appearance-none w-4 h-4 border border-gray-300 rounded checked:bg-blue-500 checked:border-blue-500 focus:outline-none transition-all duration-200 mr-2"
-                          id={option}
-                          type="checkbox"
-                          value={option}
-                          checked={sizes.includes(option)}
-                          onChange={(e) =>
-                            onCheckboxChange('sizes', option, e.target.checked)
-                          }
-                        />
-                        <span className="text-gray-700">{option}</span>
-                      </label>
-                    </div>
-                  ))}
-                </Panel>
-              </Collapse>
-            </div>
-          </div>
-          <div>
+          {/* <div>
             <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 w-47 border-2  border-gray-300 hover:border-transparent rounded-lg">
               Sort
             </button>
             <div>Asc A to Z</div>
             <div>Dsc Z to A</div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
