@@ -1,11 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
-//import { getClosetitems } from '../api-functions';
-//import { ClosetitemCard } from '../components/ClosetitemCard.tsx';
 import axios from 'axios';
 import type { Closetitem } from '../interfaces/Interfaces.tsx';
 import { FilterMenu } from '../components/FilterMenu.tsx';
 import { OutputList } from '../components/OutputList.tsx';
-import type { ChangeEvent } from 'react';
 
 import type { FilterObject } from '../interfaces/Interfaces';
 
@@ -24,6 +21,7 @@ export const HomePage: React.FC = () => {
     categories: [],
     seasons: [],
     sizes: [],
+    sort: 'asc',
   });
 
   const handleCheckboxChange = useCallback(
@@ -57,36 +55,37 @@ export const HomePage: React.FC = () => {
   const sortAndFilterClosetitems = (filterObj: FilterObject) => {
     //console.log(filterObj.searchTerm);
     //console.log(filterObj.category);
-    return data.filter((item) => {
-      return (
-        // filter by search term - check if item.name includes the current search term
-        item.name &&
-        item.name.toLowerCase().indexOf(filterObj.searchTerm.toLowerCase()) >
-          -1 &&
-        //filter by category - check if item.category is part of the options inside the filters.category array
-        (filterObj.categories.length > 0
-          ? filterObj.categories.includes(item.category)
-          : true) &&
-        (filterObj.seasons.length > 0
-          ? filterObj.seasons.includes(item.season)
-          : true) &&
-        (filterObj.sizes.length > 0
-          ? filterObj.sizes.includes(item.size)
-          : true)
-      );
-      // expand with more checks to fit your data
-    });
-    // .sort((a: any, b: any) => {
-    //   // first, get the name parameter
-    //   const seasonA = a.season.toLowerCase();
-    //   const seasonB = b.season.toLowerCase();
-    //   if (filterObj.sort === 'desc') {
-    //     //return seasonB.localeCompare(seasonA); // returns 1 if nameB > nameA and returns -1 if nameB < nameA
-    //   } else if (filterObj.sort === 'asc') {
-    //     return seasonA.localeCompare(seasonB); // returns 1 if nameA > nameB and returns -1 if nameA < nameB
-    //   }
-    //   return 0;
-    //});
+    return data
+      .filter((item) => {
+        return (
+          // filter by search term - check if item.name includes the current search term
+          item.name &&
+          item.name.toLowerCase().indexOf(filterObj.searchTerm.toLowerCase()) >
+            -1 &&
+          //filter by category - check if item.category is part of the options inside the filters.category array
+          (filterObj.categories.length > 0
+            ? filterObj.categories.includes(item.category)
+            : true) &&
+          (filterObj.seasons.length > 0
+            ? filterObj.seasons.includes(item.season)
+            : true) &&
+          (filterObj.sizes.length > 0
+            ? filterObj.sizes.includes(item.size)
+            : true)
+        );
+        // expand with more checks to fit your data
+      })
+      .sort((a: any, b: any) => {
+        // first, get the name parameter
+        const seasonA = a.season.toLowerCase();
+        const seasonB = b.season.toLowerCase();
+        if (filterObj.sort === 'desc') {
+          //return seasonB.localeCompare(seasonA); // returns 1 if nameB > nameA and returns -1 if nameB < nameA
+        } else if (filterObj.sort === 'asc') {
+          return seasonA.localeCompare(seasonB); // returns 1 if nameA > nameB and returns -1 if nameA < nameB
+        }
+        return 0;
+      });
   };
 
   useEffect(() => {
@@ -108,7 +107,7 @@ export const HomePage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const data = sortAndFilterClosetitems(filters); // call the `sortAndFilterData`function and set its returned value to `filteredData`
+    const data = sortAndFilterClosetitems(filters);
     setFilteredData(data);
   }, [filters, data]);
 
@@ -121,13 +120,10 @@ export const HomePage: React.FC = () => {
   }
 
   return (
-    <div className="home">
+    <div className="w-full">
       <FilterMenu
         filters={filters}
         setFilters={setFilters}
-        categories={filters.categories}
-        seasons={filters.seasons}
-        sizes={filters.sizes}
         onCheckboxChange={handleCheckboxChange}
       />
       Filters: {JSON.stringify(filters)}

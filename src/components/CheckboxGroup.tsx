@@ -20,8 +20,8 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
   return (
     <div className="ms-4">
       {options.map((option) => (
-        <div>
-          <label htmlFor={option} key={option}>
+        <div key={option}>
+          <label htmlFor={option}>
             <input
               id={option}
               type="checkbox"
