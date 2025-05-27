@@ -27,14 +27,16 @@ export interface FilterObject {
   sort: string;
 }
 
-export interface CategoryItem {
-  _id: number;
-  name: string;
+export interface Option {
+  // _id: number;
+  // name: string;
+  value: string;
+  label: string;
 }
 
 export interface SeasonItem {
-  _id: number;
-  name: string;
+  // _id: number;
+  // name: string;
 }
 
 // export interface CheckBoxProps {

@@ -1,99 +1,190 @@
-import React, { useState, type ChangeEvent } from 'react';
+import React from 'react';
 //import type { Closetitem } from '@/interfaces/Interfaces.tsx';
+import { Toaster, toast } from 'sonner';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import type { Option } from '@/interfaces/Interfaces.tsx';
+import {
+  categoryItems,
+  seasonItems,
+  sizeItems,
+} from '../../components/Datas.ts';
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+
 import { Input } from '../../components/ui/input.tsx';
 import { Button } from '../../components/ui/button.tsx';
-import { Label } from '../../components/ui/label.tsx';
+
+// const FormSchema = z.object({
+//   category: z.string().min(1),
+//   name: z.string().min(1),
+//   season: z.string().min(1),
+//   size: z.string().min(1),
+//   desc: z.string().min(1),
+//   rating: z.string().min(1),
+// });
+
+const FormSchema = z.object({
+  category: z.string({
+    required_error: 'Please select an category to display.',
+  }),
+  name: z
+    .string({
+      required_error: 'Please select an category to display.',
+    })
+    .min(5),
+  season: z.string({
+    required_error: 'Please select an season to display.',
+  }),
+  size: z.string({
+    required_error: 'Please select an season to display.',
+  }),
+});
 
 //import { createClosetitem } from '../../api-functions.ts';
 
-interface FormData {
-  category: string;
-  name: string;
-  season: string;
-  size: string;
-  desc: string;
-  rating: string;
-}
-
 export const ClosetItemAddPage: React.FC = () => {
-  const [formData, setFormData] = useState<FormData>({
-    category: '',
-    name: '',
-    season: '',
-    size: '',
-    desc: '',
-    rating: '',
-    //file:file
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
   });
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    console.log(JSON.stringify(formData));
-  };
+  function onSubmit(data: z.infer<typeof FormSchema>) {
+    toast.success('Operation successful!', {
+      duration: 6000, // milliseconds
+      className: 'bg-green-500', // Tailwind CSS class
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+        </pre>
+      ),
+    });
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="w-1/3">
-      <Label className="flex left-0 p-2">Closetitem Category: </Label>
-      <input
-        type="string"
-        id="category"
-        name="category"
-        value={formData.category}
-        onChange={handleChange}
-      />
-      <Label className="flex left-0 p-2">Closetitem Name: </Label>
-      <Input
-        value={formData.name}
-        onChange={handleChange}
-        maxLength={40}
-        required
-        name="name"
-      />
-      <Label className="flex left-0 p-2">Closetitem Category: </Label>
-      <Input
-        value={formData.season}
-        onChange={handleChange}
-        maxLength={40}
-        required
-        name="season"
-      />
-      <Label className="flex left-0 p-2">Closetitem Category: </Label>
-      <Input
-        value={formData.size}
-        onChange={handleChange}
-        maxLength={40}
-        required
-        name="size"
-      />
-      <Label className="flex left-0 p-2">Closetitem Category: </Label>
-      <Input
-        value={formData.desc}
-        onChange={handleChange}
-        maxLength={40}
-        required
-        name="desc"
-      />
-      <Label className="flex left-0 p-2">Closetitem Category: </Label>
-      <Input
-        value={formData.rating}
-        onChange={handleChange}
-        maxLength={40}
-        required
-        name="rating"
-      />
-      {/* <Label className='flex left-0 p-2'>Item Image: </Label>
-          <input type="file" value={FormData.file} onChange={handleFileUpload} ref={inputFile} className='cursor-pointer hover:bg-accent' required /> */}
-      <Button type="submit" className="mt-4">
-        Submit
-      </Button>
-    </form>
+    <>
+      <Toaster position="bottom-center" />
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-2/3 space-y-6 bg-red-300"
+        >
+          <FormField
+            control={form.control}
+            name="category"
+            render={({ field }) => (
+              <FormItem>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Category" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {categoryItems.map((option: Option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    placeholder="Please add a title of your items"
+                    {...field}
+                  />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="season"
+            render={({ field }) => (
+              <FormItem>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Season" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {seasonItems.map((option: Option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="size"
+            render={({ field }) => (
+              <FormItem>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Size" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {sizeItems.map((option: Option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormDescription>
+                  You can manage size addresses in your{' '}
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit">Submit</Button>
+        </form>
+      </Form>
+    </>
   );
 };
