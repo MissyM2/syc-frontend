@@ -113,8 +113,8 @@ export async function getClosetitem(id: number) {
   return closetitem;
 }
 
-export async function createClosetitems(closetitems: Closetitems) {
-  console.log(closetitems);
+export async function createClosetitem(closetitem: Closetitem) {
+  console.log(closetitem);
   //const data = await createImage(user.file);
   // const imageId = user.file.name;
 
