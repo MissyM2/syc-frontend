@@ -1,58 +1,55 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { pageData } from './pageData';
+import { navbarData } from './navbarData';
+import { BiMenu } from 'react-icons/bi';
 
 export const Navbar: React.FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+
+  const showNav = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
-    <nav className="flex items-center justify-between flex-wrap bg-teal-500 p-6">
-      <div className="flex items-center flex-shrink-0 text-white mr-6">
-        <svg
-          className="fill-current h-8 w-8 mr-2"
-          width="54"
-          height="54"
-          viewBox="0 0 54 54"
-          xmlns="http://www.w3.org/2000/svg"
+    <nav className=" z-10 fixed top-0 w-full bg-slate-500 items-center flex p-4">
+      <div className="flex justify-between items-center w-full flex-wrap md:flex-nowrap">
+        <h1 className="text-xl text-white font-bold cursor-pointer">
+          Shop Your Closet
+        </h1>
+
+        <button
+          className="flex justify-end md:hidden ring-1 ring-black rounded"
+          onClick={showNav}
         >
-          <path d="M13.5 22.1c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 38.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z" />
-        </svg>
-        <span className="font-semibold text-xl tracking-tight">
-          Tailwind CSS
-        </span>
-      </div>
-      <div className="block lg:hidden">
-        <button className="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white">
-          <svg
-            className="fill-current h-3 w-3"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <title>Menu</title>
-            <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
-          </svg>
+          <BiMenu className="text-white w-9 h-9 flex justify-center items-center hover:text-black" />
         </button>
-      </div>
-      <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-        <div className="text-sm lg:flex-grow">
-          {pageData.map((page) => {
+
+        <ul
+          className={`${
+            isMenuOpen ? 'flex' : ' hidden'
+          } flex-col justify-center items-center w-full first:mt-2 md:flex-row md:w-auto md:space-x-10 md:flex`}
+        >
+          {navbarData.map((link, index) => {
             return (
-              <Link
-                key={page.path}
-                to={page.path}
-                className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
-              >
-                {page.name}
-              </Link>
+              <li key={index} className={link.cname}>
+                <Link
+                  className="hover:text-sky-500"
+                  to={link.href}
+                  onClick={showNav}
+                >
+                  {link.title}
+                </Link>
+              </li>
             );
           })}
-        </div>
-        <div>
-          <a
-            href="#"
-            className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
-          >
-            Download
-          </a>
-        </div>
+        </ul>
+        <button
+          className={`${
+            isMenuOpen ? ' flex' : ' hidden'
+          } text-indigo-800 hover:bg-gray-300 mx-auto md:mx-0 md:flex md:mt-0 items-center justify-center font-medium bg-gray-100 px-1 p-2 rounded-lg mt-4 w-24`}
+        >
+          Login
+        </button>
       </div>
     </nav>
   );

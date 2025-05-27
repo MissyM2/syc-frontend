@@ -14,10 +14,12 @@ export const RootLayout = () => {
 
   return (
     <>
-      <Navbar />
-      <main className="flex first-letter:w-screen justify-center mt-24">
-        <Outlet />
-      </main>
+      <div className="min-h-screen flex justify-center">
+        <Navbar />
+        <main className="flex first-letter:w-screen justify-center mt-24">
+          <Outlet />
+        </main>
+      </div>
     </>
   );
 };

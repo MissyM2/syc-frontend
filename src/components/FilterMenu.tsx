@@ -78,6 +78,7 @@ export const FilterMenu: React.FC<FilterMenuProps> = ({
     marginBottom: 24,
     borderRadius: token.borderRadiusLG,
     border: '2px solid #cbd5e0',
+    zIndex: 1000,
   };
 
   const getFilterItems: (
