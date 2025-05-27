@@ -16,7 +16,7 @@ export const RootLayout = () => {
     <>
       <div className="min-h-screen flex justify-center">
         <Navbar />
-        <main className="flex first-letter:w-screen justify-center mt-24">
+        <main className="md:container md:mx-auto mt-24 bg-blue-100">
           <Outlet />
         </main>
       </div>
