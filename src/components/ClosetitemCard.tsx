@@ -19,14 +19,14 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
   closetitem,
 }): React.JSX.Element => {
   return (
-    <div className="w-57 flex flex-col lg:flex-row border border-gray-400 rounded-lg shadow-md m-6 overflow-hidden lg:w-118 cursor-pointer">
+    <div className="flex flex-col sm: max-w-3xs p-0 m-0 border border-gray-400 rounded-lg shadow-md overflow-hidden cursor-pointer">
       <div
-        className="h-48 lg:h-auto lg:w-70 flex-none bg-cover border-b lg:border-b-0 lg:border-r border-gray-400 text-center overflow-hidden mr-0"
+        className="h-48 flex-none bg-center sm:bg-contain md: bg-cover border-b border-gray-400 text-center overflow-hidden mr-0"
         style={{ backgroundImage: `url(${clothingImg})` }}
         title="Princess Di"
       />
 
-      <div className="h-70 lg:w-55 bg-white p-4 flex flex-col justify-between leading-normal">
+      <div className="h-70 bg-white p-4 flex flex-col justify-between leading-normal">
         <div className="mb-8">
           <div className="text-gray-900 font-bold text-xl mb-2">
             {closetitem.name}

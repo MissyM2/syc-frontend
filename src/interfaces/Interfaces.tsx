@@ -1,7 +1,7 @@
 //import type { Category, Season, SortOption } from '../types/Types.tsx';
 
 export interface Closetitem {
-  //_id: string;
+  _id: string;
   category: string;
   name: string;
   season: string;
