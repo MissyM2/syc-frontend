@@ -1,0 +1,45 @@
+import { MongoClient } from 'mongodb';
+
+// /api/new-closetitem
+// POST /api/new-closetitem
+
+async function handler(req, res) {
+  if (req.method === 'POST') {
+    const data = req.body;
+
+    const client = await MongoClient.connect(
+      'mongodb+srv://fdmaloney:Daisl9515$!#@@fdmclustersandbox.0zdlunl.mongodb.net/syc-backend?retryWrites=true&w=majority&appName=FDMClusterSandbox'
+    );
+
+    const db = client.db();
+    const closetitemsCollection = db.collection('closetitems');
+    const result = await closetitemsCollection.insertOne(data);
+
+    console.log(result);
+
+    client.close();
+
+    res.status(201).json({ message: 'Closetitem added!' });
+  }
+}
+
+// async function getClosetitems(req, res) {
+//   const client = await MongoClient.connect(
+//     'mongodb+srv://fdmaloney:Daisl9515$!#@@fdmclustersandbox.0zdlunl.mongodb.net/?retryWrites=true&w=majority&appName=FDMClusterSandbox'
+//   );
+//   const db = client.db();
+//   const closetitemsCollection = db.collection('closetitems');
+//   const closetitems = await closetitemsCollection.find().toArray();
+
+//   client.close();
+
+//   return {
+//     props: {
+//       meetups: closetitems.map((closetitem) => ({
+//         name: closetitem.name,
+//         email: closetitem.email,
+//       })),
+//     },
+//     revalidate: 1,
+//   };
+// }

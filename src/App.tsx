@@ -10,7 +10,7 @@ import { ProfilePage } from './pages/ProfilePage';
 //import { RegisterPage } from './pages/RegisterPage';
 import { ViewItemDetailPage } from './pages/ViewItemDetailPage';
 import { NotFoundPage } from './pages/NotFoundPage';
-import { CreateClosetItemPage } from './pages/CreateClosetItemPage';
+import { ClosetItemAddPage } from './features/closetitems/closetitem-add';
 import { RootLayout } from './components/RootLayout';
 //import UserRegistrationPage from './features/users/user-reg.tsx';
 
@@ -41,7 +41,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/create-closet-item',
-        element: <CreateClosetItemPage />,
+        element: <ClosetItemAddPage />,
       },
 
       {
