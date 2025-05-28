@@ -28,17 +28,6 @@ export interface FilterObject {
 }
 
 export interface Option {
-  // _id: number;
-  // name: string;
   value: string;
   label: string;
 }
-
-export interface SeasonItem {
-  // _id: number;
-  // name: string;
-}
-
-// export interface CheckBoxProps {
-//   handleFilters: (selected:number[])
-// }
