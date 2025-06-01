@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
+//import axios from 'axios';
 import type { Closetitem } from '../interfaces/Interfaces.tsx';
 import { FilterMenu } from '../components/FilterMenu.tsx';
 import { OutputList } from '../components/OutputList.tsx';
+import { getAllClosetitems } from '../features/closetitems/closetitem-api.ts';
 
 import type { FilterObject } from '../interfaces/Interfaces';
 
-const URL = 'http://localhost:3000';
+//const URL = 'http://localhost:3000';
 
 export type TClosetitemList = Closetitem[];
 
@@ -93,10 +94,11 @@ export const HomePage: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get<TClosetitemList>(
-          `${URL}/syc/closetitems`
-        );
-        setData(response.data);
+        // const response = await axios.get<TClosetitemList>(
+        //   `${URL}/syc/closetitems`
+        // );
+        const data = await getAllClosetitems();
+        setData(data ?? []);
       } catch (e: any) {
         setError(e.message);
       } finally {
