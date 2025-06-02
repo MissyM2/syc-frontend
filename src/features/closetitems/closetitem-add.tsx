@@ -5,6 +5,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import type { Option } from '@/interfaces/Interfaces.tsx';
+
+import { createClosetitem } from './closetitem-api.ts';
+
 import {
   categoryItems,
   seasonItems,
@@ -55,22 +58,43 @@ const FormSchema = z.object({
   rating: z.string({
     required_error: 'Please add a rating.',
   }),
+  dateCreated: z.date(),
+  // itemImage: z
+  //   .custom<File>((v) => v instanceof File, {
+  //     message: 'Invalid file type.',
+  //   })
+  //   .optional(),
 });
+
+// If the image is optional, you can use:
+// image: z.custom<File>((v) => v instanceof File, {
+//   message: 'Invalid file type.',
+// }).optional(),
 
 //import { createClosetitem } from '../../api-functions.ts';
 
 export const ClosetItemAddPage: React.FC = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      dateCreated: new Date(),
+    },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(closetitemData: z.infer<typeof FormSchema>) {
+    //let closetitemObject = {};
+    closetitemData.dateCreated = new Date();
+
+    //await createClosetitem(closetitemData);
+
     toast.success('Operation successful!', {
       duration: 6000, // milliseconds
       className: 'bg-green-500', // Tailwind CSS class
       description: (
         <pre className="mt-2 size-fit rounded-md bg-slate-300 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+          <code className="text-white">
+            {JSON.stringify(closetitemData, null, 2)}
+          </code>
         </pre>
       ),
     });

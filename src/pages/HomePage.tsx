@@ -3,7 +3,12 @@ import { useState, useEffect, useCallback } from 'react';
 import type { Closetitem } from '../interfaces/Interfaces.tsx';
 import { FilterMenu } from '../components/FilterMenu.tsx';
 import { OutputList } from '../components/OutputList.tsx';
-import { getAllClosetitems } from '../features/closetitems/closetitem-api.ts';
+import {
+  getAllClosetitems,
+  //createClosetitem,
+  //updateClosetitem,
+  //deleteClosetitem,
+} from '../features/closetitems/closetitem-api.ts';
 
 import type { FilterObject } from '../interfaces/Interfaces';
 
@@ -12,8 +17,10 @@ import type { FilterObject } from '../interfaces/Interfaces';
 export type TClosetitemList = Closetitem[];
 
 export const HomePage: React.FC = () => {
-  const [data, setData] = useState<Closetitem[]>([]);
-  const [filteredData, setFilteredData] = useState<Closetitem[]>([]);
+  const [closetitems, setClosetitems] = useState<Closetitem[]>([]);
+  const [filteredClosetitems, setFilteredClosetitems] = useState<Closetitem[]>(
+    []
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,21 +38,23 @@ export const HomePage: React.FC = () => {
         setFilters((prevFilter) => {
           const updatedValues = isChecked
             ? [...prevFilter.categories, value]
-            : prevFilter.categories.filter((item) => item !== value);
+            : prevFilter.categories.filter(
+                (closetitem) => closetitem !== value
+              );
           return { ...prevFilter, categories: updatedValues };
         });
       } else if (filterName === 'seasons') {
         setFilters((prevFilter) => {
           const updatedValues = isChecked
             ? [...prevFilter.seasons, value]
-            : prevFilter.seasons.filter((item) => item !== value);
+            : prevFilter.seasons.filter((closetitem) => closetitem !== value);
           return { ...prevFilter, seasons: updatedValues };
         });
       } else if (filterName === 'sizes') {
         setFilters((prevFilter) => {
           const updatedValues = isChecked
             ? [...prevFilter.sizes, value]
-            : prevFilter.sizes.filter((item) => item !== value);
+            : prevFilter.sizes.filter((closetitem) => closetitem !== value);
           return { ...prevFilter, sizes: updatedValues };
         });
       }
@@ -56,22 +65,23 @@ export const HomePage: React.FC = () => {
   const sortAndFilterClosetitems = (filterObj: FilterObject) => {
     //console.log(filterObj.searchTerm);
     //console.log(filterObj.category);
-    return data
-      .filter((item) => {
+    return closetitems
+      .filter((closetitem) => {
         return (
-          // filter by search term - check if item.name includes the current search term
-          item.name &&
-          item.name.toLowerCase().indexOf(filterObj.searchTerm.toLowerCase()) >
-            -1 &&
-          //filter by category - check if item.category is part of the options inside the filters.category array
+          // filter by search term - check if closetitem.name includes the current search term
+          closetitem.name &&
+          closetitem.name
+            .toLowerCase()
+            .indexOf(filterObj.searchTerm.toLowerCase()) > -1 &&
+          //filter by category - check if closetitem.category is part of the options inside the filters.category array
           (filterObj.categories.length > 0
-            ? filterObj.categories.includes(item.category)
+            ? filterObj.categories.includes(closetitem.category)
             : true) &&
           (filterObj.seasons.length > 0
-            ? filterObj.seasons.includes(item.season)
+            ? filterObj.seasons.includes(closetitem.season)
             : true) &&
           (filterObj.sizes.length > 0
-            ? filterObj.sizes.includes(item.size)
+            ? filterObj.sizes.includes(closetitem.size)
             : true)
         );
         // expand with more checks to fit your data
@@ -94,11 +104,11 @@ export const HomePage: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        // const response = await axios.get<TClosetitemList>(
+        // const response = await axios.get<TClosetList>(
         //   `${URL}/syc/closetitems`
         // );
         const data = await getAllClosetitems();
-        setData(data ?? []);
+        setClosetitems(data ?? []);
       } catch (e: any) {
         setError(e.message);
       } finally {
@@ -110,11 +120,11 @@ export const HomePage: React.FC = () => {
 
   useEffect(() => {
     const data = sortAndFilterClosetitems(filters);
-    setFilteredData(data);
-  }, [filters, data]);
+    setFilteredClosetitems(data);
+  }, [filters, closetitems]);
 
   if (loading) {
-    return <p>Loading data...</p>;
+    return <p>Loading Closet Items...</p>;
   }
 
   if (error) {
@@ -129,7 +139,7 @@ export const HomePage: React.FC = () => {
         onCheckboxChange={handleCheckboxChange}
       />
       Filters: {JSON.stringify(filters)}
-      <OutputList data={filteredData} />
+      <OutputList data={filteredClosetitems} />
     </div>
   );
 };
