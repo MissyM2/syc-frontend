@@ -85,7 +85,7 @@ export const ClosetItemAddPage: React.FC = () => {
     //let closetitemObject = {};
     closetitemData.dateCreated = new Date();
 
-    //await createClosetitem(closetitemData);
+    await createClosetitem(closetitemData);
 
     toast.success('Operation successful!', {
       duration: 6000, // milliseconds

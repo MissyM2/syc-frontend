@@ -40,13 +40,13 @@ export async function getAllClosetitems() {
 
 export async function createClosetitem(closetitem: Closetitem) {
   console.log(closetitem);
-  const data = await createImage(closetitem.file);
-  const imageId = closetitem.file.name;
+  //const data = await createImage(closetitem.file);
+  //const imageId = closetitem.file.name;
 
-  closetitem.imageId = imageId;
+  //closetitem.imageId = imageId;
 
   //"http://localhost:3000/closetitems"
-  const response = await axios.post(`${URL}/closetitems`, closetitem);
+  const response = await axios.post(`${URL}/syc/closetitems`, closetitem);
   return response;
 }
 
