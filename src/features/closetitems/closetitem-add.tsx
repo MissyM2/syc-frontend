@@ -6,6 +6,9 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import type { Option } from '@/interfaces/Interfaces.tsx';
 
+import { Input } from '../../components/ui/input.tsx';
+import { Button } from '../../components/ui/button.tsx';
+
 import { createClosetitem } from './closetitem-api.ts';
 
 import {
@@ -31,9 +34,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-
-import { Input } from '../../components/ui/input.tsx';
-import { Button } from '../../components/ui/button.tsx';
 
 const FormSchema = z.object({
   category: z.string({
@@ -83,7 +83,7 @@ export const ClosetItemAddPage: React.FC = () => {
 
   async function onSubmit(closetitemData: z.infer<typeof FormSchema>) {
     //let closetitemObject = {};
-    closetitemData.dateCreated = new Date();
+    //closetitemData.dateCreated = new Date();
 
     await createClosetitem(closetitemData);
 

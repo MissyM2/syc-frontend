@@ -10,3 +10,10 @@ export type Category =
   | 'Accessories';
 
 export type SortOption = 'asc' | 'desc';
+
+export type MyErrorType = {
+  status: string;
+  message: string;
+  type: string;
+  errors: string[];
+};
