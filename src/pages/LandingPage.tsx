@@ -6,22 +6,26 @@ import { Button } from '../components/ui/button.tsx';
 export const LandingPage: React.FC = () => {
   // view == 0 ---> Login
   // view == 1 ----> Create
-  const [view, setView] = useState<boolean>(false);
+  const [showUserAddPage, setShowUserAddPage] = useState<boolean>(false);
+
+  const handleViewUpdate = (newValue: boolean) => {
+    setShowUserAddPage(newValue);
+  };
   return (
     <div>
-      {!view ? (
+      {!showUserAddPage ? (
         <>
-          <UserLoginPage />
-          <Button onClick={() => setView(!view)}>
+          <UserLoginPage onUpdate={handleViewUpdate} />
+          {/* <Button onClick={() => setShowUserAddPage(!showUserAddPage)}>
             Create New Account
-          </Button>{' '}
+          </Button>{' '} */}
         </>
       ) : (
         <>
-          <UserAddPage />
-          <Button onClick={() => setView(!view)}>
+          <UserAddPage onUpdate={handleViewUpdate} />
+          {/* <Button onClick={() => setShowUserAddPage(!showUserAddPage)}>
             Login to Existing Account
-          </Button>
+          </Button> */}
         </>
       )}
     </div>

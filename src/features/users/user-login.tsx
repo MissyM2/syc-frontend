@@ -27,7 +27,14 @@ const FormSchema = z.object({
   dateLogin: z.date(),
 });
 
-export const UserLoginPage: React.FC = () => {
+interface UserAddPageProps {
+  onUpdate: (newValue: boolean) => void;
+}
+
+export const UserLoginPage: React.FC<UserAddPageProps> = ({ onUpdate }) => {
+  const handleClick = () => {
+    onUpdate(true);
+  };
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -49,54 +56,90 @@ export const UserLoginPage: React.FC = () => {
   }
 
   return (
-    <div className="grid grid-flow-row w-full justify-items-center">
-      <h1 className="text-center text-xl lg:text-3xl mb-2 lg:mb-3">
-        Please add your user info here.
-      </h1>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
-          <div>
-            <FormField
-              control={form.control}
-              name="emailAddress"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      placeholder={'Email'}
-                      className="text-xl lg:text-2xl w-full lg:mb-3"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div>
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      className="text-xl lg:text-2xl w-full lg:mb-3"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+    <div
+      className="min-h-screen flex items-center justify-center 
+     bg-blue-50 p-8"
+    >
+      <div
+        className="@container max-w-md w-full p-8 bg-zinc-50 
+      rounded-2xl shadow-[0_20px_50px_rgba(0,_29,_61,_0.7)] backdrop-blur-xl 
+      border border-blue-800/30 relative animate-fade-in"
+      >
+        <h2 className="text-3xl font-extrabold text-zinc-800 text-center mb-2 tracking-tight">
+          Sign in
+        </h2>
+        <p className="text-zinc-800 text-center mb-8">
+          Sign in to continue your journey
+        </p>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="mt-8 space-y-5 perspective-1000"
+          >
+            <div>
+              <FormField
+                control={form.control}
+                name="emailAddress"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        placeholder={'Email'}
+                        className="w-full p-4 bg-blue-100/30 rounded-xl border border-blue-500/50 text-rose-400 
+                                placeholder-blue-300/50 outline-none focus:ring-2 
+                                focus:ring-rose-400/50 focus:border-transparent transition-all"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div>
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        className="w-full p-4 bg-blue-100/30 rounded-xl border border-blue-500/50 text-rose-400 
+                                placeholder-blue-300/50 outline-none focus:ring-2 
+                                focus:ring-rose-400/50 focus:border-transparent transition-all"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-          <Button type="submit" className="mb-2">
-            Login
-          </Button>
-        </form>
-      </Form>
+            <Button
+              type="submit"
+              className="group[ w-full p-4 mt-6 bg-gradient-to-r 
+            from-rose-400 to-rose-300 text-zinc-800 rounded-xl font-bold 
+            shadow-lg hover:shadow-rose-400/40 overflow-hidden transform transform-style-3d 
+            hover:-translate-y-0.5 hover:scale-105 hover:translate-z-20 
+            transition-all duration-300 relative"
+            >
+              Login
+            </Button>
+          </form>
+        </Form>
+        <p className="mt-8 text-zinc-500/80 text-center">
+          Need to create an account?
+          <span
+            className="text-rose-300 font-bold cursor-pointer 
+            hover:text-rose-400 ml-1 transition-colors"
+            onClick={handleClick}
+          >
+            Sign Up
+          </span>
+        </p>
+      </div>
     </div>
   );
 };
