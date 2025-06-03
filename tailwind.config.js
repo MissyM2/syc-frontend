@@ -1,6 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   theme: {
+    extend: {
+      fontFamily: {
+        fontsansserif: ['Roberto', 'sans'],
+        fontserif: ['Libre+Baskerville', 'serif'],
+      },
+    },
     container: {
       center: true,
       padding: {

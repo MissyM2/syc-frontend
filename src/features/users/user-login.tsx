@@ -66,8 +66,11 @@ export const UserLoginPage: React.FC<UserAddPageProps> = ({ onUpdate }) => {
       border border-blue-800/30 relative animate-fade-in"
       >
         <h2 className="text-3xl font-extrabold text-zinc-800 text-center mb-2 tracking-tight">
-          Sign in
+          Shop Your Closet
         </h2>
+        <h3 className="text-xl font-extrabold text-zinc-800 text-center mb-2 tracking-tight">
+          Sign In
+        </h3>
         <p className="text-zinc-800 text-center mb-8">
           Sign in to continue your journey
         </p>

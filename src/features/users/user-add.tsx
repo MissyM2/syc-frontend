@@ -68,8 +68,11 @@ export const UserAddPage: React.FC<UserAddPageProps> = ({ onUpdate }) => {
       border border-blue-800/30 relative animate-fade-in"
       >
         <h2 className="text-3xl font-extrabold text-zinc-800 text-center mb-2 tracking-tight">
-          Sign Up
+          Shop Your Closet
         </h2>
+        <h3 className="text-xl font-extrabold text-zinc-800 text-center mb-2 tracking-tight">
+          Sign Up
+        </h3>
         <p className="text-zinc-800 text-center mb-8">
           Sign up to start your journey
         </p>
