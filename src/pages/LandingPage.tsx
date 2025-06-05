@@ -12,20 +12,14 @@ export const LandingPage: React.FC = () => {
     setShowUserAddPage(newValue);
   };
   return (
-    <div>
+    <div className="bg-slate-50">
       {!showUserAddPage ? (
         <>
           <UserLoginPage onUpdate={handleViewUpdate} />
-          {/* <Button onClick={() => setShowUserAddPage(!showUserAddPage)}>
-            Create New Account
-          </Button>{' '} */}
         </>
       ) : (
         <>
           <UserAddPage onUpdate={handleViewUpdate} />
-          {/* <Button onClick={() => setShowUserAddPage(!showUserAddPage)}>
-            Login to Existing Account
-          </Button> */}
         </>
       )}
     </div>

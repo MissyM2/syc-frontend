@@ -1,5 +1,5 @@
-import clothingImg from '../assets/clothingImg.jpg';
-import ownerImg from '../assets/ownerImg.jpg';
+import clothingImg from '../../../assets/clothingImg.jpg';
+import ownerImg from '../../../assets/ownerImg.jpg';
 
 interface ClosetitemType {
   _id: string;

@@ -10,7 +10,7 @@ import { ProfilePage } from './pages/ProfilePage';
 //import { RegisterPage } from './pages/RegisterPage';
 import { ViewItemDetailPage } from './pages/ViewItemDetailPage';
 import { NotFoundPage } from './pages/NotFoundPage';
-import { ClosetItemAddPage } from './features/closetitems/closetitem-add';
+import { ClosetItemAddPage } from './features/closetitems/closetitem-test-add';
 import { RootLayout } from './components/RootLayout';
 //import UserRegistrationPage from './features/users/user-reg.tsx';
 

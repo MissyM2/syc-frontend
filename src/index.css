@@ -140,12 +140,14 @@
 
 @layer base {
   html {
-    font-family: 'Roberto', sans-serif;
+    font-family: 'Roboto', sans-serif;
   }
   * {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    /* @apply bg-background text-foreground; */
+    background-color: 'red';
+    
   }
 }

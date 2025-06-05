@@ -1,5 +1,4 @@
 import React from 'react';
-//import type { Closetitem } from '@/interfaces/Interfaces.tsx';
 import { Toaster, toast } from 'sonner';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -11,11 +10,7 @@ import { Button } from '../../components/ui/button.tsx';
 
 import { createClosetitem } from './closetitem-api.ts';
 
-import {
-  categoryItems,
-  seasonItems,
-  sizeItems,
-} from '../../components/Datas.ts';
+import { categoryItems, seasonItems, sizeItems } from './Datas.ts';
 
 import {
   Select,
@@ -28,10 +23,8 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 
@@ -59,7 +52,8 @@ const FormSchema = z.object({
     required_error: 'Please add a rating.',
   }),
   dateCreated: z.date(),
-  // itemImage: z
+  imageId: z.string(),
+  // file: z
   //   .custom<File>((v) => v instanceof File, {
   //     message: 'Invalid file type.',
   //   })

@@ -56,10 +56,7 @@ export const UserLoginPage: React.FC<UserAddPageProps> = ({ onUpdate }) => {
   }
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center 
-     bg-blue-50 p-8"
-    >
+    <div className="min-h-screen flex items-center justify-center p-8">
       <div
         className="@container max-w-md w-full p-8 bg-zinc-50 
       rounded-2xl shadow-[0_20px_50px_rgba(0,_29,_61,_0.7)] backdrop-blur-xl 

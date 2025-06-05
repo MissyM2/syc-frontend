@@ -1,4 +1,4 @@
-import type { Option } from '../interfaces/Interfaces.tsx';
+import type { Option } from '../../interfaces/Interfaces.tsx';
 
 export const categoryItems: Option[] = [
   { value: 'Clothing', label: 'Clothing' },

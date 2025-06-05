@@ -12,7 +12,7 @@ export const ContactUsPage: React.FC = () => {
 
   return (
     <div className="w-1/3">
-      <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-2 text-primary">
+      <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-2 ">
         Contact Us
       </h1>
       <p className="leading-7 [&:not(:first-child)]:mt-6 whitespace-pre-wrap text-center">

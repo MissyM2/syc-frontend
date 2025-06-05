@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 //import axios from 'axios';
 import type { Closetitem } from '../interfaces/Interfaces.tsx';
-import { FilterMenu } from '../components/FilterMenu.tsx';
-import { OutputList } from '../components/OutputList.tsx';
+import { FilterMenu } from '../features/closetitems/ui/FilterMenu.tsx';
+import { OutputList } from '../features/closetitems/ui/OutputList.tsx';
 import {
   getAllClosetitems,
   //createClosetitem,
