@@ -15,14 +15,15 @@ export interface LoginUser {
   //closetitems: [];
 }
 export interface Closetitem {
-  // _id: string;
+  _id: string;
   category: string;
   name: string;
   season: string;
   size: string;
   desc: string;
   rating: string;
-  imageId?: string | Blob;
+  // imageFile: File;
+  // imageId?: string | Blob;
 }
 
 export interface ClosetitemCardProp {

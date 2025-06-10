@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { navbarData } from './navbarData';
 import { BiMenu } from 'react-icons/bi';
 import { Button } from './ui/button.tsx';
 
 export const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const showNav = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('User');
+    navigate('/');
   };
 
   return (
@@ -45,7 +51,7 @@ export const Navbar: React.FC = () => {
           })}
         </ul>
         <Button
-          onClick={() => sessionStorage.removeItem('User')}
+          onClick={handleLogout}
           className={`${
             isMenuOpen ? ' flex' : ' hidden'
           } text-slate-800 hover:bg-gray-300 mx-auto md:mx-0 md:flex md:mt-0 items-center justify-center font-medium bg-gray-100 px-1 p-2 rounded-lg mt-4 w-24`}

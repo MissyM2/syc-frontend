@@ -8,9 +8,10 @@ import { LandingPage } from './pages/LandingPage';
 //import { LoginPage } from './pages/LoginPage';
 import { ProfilePage } from './pages/ProfilePage';
 //import { RegisterPage } from './pages/RegisterPage';
-import { ViewItemDetailPage } from './pages/ViewItemDetailPage';
-import { NotFoundPage } from './pages/NotFoundPage';
 import { ClosetItemAddPage } from './features/closetitems/closetitem-test-add';
+import { ClosetitemDetailPage } from './features/closetitems/closetitem-detail-page';
+import { NotFoundPage } from './pages/NotFoundPage';
+
 import { RootLayout } from './components/RootLayout';
 //import UserRegistrationPage from './features/users/user-reg.tsx';
 
@@ -39,14 +40,15 @@ const router = createBrowserRouter([
         path: '/profile',
         element: <ProfilePage />,
       },
+
       {
         path: '/create-closet-item',
         element: <ClosetItemAddPage />,
       },
 
       {
-        path: '/closet-items/:closetitemId',
-        element: <ViewItemDetailPage />,
+        path: '/closetitem-detail-page/:id',
+        element: <ClosetitemDetailPage />,
       },
       {
         path: '/about',

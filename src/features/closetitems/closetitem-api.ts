@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { MongoClient } from 'mongodb';
+//import { MongoClient } from 'mongodb';
+import { ObjectId } from 'mongodb';
 
 import type { Closetitem } from '../../interfaces/Interfaces.tsx';
 
@@ -19,36 +20,69 @@ export async function getAllClosetitems() {
 }
 
 export async function getClosetitem(id: string) {
+  console.log('inside getClosetitem');
+
   //"http://localhost:3000/posts/12345"
   const response = await axios.get(`${URL}/syc/closetitems/${id}`); // first, go get the closetitem from mongo
 
   const closetitem = response.data;
+  console.log('inside getClosetitem: closetitem ' + JSON.stringify(closetitem));
   const data = await getImage(closetitem.imageId);
+
   closetitem.image = data;
   return closetitem;
 }
 
-export async function createClosetitem(closetitem: Closetitem) {
-  console.log('inside createClosetitem: ' + JSON.stringify(closetitem));
-  const data = await createImage(closetitem.file);
-  const imageId = data.data.VersionId; //the id of the file
+interface ReceivingFormData {
+  category: string;
+  name: string;
+  season: string;
+  size: string;
+  desc: string;
+  rating: string;
+  dateCreated: Date;
+  imageId: string;
+  imageFile?: File;
+  items?: number[];
+}
 
+export async function createClosetitem(closetitem: ReceivingFormData) {
+  if (!closetitem.imageFile) {
+    throw new Error('No file provided');
+  }
+  const data = await createImage(closetitem.imageFile);
+  if (data != null) {
+    console.log('check if image was created.');
+  }
+  const imageId = closetitem.imageFile.name; //the id of the file
   closetitem.imageId = imageId;
+  console.log(
+    'createClosetitem: before axios post' + JSON.stringify(closetitem)
+  );
 
-  //"http://localhost:3000/closetitems"
-  const response = await axios.post(`${URL}/syc/closetitems`, closetitem);
-  return response;
+  // "http://localhost:3000/closetitems"
+
+  try {
+    const response = await axios.post(`${URL}/syc/closetitems`, closetitem);
+    return response;
+  } catch (error) {
+    console.error('Error:', error);
+  }
 }
 
 export async function createImage(file: string | Blob) {
   const formData = new FormData();
-  formData.append('image', file);
-  const response = await axios.post(`${URL}/images`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-  return response;
+  formData.append('imageFile', file);
+
+  try {
+    const response = await axios.post(`${URL}/images`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  } catch (error) {
+    console.error('Error:', error);
+  }
 }
 
 export async function getImage(id: any) {
