@@ -72,8 +72,6 @@ export async function createClosetitem(closetitem: ReceivingFormData) {
 }
 
 export async function createImage(file: string | Blob) {
-  console.log('THIS IS FILE', file);
-
   const formData = new FormData();
   formData.append('imageFile', file);
 

@@ -3,19 +3,48 @@ import type { FormData, ValidFieldNames } from '../../types/Types.tsx';
 import { ClosetitemSchema } from '../../types/Types.tsx';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import FormField from './ui/FormField.tsx';
+//import FormField from './ui/FormField.tsx';
 import { useNavigate } from 'react-router-dom';
+import type { Option } from '@/interfaces/Interfaces.tsx';
 
 import { createClosetitem } from './closetitem-api.ts';
 
+import { categoryItems, seasonItems, sizeItems } from './Datas.ts';
+
+import { Input } from '../../components/ui/input.tsx';
+import { Button } from '../../components/ui/button.tsx';
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+
+import {
+  Form,
+  FormControl,
+  FormLabel,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form';
+
 export const ClosetItemAddPage: React.FC = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setError,
-    watch,
-  } = useForm<FormData>({
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   formState: { errors },
+  //   setError,
+  //   watch,
+  // } = useForm<FormData>({
+  //   resolver: zodResolver(ClosetitemSchema),
+  //   // defaultValues: {
+  //   //   dateCreated: new Date(),
+  //   // },
+  // });
+  const form = useForm<FormData>({
     resolver: zodResolver(ClosetitemSchema),
     // defaultValues: {
     //   dateCreated: new Date(),
@@ -68,63 +97,200 @@ export const ClosetItemAddPage: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="grid col-auto">
-        <h1 className="text-3xl font-bold mb-4">React-Hook-Form & Zod</h1>
-        <FormField
-          type="text"
-          placeholder="Category"
-          name="category"
-          register={register}
-          error={errors.category}
-        />
-        <FormField
-          type="text"
-          placeholder="Name"
-          name="name"
-          register={register}
-          error={errors.name}
-        />
-        <FormField
-          type="text"
-          placeholder="Season"
-          name="season"
-          register={register}
-          error={errors.season}
-        />
-        <FormField
-          type="text"
-          placeholder="Size"
-          name="size"
-          register={register}
-          error={errors.size}
-        />
-        <FormField
-          type="text"
-          placeholder="Desc"
-          name="desc"
-          register={register}
-          error={errors.desc}
-        />
-        <FormField
-          type="text"
-          placeholder="Rating"
-          name="rating"
-          register={register}
-          error={errors.rating}
-        />
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="grid col-auto">
+          <h1 className="text-3xl font-bold mb-4">React-Hook-Form & Zod</h1>
 
-        <FormField
-          type="file"
-          placeholder="ImageFile"
-          name="imageFile"
-          register={register}
-          error={errors.imageFile}
-        />
-      </div>
-      <div>
-        <button type="submit">Submit</button>
-      </div>
-    </form>
+          <div>
+            <FormLabel>Season</FormLabel>
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl className="w-full text-xl lg:text-2xl lg:mb-3">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Category" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {categoryItems.map((option: Option) => (
+                        <SelectItem
+                          className="text-lg"
+                          key={option.value}
+                          value={option.value}
+                        >
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div>
+            <FormLabel>Name</FormLabel>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Name"
+                      className="text-xl lg:text-2xl w-full lg:mb-3"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div>
+            <FormLabel>Season</FormLabel>
+            <FormField
+              control={form.control}
+              name="season"
+              render={({ field }) => (
+                <FormItem>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl className="w-full text-xl lg:text-2xl lg:mb-3">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Season" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {seasonItems.map((option: Option) => (
+                        <SelectItem
+                          className="text-lg"
+                          key={option.value}
+                          value={option.value}
+                        >
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div>
+            <FormLabel>Size</FormLabel>
+            <FormField
+              control={form.control}
+              name="size"
+              render={({ field }) => (
+                <FormItem>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl className="w-full text-xl lg:text-2xl lg:mb-3">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Size" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {sizeItems.map((option: Option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div>
+            <FormLabel>Desc</FormLabel>
+            <FormField
+              control={form.control}
+              name="desc"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Desc"
+                      className="text-xl lg:text-2xl w-full mb-2 lg:mb-3"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div>
+            <FormLabel>Rating</FormLabel>
+            <FormField
+              control={form.control}
+              name="rating"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Rating"
+                      className="text-xl lg:text-2xl w-full mb-2 lg:mb-3"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div>
+            <FormLabel>Image File</FormLabel>
+            <FormField
+              control={form.control}
+              name="imageFile"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      type="file"
+                      placeholder="Select image"
+                      className="text-xl lg:text-2xl w-full mb-2 lg:mb-3"
+                      name={field.name}
+                      ref={field.ref}
+                      onChange={(e) => field.onChange(e.target.files)}
+                      onBlur={field.onBlur}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+        <div>
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+    </Form>
   );
 };
