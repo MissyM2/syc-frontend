@@ -1,223 +1,130 @@
 import React from 'react';
-
-import { useState, useRef } from 'react';
+import type { FormData, ValidFieldNames } from '../../types/Types.tsx';
+import { ClosetitemSchema } from '../../types/Types.tsx';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import FormField from './ui/FormField.tsx';
 import { useNavigate } from 'react-router-dom';
-
-// import { zodResolver } from '@hookform/resolvers/zod';
-// import { useForm } from 'react-hook-form';
-// import { z } from 'zod';
-
-import { Input } from '../../components/ui/input.tsx';
-import { Button } from '../../components/ui/button.tsx';
-import { Label } from '../../components/ui/label.tsx';
-//import { Textarea } from '../../components/ui/textarea.tsx';
 
 import { createClosetitem } from './closetitem-api.ts';
 
-// interface Props {
-//   onSubmit: (data: FormValues) => void;
-// }
-interface MyFormData {
-  category: string;
-  name: string;
-  season: string;
-  size: string;
-  desc: string;
-  rating: string;
-  dateCreated: Date;
-  imageId: string;
-  imageFile?: File;
-  items?: number[];
-}
-
-export const ClosetItemAddPage: React.FC<MyFormData> = () => {
-  const [formData, setFormData] = useState<MyFormData>({
-    category: '',
-    name: '',
-    season: '',
-    size: '',
-    desc: '',
-    rating: '',
-    imageId: '',
-    dateCreated: new Date(),
+export const ClosetItemAddPage: React.FC = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+    watch,
+  } = useForm<FormData>({
+    resolver: zodResolver(ClosetitemSchema),
+    // defaultValues: {
+    //   dateCreated: new Date(),
+    // },
   });
 
   const navigate = useNavigate();
 
-  //const MAX_FILE_SIZE = 15000000;
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const currDate = new Date();
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // if (event.target.files && event.target.files.length > 0) {
-    //   setImageFile(event.target.files[0]);
-    // } else {
-    //   setImageFile(null);
-    // }
-    setFormData({ ...formData, [event.target.name]: event.target.value });
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFormData({ ...formData, imageFile: e.target.files[0] });
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const form = new FormData();
-    form.append('category', formData.category);
-    form.append('name', formData.name);
-    form.append('season', formData.season);
-    form.append('size', formData.size);
-    form.append('desc', formData.desc);
-    form.append('rating', formData.rating);
-    form.append('dateCreated', currDate.toDateString());
-
-    if (formData.imageFile) {
-      form.append('imageFile', formData.imageFile);
-      form.append('imageId', '');
-    }
-
-    if (formData.items) {
-      form.append('items', JSON.stringify(formData.items));
-    }
+  const onSubmit = async (data: FormData) => {
+    const modifiedData = {
+      ...data,
+      dateCreated: new Date(),
+      imageId: data.imageFile.name,
+    };
 
     try {
-      const response = await createClosetitem(formData);
+      const response = await createClosetitem(modifiedData);
+      const { errors = {} } = response?.data; // Destructure the 'errors' property from the response data
+
+      //   // Define a mapping between server-side field names and their corresponding client-side names
+      //   const fieldErrorMapping: Record<string, ValidFieldNames> = {
+      //     category: 'category',
+      //     name: 'name',
+      //     // season: 'season',
+      //     // size: 'size',
+      //     // desc: 'desc',
+      //     // rating: 'rating',
+      //     // imageFile: 'imageFile',
+      //   };
+
+      //   // Find the first field with an error in the response data
+      //   const fieldWithError = Object.keys(fieldErrorMapping).find(
+      //     (field) => errors[field]
+      //   );
+
+      //   // If a field with an error is found, update the form error state using setError
+      //   if (fieldWithError) {
+      //     // Use the ValidFieldNames type to ensure the correct field names
+      //     setError(fieldErrorMapping[fieldWithError], {
+      //       type: 'server',
+      //       message: errors[fieldWithError],
+      //     });
+      //   }
       if (response) {
         navigate('/home');
       }
     } catch (error) {
-      console.error('Error:', error);
+      alert('Submitting form failed!');
     }
   };
 
-  // const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   console.log('instide handlefileupload' + JSON.stringify(e));
-  //   if (!e.target.files || e.target.files.length === 0) {
-  //     // Handle the case where no files are selected or files is null
-  //     console.warn('No files selected or files array is null.');
-  //     return;
-  //   }
-
-  //   if (inputFile.current == null) {
-  //     // Handle the case where no files are selected or files is null
-  //     console.warn('No image selected.');
-  //     return;
-  //   }
-
-  //   const imageFile = e.target.files[0];
-  //   console.log('what is imageFile? +' + JSON.stringify(imageFile));
-  //   const fileExtension = imageFile.name.substring(
-  //     imageFile.name.lastIndexOf('.')
-  //   );
-  //   if (
-  //     fileExtension != '.jpg' &&
-  //     fileExtension != '.jpeg' &&
-  //     fileExtension != '.png'
-  //   ) {
-  //     alert('Files must be jpg or png');
-  //     inputFile.current.value = '';
-  //     inputFile.current.type = 'file';
-  //     return;
-  //   }
-  //   if (imageFile.size > MAX_FILE_SIZE) {
-  //     alert('File size exceeds the limit (15 Mb)');
-  //     inputFile.current.value = '';
-  //     inputFile.current.type = 'file';
-  //     return;
-  //   }
-
-  //   setImageFile(imageFile);
-
-  //   console.log('before setFile: what is file? ' + JSON.stringify(imageFile));
-  // };
-
   return (
-    <div className="grid grid-flow-row w-full justify-items-center">
-      <h1 className="text-center text-xl lg:text-3xl mb-2 lg:mb-3">
-        Please add your info on the closet item here.
-      </h1>
-      <form onSubmit={handleSubmit}>
-        <Label className="flex left-0 p-2">Category: </Label>
-        <Input
-          onChange={handleInputChange}
-          maxLength={10}
-          required
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="grid col-auto">
+        <h1 className="text-3xl font-bold mb-4">React-Hook-Form & Zod</h1>
+        <FormField
+          type="text"
+          placeholder="Category"
           name="category"
-          value={formData.category}
+          register={register}
+          error={errors.category}
         />
-        <Label className="flex left-0 p-2">Name: </Label>
-        <Input
-          onChange={handleInputChange}
-          maxLength={20}
-          required
+        <FormField
+          type="text"
+          placeholder="Name"
           name="name"
-          value={formData.name}
+          register={register}
+          error={errors.name}
         />
-        <Label className="flex left-0 p-2">Season: </Label>
-        <Input
-          onChange={handleInputChange}
-          maxLength={50}
-          required
+        <FormField
+          type="text"
+          placeholder="Season"
           name="season"
-          value={formData.season}
+          register={register}
+          error={errors.season}
         />
-        <Label className="flex left-0 p-2">Size: </Label>
-        <Input
-          onChange={handleInputChange}
-          maxLength={100}
-          required
+        <FormField
+          type="text"
+          placeholder="Size"
           name="size"
-          value={formData.size}
+          register={register}
+          error={errors.size}
         />
-        <Label className="flex left-0 p-2">Desc: </Label>
-        <input
-          onChange={handleInputChange}
-          maxLength={20}
-          required
+        <FormField
+          type="text"
+          placeholder="Desc"
           name="desc"
-          value={formData.desc}
+          register={register}
+          error={errors.desc}
         />
-        <Label className="flex left-0 p-2">Rating </Label>
-        <Input
-          onChange={handleInputChange}
-          maxLength={5}
-          required
+        <FormField
+          type="text"
+          placeholder="Rating"
           name="rating"
-          value={formData.rating}
-        />
-        <Label className="flex left-0 p-2">Insert Header Image: </Label>
-        <input
-          type="file"
-          onChange={handleFileChange}
-          ref={fileInputRef}
-          className="cursor-pointer hover:bg-accent"
-          required
+          register={register}
+          error={errors.rating}
         />
 
-        {/* <Input
+        <FormField
           type="file"
-          onChange={handleFileUpload}
-          ref={inputFile}
-          className="cursor-pointer hover:bg-accent"
-          required
-        /> */}
-        <Button type="submit" className="mt-4">
-          Submit
-        </Button>
-      </form>
-
-      {/* {imageFile && (
-        <div>
-          <p>File Name: {imageFile.name}</p>
-          <p>File Size: {imageFile.size} bytes</p>
-          <p>File Type: {imageFile.type}</p>
-        </div>
-      )} */}
-    </div>
+          placeholder="ImageFile"
+          name="imageFile"
+          register={register}
+          error={errors.imageFile}
+        />
+      </div>
+      <div>
+        <button type="submit">Submit</button>
+      </div>
+    </form>
   );
 };

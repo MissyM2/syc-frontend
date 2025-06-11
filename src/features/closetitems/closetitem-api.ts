@@ -50,15 +50,16 @@ export async function createClosetitem(closetitem: ReceivingFormData) {
   if (!closetitem.imageFile) {
     throw new Error('No file provided');
   }
+
+  const imageId = closetitem.imageFile.name; //the id of the file
+  closetitem.imageId = imageId;
+
   const data = await createImage(closetitem.imageFile);
   if (data != null) {
     console.log('check if image was created.');
   }
-  const imageId = closetitem.imageFile.name; //the id of the file
-  closetitem.imageId = imageId;
-  console.log(
-    'createClosetitem: before axios post' + JSON.stringify(closetitem)
-  );
+  // const imageId = closetitem.imageFile.name; //the id of the file
+  // closetitem.imageId = imageId;
 
   // "http://localhost:3000/closetitems"
 
@@ -71,14 +72,14 @@ export async function createClosetitem(closetitem: ReceivingFormData) {
 }
 
 export async function createImage(file: string | Blob) {
+  console.log('THIS IS FILE', file);
+
   const formData = new FormData();
   formData.append('imageFile', file);
 
   try {
     const response = await axios.post(`${URL}/images`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+      headers: {},
     });
   } catch (error) {
     console.error('Error:', error);
