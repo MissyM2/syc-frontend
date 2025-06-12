@@ -28,7 +28,7 @@ export type MyErrorType = {
 export type FormData = {
   category: string;
   name: string;
-  season: string;
+  seasons: string[];
   size: string;
   desc: string;
   rating: string;
@@ -54,9 +54,15 @@ export const ClosetitemSchema: ZodType<FormData> = z.object({
       required_error: 'Please add a title.',
     })
     .min(5),
-  season: z.string({
-    required_error: 'Please select a season.',
-  }),
+  seasons: z
+    .array(z.string())
+    .refine((value) => value.some((item) => item), {
+      message: 'You have to select at least one item.',
+    })
+    .transform((val) => val as string[]), // Ensures output is string[]
+  // season: z.string({
+  //   required_error: 'Please select a season.',
+  // }),
   size: z.string({
     required_error: 'Please select an size.',
   }),
@@ -69,7 +75,7 @@ export const ClosetitemSchema: ZodType<FormData> = z.object({
     required_error: 'Please add a rating.',
   }),
   //dateCreated: z.date(),
-  //imageId: z.string(),
+  imageId: z.string(),
   imageFile: z
     .any() // or z.instanceof(File)
     .refine((files) => files?.length === 1, 'Image is required.') // Check if a file is uploaded
@@ -96,7 +102,7 @@ export type FormFieldProps = {
 export type ValidFieldNames =
   | 'category'
   | 'name'
-  | 'season'
+  | 'seasons'
   | 'size'
   | 'desc'
   | 'rating'
