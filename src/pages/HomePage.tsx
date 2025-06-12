@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 //import axios from 'axios';
 import type { Closetitem } from '../interfaces/Interfaces.tsx';
-import { FilterMenu } from '../features/closetitems/ui/FilterMenu.tsx';
-import { OutputList } from '../features/closetitems/ui/OutputList.tsx';
+import { FilterMenu } from '../features/closetitems/components/FilterMenu.tsx';
+import { OutputList } from '../features/closetitems/components/OutputList.tsx';
 import {
   getAllClosetitems,
   //createClosetitem,
@@ -104,9 +104,6 @@ export const HomePage: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        // const response = await axios.get<TClosetList>(
-        //   `${URL}/syc/closetitems`
-        // );
         const data = await getAllClosetitems();
         setClosetitems(data ?? []);
       } catch (e: any) {

@@ -1,36 +1,5 @@
 import { ClosetitemCard } from './ClosetitemCard.tsx';
-
 import type { Closetitem } from '../../../interfaces/Interfaces.tsx';
-
-// interface ImageData {
-//   data: string;
-// }
-
-// interface ClosetitemDetails {
-//   _id: string;
-//   category: string;
-//   name: string;
-//   season: string;
-//   size: string;
-//   desc: string;
-//   rating: string;
-//   dateCreated: Date;
-//   imageId: string;
-//   imageFile: ImageData;
-// }
-
-// export interface Closetitem {
-//   _id: string;
-//   category: string;
-//   name: string;
-//   season: string;
-//   size: string;
-//   desc: string;
-//   rating: string;
-//   dateCreated: Date;
-//   imageId?: string;
-//   imageFile: ImageData;
-// }
 
 interface OutputListProps {
   data: Closetitem[];

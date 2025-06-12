@@ -12,11 +12,16 @@ export type TClosetitemList = Closetitem[];
 
 export async function getAllClosetitems() {
   const response = await axios.get<TClosetitemList>(`${URL}/syc/closetitems`);
+  const items = response.data;
   if (response.status === 200) {
-    return response.data;
+    for (const item of items) {
+      const itemImg = await getImage(item.imageId);
+      item.imageFile = itemImg;
+    }
   } else {
     return;
   }
+  return items;
 }
 
 export async function getClosetitem(id: string) {

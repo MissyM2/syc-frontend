@@ -1,6 +1,9 @@
 import ownerImg from '../../../assets/ownerImg.jpg';
 import { Link } from 'react-router-dom';
 import type { Closetitem } from '../../../interfaces/Interfaces.tsx';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+
 import {
   Card,
   CardAction,
@@ -10,8 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 
 interface ClosetitemProps {
   closetitem: Closetitem;
@@ -20,48 +21,71 @@ interface ClosetitemProps {
 export const ClosetitemCard: React.FC<ClosetitemProps> = ({
   closetitem,
 }): React.JSX.Element => {
+  const date = new Date(closetitem.dateCreated);
+
+  const formattedDate = date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
+  const formattedTime = date.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+
   return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <div>
-          <img src={closetitem?.imageFile?.data} className="max-h-96 my-4" />
+    <Link to={`/closetitem-detail-page/${closetitem._id}`} className="w-full">
+      <Card className="w-full max-w-sm">
+        <div className="grid w-full place-items-center overflow-x-scroll aspect-square  bg-gray-200">
+          <img
+            className="object-cover object-center w-full h-full"
+            src={closetitem?.imageFile?.data}
+            alt={closetitem.name}
+          />
         </div>
-        <CardTitle>{closetitem.name}</CardTitle>
-        <CardDescription>{closetitem.desc}</CardDescription>
-        {/* <CardAction>
+        <CardHeader>
+          <CardTitle>{closetitem.name}</CardTitle>
+          <CardDescription>{closetitem.desc}</CardDescription>
+          {/* <CardAction>
           <Button variant="link">Sign Up</Button>
         </CardAction> */}
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-col gap-6">
-          <div className="grid gap-2">
-            <Label>Category: {closetitem.category}</Label>
-          </div>
-          <div className="grid gap-2">
-            <div className="flex items-center">
-              <Label>Season: {closetitem.season}</Label>
+        </CardHeader>
+        <CardContent className="flex-col gap-2 bg-green-50">
+          <div className="flex flex-row gap-2">
+            <div className="">
+              <Label>{closetitem.category}</Label>
             </div>
-            <div className="flex items-center">
-              <Label>Rating: {closetitem.rating}</Label>
+            <div className="">
+              <Label>{closetitem.season}</Label>
+            </div>
+            <div className="">
+              <Label>{closetitem.rating}</Label>
             </div>
           </div>
-        </div>
-      </CardContent>
-      <CardFooter className="flex-col gap-2">
-        {/* <div className="flex items-center">
-          <Label>Added on: {cldate}</Label>
-        </div> */}
-        <img
-          className="w-10 h-10 rounded-full mr-4"
-          src={ownerImg}
-          alt="Avatar of Jonathan Reinink"
-        />
-        <div className="text-sm">
-          <p className="text-gray-900 leading-none">Jonathan Reinink</p>
-          <p className="text-gray-600">Aug 18</p>
-        </div>
-      </CardFooter>
-    </Card>
+        </CardContent>
+        <CardFooter className="flex-row bg-red-50">
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-col md:flex-row items-left">
+              <div className="text-xs pr-2">Added:</div>
+              <div className="text-xs">
+                {formattedDate} / {formattedTime}
+              </div>
+            </div>
+            <div className="flex flex-row items-center">
+              <img
+                className="w-10 h-10 rounded-full mr-4"
+                src={ownerImg}
+                alt="Avatar of Jonathan Reinink"
+              />
+              <div className="text-xs  bg-blue-50">
+                <p className="text-gray-900 leading-none">Jonathan Reinink</p>
+              </div>
+            </div>
+          </div>
+        </CardFooter>
+      </Card>
+    </Link>
     // <div className="flex flex-col sm: max-w-3xs p-0 m-0 border border-gray-400 rounded-lg shadow-md overflow-hidden cursor-pointer">
     //   <Link to={`/closetitem-detail-page/${closetitem._id}`} className="w-full">
     //     <div className="h-70 bg-white p-4 flex flex-col justify-between leading-normal">
