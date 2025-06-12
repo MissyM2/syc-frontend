@@ -15,6 +15,8 @@ interface FormData {
   seasons: string[];
   size: string;
   desc: string;
+  rating: string;
+  imageFile: FileList;
 }
 
 export const CreateClosetitemPage: React.FC = () => {
@@ -26,7 +28,12 @@ export const CreateClosetitemPage: React.FC = () => {
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
+      category: '',
+      name: '',
       seasons: [],
+      size: '',
+      desc: '',
+      rating: '',
     },
   });
 
@@ -39,6 +46,7 @@ export const CreateClosetitemPage: React.FC = () => {
   const watchCategoryOption = watch('category');
   const watchNameOption = watch('name');
   const watchDescOption = watch('desc');
+  const watchRatingOption = watch('desc');
 
   return (
     <div className="container">
@@ -113,6 +121,26 @@ export const CreateClosetitemPage: React.FC = () => {
             />
             {errors.desc && <span>This field is required</span>}
           </div>
+          <div>
+            <label htmlFor="rating">Rating:</label>
+            <input
+              type="text"
+              id="rating"
+              {...register('rating', { required: true })}
+            />
+            {errors.desc && <span>This field is required</span>}
+          </div>
+
+          <div>
+            <label htmlFor="imageFile">Image:</label>
+            <input
+              type="file"
+              accept="image/*"
+              id="rating"
+              {...register('imageFile', { required: true })}
+            />
+            {errors.desc && <span>This field is required</span>}
+          </div>
 
           <button type="submit">Submit</button>
         </div>
@@ -122,6 +150,7 @@ export const CreateClosetitemPage: React.FC = () => {
           <p>Selected Seasons: {watchSeasonOptions?.join(', ') || 'None'}</p>
           <p>Selected Name: {watchNameOption || 'None'}</p>
           <p>Selected Desc: {watchDescOption || 'None'}</p>
+          <p>Selected Rating: {watchRatingOption || 'None'}</p>
         </div>
       </form>
     </div>
