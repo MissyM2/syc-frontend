@@ -18,10 +18,10 @@ interface ClosetitemDetails {
   rating: string;
   dateCreated: string;
   imageId: string;
-  image: ImageData;
+  imageFile: ImageData;
 }
 
-export const ClosetitemDetailPage: React.FC = (): React.JSX.Element => {
+export const ViewClosetitemDetailPage: React.FC = (): React.JSX.Element => {
   const { id } = useParams<{ id: string }>();
   const [closetitem, setClosetitem] = useState<ClosetitemDetails | null>(null);
 
@@ -51,7 +51,7 @@ export const ClosetitemDetailPage: React.FC = (): React.JSX.Element => {
         Back
       </Button>
       <div className="flex w-full justify-center">
-        <img src={closetitem?.image?.data} className="max-h-96 my-4" />
+        <img src={closetitem?.imageFile?.data} className="max-h-96 my-4" />
       </div>
       <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-2 text-primary">
         Name: {closetitem?.name}

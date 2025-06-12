@@ -14,6 +14,10 @@ export interface LoginUser {
   dateLogin: Date;
   //closetitems: [];
 }
+
+interface ImageData {
+  data: string;
+}
 export interface Closetitem {
   _id: string;
   category: string;
@@ -22,8 +26,9 @@ export interface Closetitem {
   size: string;
   desc: string;
   rating: string;
-  // imageFile: File;
-  // imageId?: string | Blob;
+  dateCreated: Date;
+  imageFile: ImageData;
+  imageId?: string;
 }
 
 export interface ClosetitemCardProp {

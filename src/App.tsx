@@ -2,14 +2,14 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 //import Header from './components/HeaderPage.tsx';
 import { AboutPage } from './pages/AboutPage';
-import { ContactUsPage } from './pages/ContactUsPage';
-import { HomePage } from './pages/HomePage';
-import { LandingPage } from './pages/LandingPage';
+import { ContactUsPage } from './pages/ContactUsPage.tsx';
+import { HomePage } from './pages/HomePage.tsx';
+import { LandingPage } from './pages/LandingPage.tsx';
 //import { LoginPage } from './pages/LoginPage';
-import { ProfilePage } from './pages/ProfilePage';
+import { ProfilePage } from './pages/ProfilePage.tsx';
 //import { RegisterPage } from './pages/RegisterPage';
-import { ClosetItemAddPage } from './features/closetitems/closetitem-test-add';
-import { ClosetitemDetailPage } from './features/closetitems/closetitem-detail-page';
+import { CreateClosetitemPage } from './features/closetitems/create-closetitem.tsx';
+import { ViewClosetitemDetailPage } from './features/closetitems/view-closetitem-detail.tsx';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 import { RootLayout } from './components/RootLayout';
@@ -43,12 +43,12 @@ const router = createBrowserRouter([
 
       {
         path: '/create-closet-item',
-        element: <ClosetItemAddPage />,
+        element: <CreateClosetitemPage />,
       },
 
       {
-        path: '/closetitem-detail-page/:id',
-        element: <ClosetitemDetailPage />,
+        path: '/view-closetitem-detail/:id',
+        element: <ViewClosetitemDetailPage />,
       },
       {
         path: '/about',

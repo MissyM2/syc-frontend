@@ -9,7 +9,7 @@ import type { Option } from '@/interfaces/Interfaces.tsx';
 
 import { createClosetitem } from './closetitem-api.ts';
 
-import { categoryItems, seasonItems, sizeItems } from './Datas.ts';
+import { categoryItems, seasonItems, sizeItems } from './Closetitem-datas.ts';
 
 import { Input } from '../../components/ui/input.tsx';
 import { Button } from '../../components/ui/button.tsx';
@@ -31,7 +31,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 
-export const ClosetItemAddPage: React.FC = () => {
+export const CreateClosetitemPage: React.FC = () => {
   // const {
   //   register,
   //   handleSubmit,
@@ -288,7 +288,7 @@ export const ClosetItemAddPage: React.FC = () => {
           </div>
         </div>
         <div>
-          <button type="submit">Submit</button>
+          <Button type="submit">Save Item</Button>
         </div>
       </form>
     </Form>
