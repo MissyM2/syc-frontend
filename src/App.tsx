@@ -5,6 +5,7 @@ import { AboutPage } from './pages/AboutPage';
 import { ContactUsPage } from './pages/ContactUsPage.tsx';
 import { HomePage } from './pages/HomePage.tsx';
 import { LandingPage } from './pages/LandingPage.tsx';
+import { UserAdminPage } from './pages/UserAdminPage.tsx';
 //import { LoginPage } from './pages/LoginPage';
 import { ProfilePage } from './pages/ProfilePage.tsx';
 //import { RegisterPage } from './pages/RegisterPage';
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: '/profile',
         element: <ProfilePage />,
+      },
+      {
+        path: '/user-admin',
+        element: <UserAdminPage />,
       },
 
       {

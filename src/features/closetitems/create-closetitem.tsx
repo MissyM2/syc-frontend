@@ -1,5 +1,6 @@
 import React from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
+import type { SubmitHandler } from 'react-hook-form';
 //import { Button, Form } from 'react-bootstrap';
 
 import { useNavigate } from 'react-router-dom';

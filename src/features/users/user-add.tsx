@@ -5,6 +5,10 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import type { Option } from '@/interfaces/Interfaces.tsx';
 import { useNavigate } from 'react-router-dom';
+import { addUser } from './userSlice';
+import type { User } from './userSlice';
+import { useDispatch } from 'react-redux';
+import type { AppDispatch } from '../../app/store';
 
 import { Input } from '../../components/ui/input.tsx';
 import { Button } from '../../components/ui/button.tsx';
@@ -41,6 +45,9 @@ export const UserAddPage: React.FC<UserAddPageProps> = ({ onUpdate }) => {
   const handleClick = () => {
     onUpdate(false);
   };
+
+  const dispatch = useDispatch<AppDispatch>();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -48,13 +55,15 @@ export const UserAddPage: React.FC<UserAddPageProps> = ({ onUpdate }) => {
     },
   });
 
-  async function onSubmit(userData: z.infer<typeof FormSchema>) {
-    let response = await createUser(userData);
+  async function onSubmit(newUserData: z.infer<typeof FormSchema>) {
+    console.log('newUserData is ' + JSON.stringify(newUserData));
+    dispatch(addUser(newUserData));
+    //let response = await createUser(userData);
 
-    console.log(response);
-    if (response.status !== 201) {
-      alert('User account counld not be created :(');
-    }
+    //console.log(response);
+    // if (response.status !== 201) {
+    //   alert('User account counld not be created :(');
+    // }
   }
 
   return (

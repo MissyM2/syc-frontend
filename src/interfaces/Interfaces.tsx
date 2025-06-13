@@ -1,11 +1,18 @@
 //import type { Category, Season, SortOption } from '../types/Types.tsx';
 
+// export interface User {
+//   name: string;
+//   emailAddress: string;
+//   password: string;
+//   dateCreated: Date;
+//   //closetitems: [];
+// }
 export interface User {
+  _id: number;
   name: string;
   emailAddress: string;
-  password: string;
+  password?: string;
   dateCreated: Date;
-  //closetitems: [];
 }
 
 export interface LoginUser {

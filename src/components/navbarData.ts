@@ -18,6 +18,12 @@ export const navbarData = [
       'text-slate-50 border-t border-white font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
   },
   {
+    title: 'User Admin',
+    href: '/user-admin',
+    cname:
+      'text-slate-50 border-t border-white font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
+  },
+  {
     title: 'About Us',
     href: '/about',
     cname:
