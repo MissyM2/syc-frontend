@@ -1,8 +1,11 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
-import { Button, Form } from 'react-bootstrap';
-//import { CheckboxGroup } from './components/CheckboxGroup';
+import { useForm, SubmitHandler } from 'react-hook-form';
+//import { Button, Form } from 'react-bootstrap';
+
+import { useNavigate } from 'react-router-dom';
 import { seasonItems, sizeItems, categoryItems } from './Closetitem-datas.ts';
+
+import { createClosetitem } from './closetitem-api.ts';
 
 interface Option {
   value: string;
@@ -16,6 +19,8 @@ interface FormData {
   size: string;
   desc: string;
   rating: string;
+  dateCreated: Date;
+  imageId: string;
   imageFile: FileList;
 }
 
@@ -34,11 +39,38 @@ export const CreateClosetitemPage: React.FC = () => {
       size: '',
       desc: '',
       rating: '',
+      imageId: '',
     },
   });
 
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const navigate = useNavigate();
+
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    console.log('data: ' + JSON.stringify(data));
+    if (data.imageFile && data.imageFile.length > 0) {
+      const file = data.imageFile[0];
+      console.log('Selected image:', file);
+      const modifiedData = {
+        ...data,
+        dateCreated: new Date(),
+        imageId: data.imageFile[0].name,
+        imageFile: file,
+      };
+
+      console.log('modified data: ' + JSON.stringify(modifiedData));
+
+      try {
+        const response = await createClosetitem(modifiedData);
+        const { errors = {} } = response?.data;
+        if (response) {
+          navigate('/home');
+        }
+      } catch (error) {
+        alert('Submitting form failed!');
+      }
+    } else {
+      return;
+    }
   };
 
   const watchSeasonOptions = watch('seasons');

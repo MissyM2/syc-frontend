@@ -35,44 +35,44 @@ export const FilterMenu: React.FC<FilterMenuProps> = ({
 
   const { token } = theme.useToken();
 
-  const filterItemsNest: CollapseProps['items'] = [
-    {
-      key: '1',
-      label: 'Categories',
-      children: (
-        <CheckboxGroup
-          selectedFilterName="categories"
-          selectedFilter={filters.categories}
-          options={categoryItems}
-          onCheckboxChange={onCheckboxChange}
-        />
-      ),
-    },
-    {
-      key: '2',
-      label: 'Seasons',
-      children: (
-        <CheckboxGroup
-          selectedFilterName="seasons"
-          selectedFilter={filters.seasons}
-          options={seasonItems}
-          onCheckboxChange={onCheckboxChange}
-        />
-      ),
-    },
-    {
-      key: '3',
-      label: 'Sizes',
-      children: (
-        <CheckboxGroup
-          selectedFilterName="sizes"
-          selectedFilter={filters.sizes}
-          options={sizeItems}
-          onCheckboxChange={onCheckboxChange}
-        />
-      ),
-    },
-  ];
+  // const filterItemsNest: CollapseProps['items'] = [
+  //   {
+  //     key: '1',
+  //     label: 'Categories',
+  //     children: (
+  //       <CheckboxGroup
+  //         selectedFilterName="categories"
+  //         selectedFilter={filters.categories}
+  //         options={categoryItems}
+  //         onCheckboxChange={onCheckboxChange}
+  //       />
+  //     ),
+  //   },
+  //   {
+  //     key: '2',
+  //     label: 'Seasons',
+  //     children: (
+  //       <CheckboxGroup
+  //         selectedFilterName="seasons"
+  //         selectedFilter={filters.seasons}
+  //         options={seasonItems}
+  //         onCheckboxChange={onCheckboxChange}
+  //       />
+  //     ),
+  //   },
+  //   {
+  //     key: '3',
+  //     label: 'Sizes',
+  //     children: (
+  //       <CheckboxGroup
+  //         selectedFilterName="sizes"
+  //         selectedFilter={filters.sizes}
+  //         options={sizeItems}
+  //         onCheckboxChange={onCheckboxChange}
+  //       />
+  //     ),
+  //   },
+  // ];
 
   const panelStyle: React.CSSProperties = {
     marginBottom: 24,
@@ -81,17 +81,17 @@ export const FilterMenu: React.FC<FilterMenuProps> = ({
     zIndex: 1000,
   };
 
-  const getFilterItems: (
-    panelStyle: CSSProperties
-  ) => CollapseProps['items'] = (panelStyle) => [
-    {
-      key: '1',
-      label: 'Filters',
-      children: <Collapse defaultActiveKey="1" items={filterItemsNest} />,
-      showArrow: false,
-      style: panelStyle,
-    },
-  ];
+  // const getFilterItems: (
+  //   panelStyle: CSSProperties
+  // ) => CollapseProps['items'] = (panelStyle) => [
+  //   {
+  //     key: '1',
+  //     label: 'Filters',
+  //     children: <Collapse defaultActiveKey="1" items={filterItemsNest} />,
+  //     showArrow: false,
+  //     style: panelStyle,
+  //   },
+  // ];
 
   // const getSortItems: (panelStyle: CSSProperties) => CollapseProps['items'] = (
   //   panelStyle
@@ -122,7 +122,7 @@ export const FilterMenu: React.FC<FilterMenuProps> = ({
             </fieldset>
           </form>
         </div>
-        <div className="flex flex-row">
+        {/* <div className="flex flex-row">
           <div className="w-1/2 me-3">
             <ConfigProvider
               theme={{
@@ -142,9 +142,9 @@ export const FilterMenu: React.FC<FilterMenuProps> = ({
                 items={getFilterItems(panelStyle)}
               />
             </ConfigProvider>
-          </div>
+          </div> */}
 
-          <div className="w-1/2 ms-3">
+        {/* <div className="w-1/2 ms-3">
             <ConfigProvider
               theme={{
                 token: {},
@@ -171,8 +171,8 @@ export const FilterMenu: React.FC<FilterMenuProps> = ({
                 </Panel>
               </Collapse>
             </ConfigProvider>
-          </div>
-        </div>
+          </div> 
+        </div>*/}
       </div>
     </div>
   );

@@ -31,7 +31,7 @@ export async function getClosetitem(id: string) {
   const response = await axios.get(`${URL}/syc/closetitems/${id}`); // first, go get the closetitem from mongo
 
   const closetitem = response.data;
-  console.log('inside getClosetitem: closetitem ' + JSON.stringify(closetitem));
+
   const data = await getImage(closetitem.imageId);
 
   closetitem.image = data;
@@ -41,7 +41,7 @@ export async function getClosetitem(id: string) {
 interface ReceivingFormData {
   category: string;
   name: string;
-  season: string;
+  seasons: string[];
   size: string;
   desc: string;
   rating: string;

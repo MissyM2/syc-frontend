@@ -65,38 +65,37 @@ export const HomePage: React.FC = () => {
   const sortAndFilterClosetitems = (filterObj: FilterObject) => {
     //console.log(filterObj.searchTerm);
     //console.log(filterObj.category);
-    return closetitems
-      .filter((closetitem) => {
-        return (
-          // filter by search term - check if closetitem.name includes the current search term
-          closetitem.name &&
-          closetitem.name
-            .toLowerCase()
-            .indexOf(filterObj.searchTerm.toLowerCase()) > -1 &&
-          //filter by category - check if closetitem.category is part of the options inside the filters.category array
-          (filterObj.categories.length > 0
-            ? filterObj.categories.includes(closetitem.category)
-            : true) &&
-          (filterObj.seasons.length > 0
-            ? filterObj.seasons.includes(closetitem.season)
-            : true) &&
-          (filterObj.sizes.length > 0
-            ? filterObj.sizes.includes(closetitem.size)
-            : true)
-        );
-        // expand with more checks to fit your data
-      })
-      .sort((a: any, b: any) => {
-        // first, get the name parameter
-        const seasonA = a.season.toLowerCase();
-        const seasonB = b.season.toLowerCase();
-        if (filterObj.sort === 'desc') {
-          //return seasonB.localeCompare(seasonA); // returns 1 if nameB > nameA and returns -1 if nameB < nameA
-        } else if (filterObj.sort === 'asc') {
-          return seasonA.localeCompare(seasonB); // returns 1 if nameA > nameB and returns -1 if nameA < nameB
-        }
-        return 0;
-      });
+    return closetitems.filter((closetitem) => {
+      return (
+        // filter by search term - check if closetitem.name includes the current search term
+        closetitem.name &&
+        closetitem.name
+          .toLowerCase()
+          .indexOf(filterObj.searchTerm.toLowerCase()) > -1 &&
+        //filter by category - check if closetitem.category is part of the options inside the filters.category array
+        (filterObj.categories.length > 0
+          ? filterObj.categories.includes(closetitem.category)
+          : true) &&
+        (filterObj.seasons.length > 0
+          ? filterObj.seasons.includes(closetitem.season)
+          : true) &&
+        (filterObj.sizes.length > 0
+          ? filterObj.sizes.includes(closetitem.size)
+          : true)
+      );
+      // expand with more checks to fit your data
+      //})
+      // .sort((a: any, b: any) => {
+      //   // first, get the name parameter
+      //   const seasonA = a.season.toLowerCase();
+      //   const seasonB = b.season.toLowerCase();
+      //   if (filterObj.sort === 'desc') {
+      //     //return seasonB.localeCompare(seasonA); // returns 1 if nameB > nameA and returns -1 if nameB < nameA
+      //   } else if (filterObj.sort === 'asc') {
+      //     return seasonA.localeCompare(seasonB); // returns 1 if nameA > nameB and returns -1 if nameA < nameB
+      //   }
+      return 0;
+    });
   };
 
   useEffect(() => {
