@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../app/store';
 import { navbarData } from './navbarData';
 import { BiMenu } from 'react-icons/bi';
 import { Button } from './ui/button.tsx';
 
 export const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+
+  const loggedInUser = useSelector(
+    (state: RootState) => state.auth.user?.emailAddress
+  );
+
   const navigate = useNavigate();
 
   const showNav = () => {
@@ -23,6 +30,9 @@ export const Navbar: React.FC = () => {
         <h1 className="text-xl text-rose-300 font-bold cursor-pointer">
           Shop Your Closet
         </h1>
+        <h3 className="text-xl text-rose-300 font-bold cursor-pointer">
+          Hi, {loggedInUser}
+        </h3>
 
         <button
           className="flex justify-end md:hidden ring-1 ring-black rounded"

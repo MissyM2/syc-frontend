@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../app/store';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -35,6 +37,8 @@ interface UserAddPageProps {
 }
 
 export const LoginPage: React.FC<UserAddPageProps> = ({ onUpdate }) => {
+  const isAuth = useSelector((state: RootState) => state.auth.isAuthenticated);
+  console.log('what is isAuth? ' + isAuth);
   const handleClick = () => {
     onUpdate(true);
   };
@@ -51,16 +55,13 @@ export const LoginPage: React.FC<UserAddPageProps> = ({ onUpdate }) => {
 
   async function onSubmit(userData: z.infer<typeof FormSchema>) {
     console.log('inside onSubmit');
-    console.log('userData ' + JSON.userData);
     dispatch(loginUser(userData));
-    // let response = await verifyUser(userData._id);
-    // if (response) {
-    //   sessionStorage.setItem('User', response);
-    //   axios.defaults.headers.common['authorization'] = `Bearer ${response}`;
-    //   navigate('/home');
-    // } else {
-    //   alert('Login Failed');
-    // }
+
+    if (isAuth === true) {
+      navigate('/home');
+    } else {
+      alert('Login Failed');
+    }
   }
 
   return (
