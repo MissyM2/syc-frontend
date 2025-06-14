@@ -51,6 +51,7 @@ export const LoginPage: React.FC<UserAddPageProps> = ({ onUpdate }) => {
 
   async function onSubmit(userData: z.infer<typeof FormSchema>) {
     console.log('inside onSubmit');
+    console.log('userData ' + JSON.userData);
     dispatch(loginUser(userData));
     // let response = await verifyUser(userData._id);
     // if (response) {

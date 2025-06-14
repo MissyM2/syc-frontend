@@ -15,13 +15,13 @@ export interface User {
   _id: string;
   name: string;
   emailAddress: string;
-  password?: string;
-  token?: string;
+  // password?: string;
+  // token?: string;
   dateCreated: Date;
 }
 
 // export interface LoginRequest {
-//   username: string;
+//   emailAddress: string;
 //   password: string;
 // }
 
@@ -32,8 +32,8 @@ export interface User {
 // }
 
 export interface AuthState {
+  user: User | null;
   token: string | null;
-  user: any | null;
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
@@ -68,13 +68,11 @@ export const registerUser = createAsyncThunk(
 export const loginUser = createAsyncThunk(
   'auth/login',
   async (
-    credentials: { emailAddress: string; password: string },
+    credentials: { email: string; password: string },
     { rejectWithValue }
   ) => {
     try {
       const response = await axiosInstance.post('api/login', credentials);
-
-      sessionStorage.setItem('token', response.data.token);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -131,12 +129,14 @@ const authSlice = createSlice({
       .addCase(
         loginUser.fulfilled,
         (state, action: PayloadAction<{ token: any; user: any }>) => {
-          console.log('what is user' + JSON.stringify(action.payload));
           state.loading = false;
           state.user = action.payload.user;
           state.isAuthenticated = true;
-          //state.token = action.payload.token;
-          sessionStorage.setItem('user', JSON.stringify(action.payload.user));
+          state.token = action.payload.token;
+          sessionStorage.setItem(
+            'emailAddress',
+            JSON.stringify(action.payload.user.emailAddress)
+          );
           sessionStorage.setItem('token', action.payload.token);
         }
       )
