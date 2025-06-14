@@ -68,18 +68,11 @@ export const registerUser = createAsyncThunk(
 export const loginUser = createAsyncThunk(
   'auth/login',
   async (
-    credentials: { name: string; password: string },
+    credentials: { emailAddress: string; password: string },
     { rejectWithValue }
   ) => {
-    console.log('inside loginuser');
     try {
-      console.log('inside try ');
-      console.log('what are credentials? ' + JSON.stringify(credentials));
       const response = await axiosInstance.post('api/login', credentials);
-      console.log('what is response? ' + JSON.stringify(response));
-      console.log('what is token? ' + response.data.token);
-      console.log('what is user? ' + response.data.user);
-      console.log('what is name? ' + response.data.name);
 
       sessionStorage.setItem('token', response.data.token);
       return response.data;
@@ -138,6 +131,7 @@ const authSlice = createSlice({
       .addCase(
         loginUser.fulfilled,
         (state, action: PayloadAction<{ token: any; user: any }>) => {
+          console.log('what is user' + JSON.stringify(action.payload));
           state.loading = false;
           state.user = action.payload.user;
           state.isAuthenticated = true;
