@@ -1,74 +1,86 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../app/store';
-import { navbarData } from './navbarData';
+import { navLinks, navAdminLinks } from './navbarData';
 import { BiMenu } from 'react-icons/bi';
 import { Button } from './ui/button.tsx';
 
-export const Navbar: React.FC = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+import { useViewportSize } from '@mantine/hooks';
+import { cn } from '../lib/utils';
 
-  const loggedInUser = useSelector(
-    (state: RootState) => state.auth.user?.emailAddress
-  );
+export const Navbar = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  //const { width } = useViewportSize();
 
-  const navigate = useNavigate();
+  //const isMobile = width < 768; // below md breakpoint
+  const isMobile = true;
 
-  const showNav = () => {
+  const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const handleLogout = () => {
-    sessionStorage.removeItem('User');
-    navigate('/');
-  };
+  // const closeMenuOnMobile = () => {
+  //   if (isMobile) {
+  //     setIsMenuOpen(false);
+  //   }
+  // };
 
   return (
-    <nav className=" z-10 fixed top-0 w-full bg-slate-400 items-center flex p-4">
-      <div className="flex justify-between items-center w-full flex-wrap md:flex-nowrap">
-        <h1 className="text-xl text-rose-300 font-bold cursor-pointer">
-          Shop Your Closet
-        </h1>
-        <h3 className="text-xl text-rose-300 font-bold cursor-pointer">
-          Hi, {loggedInUser}
-        </h3>
+    <header className="fixed w-full px-8  bg-slate-400 shadow-sm shadow-neutral-500 h-12 flex items-center">
+      <nav className="flex justify-between items-center w-full ">
+        <NavLink to="/" className="font-bold">
+          NavigationBar
+        </NavLink>
+        <div>
+          <ul
+            className={cn(
+              'flex content-center gap-8',
+              isMenuOpen &&
+                'bg-slate-300 shadow-sm flex-col fixed top-12 right-0 w-1/2 md:w-1/4 p-8 transform transition-transform duration-300 ease-in-out translate-x-0',
+              !isMenuOpen &&
+                isMobile &&
+                ' bg-slate-300 shadow-sm flex-col fixed top-10 right-0 w-1/2 md:w-1/4 p-8 transform transition-transform duration-300 ease-in-out translate-x-full'
+            )}
+          >
+            {navAdminLinks.map((link) => (
+              <li key={link.name}>
+                <div className="flex justify-center items-center w-75 bg-red-100 border-t border-white">
+                  <NavLink
+                    to={link.path}
+                    className={({ isActive }) =>
+                      isActive
+                        ? 'text-slate-100 font-medium '
+                        : 'text-slate-100 font-medium '
+                    }
+                    // onClick={closeMenuOnMobile}
+                  >
+                    {link.name}
+                  </NavLink>
+                </div>
+              </li>
+            ))}
+            {/* <a
+              href="https://chinwike.space"
+              className="rounded-lg py-2 px-4 bg-[#1FABEB]"
+            >
+              Explore Further
+            </a> */}
+          </ul>
+        </div>
 
         <button
-          className="flex justify-end md:hidden ring-1 ring-black rounded"
-          onClick={showNav}
+          aria-labelledby="Menu Toggle Button"
+          className="block"
+          onClick={toggleMenu}
         >
-          <BiMenu className="text-white w-9 h-9 flex justify-center items-center hover:text-black" />
+          {isMenuOpen ? (
+            <BiMenu className="text-white bg-red w-9 h-9 flex justify-center items-center hover:text-black" />
+          ) : (
+            <BiMenu className="text-white bg-red w-9 h-9 flex justify-center items-center hover:text-black" />
+          )}
         </button>
-
-        <ul
-          className={`${
-            isMenuOpen ? 'flex' : ' hidden'
-          } flex-col justify-center items-center w-full first:mt-2 md:flex-row md:w-auto md:space-x-10 md:flex`}
-        >
-          {navbarData.map((link, index) => {
-            return (
-              <li key={index} className={link.cname}>
-                <Link
-                  className="hover:text-slate-700"
-                  to={link.href}
-                  onClick={showNav}
-                >
-                  {link.title}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-        <Button
-          onClick={handleLogout}
-          className={`${
-            isMenuOpen ? ' flex' : ' hidden'
-          } text-slate-800 hover:bg-gray-300 mx-auto md:mx-0 md:flex md:mt-0 items-center justify-center font-medium bg-gray-100 px-1 p-2 rounded-lg mt-4 w-24`}
-        >
-          Logout
-        </Button>
-      </div>
-    </nav>
+      </nav>
+    </header>
   );
 };

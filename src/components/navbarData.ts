@@ -1,37 +1,52 @@
-export const navbarData = [
+interface NavLinkType {
+  name: string;
+  path: string;
+  cname: string;
+}
+
+export const navAdminLinks: NavLinkType[] = [
   {
-    title: 'Home',
-    href: '/home',
+    name: 'Profile',
+    path: '/profile',
+    cname:
+      'text-slate-50 border-t border-white font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
+  },
+  {
+    name: 'User Admin',
+    path: '/user-admin',
+    cname:
+      'text-slate-50 border-t border-white font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
+  },
+  {
+    name: 'Logout',
+    path: '/logout',
+    cname:
+      'text-rose-500 border-t border-white font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
+  },
+];
+
+export const navLinks: NavLinkType[] = [
+  {
+    name: 'Home',
+    path: '/home',
     cname:
       'text-slate-50 border-t border-white font-medium w-full flex justify-center p-2.5 mt-3 md:border-none md:p-0 md:mt-0 md:w-auto ',
   },
   {
-    title: 'Create Closet Item',
-    href: '/create-closet-item',
+    name: 'Create Closet Item',
+    path: '/create-closet-item',
     cname:
       'text-slate-50 border-t border-white font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
   },
   {
-    title: 'Profile',
-    href: '/profile',
+    name: 'About Us',
+    path: '/about',
     cname:
       'text-slate-50 border-t border-white font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
   },
   {
-    title: 'User Admin',
-    href: '/user-admin',
-    cname:
-      'text-slate-50 border-t border-white font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
-  },
-  {
-    title: 'About Us',
-    href: '/about',
-    cname:
-      'text-slate-50 border-t border-white font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
-  },
-  {
-    title: 'Contact',
-    href: '/contact',
+    name: 'Contact',
+    path: '/contact',
     cname:
       'text-slate-50 border-t border-white border-b font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
   },
