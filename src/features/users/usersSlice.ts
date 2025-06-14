@@ -4,13 +4,12 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import type { User } from '../../interfaces/Interfaces.tsx';
 import axios, { type AxiosResponse, AxiosError, isAxiosError } from 'axios';
 
-interface UsersState {
+export interface UsersState {
   users: User[];
   loading: boolean;
   error: string | null;
 }
 
-// Define the initial state using that type
 const initialState: UsersState = {
   users: [],
   loading: false,
@@ -20,10 +19,6 @@ const initialState: UsersState = {
 export type TUserList = User[];
 
 const URL = 'http://localhost:3000';
-// const USERS_URL =
-//   'mongodb+srv://fdmaloney:Daisl9515$!#@@fdmclustersandbox.0zdlunl.mongodb.net/syc-backend?retryWrites=true&w=majority&appName=FDMClusterSandbox/users';
-
-// async thunk for making the POST request
 
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
   const response: AxiosResponse = await axios.get<TUserList>(

@@ -3,12 +3,16 @@ import { useState, useEffect, useCallback } from 'react';
 import type { Closetitem } from '../interfaces/Interfaces.tsx';
 import { FilterMenu } from '../features/closetitems/components/FilterMenu.tsx';
 import { OutputList } from '../features/closetitems/components/OutputList.tsx';
-import {
-  getAllClosetitems,
-  //createClosetitem,
-  //updateClosetitem,
-  //deleteClosetitem,
-} from '../features/closetitems/closetitem-api.ts';
+// import {
+//   getAllClosetitems,
+//   //createClosetitem,
+//   //updateClosetitem,
+//   //deleteClosetitem,
+// } from '../features/closetitems/closetitem-api.ts';
+
+import { fetchClosetitems } from '../features/closetitems/closetitemsSlice';
+import { useDispatch } from 'react-redux';
+import type { AppDispatch } from '../app/store';
 
 import type { FilterObject } from '../interfaces/Interfaces';
 
@@ -98,13 +102,20 @@ export const HomePage: React.FC = () => {
     });
   };
 
+  const dispatch = useDispatch<AppDispatch>();
+
   useEffect(() => {
     const loadAllClosetitems = async () => {
       setLoading(true);
       setError(null);
       try {
-        const data = await getAllClosetitems();
-        setClosetitems(data ?? []);
+        const resultAction = await dispatch(fetchClosetitems());
+
+        if ('payload' in resultAction && Array.isArray(resultAction.payload)) {
+          setClosetitems(resultAction.payload);
+        } else {
+          setClosetitems([]);
+        }
       } catch (e: any) {
         setError(e.message);
       } finally {

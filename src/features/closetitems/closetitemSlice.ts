@@ -1,77 +1,93 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { RootState } from '../../app/store.ts';
+//import type { RootState } from '../../app/store.ts';
 import type { Closetitem } from '@/interfaces/Interfaces.tsx';
 import axios from 'axios';
 
-export interface ClosetItemsState {
-  closetitems: Closetitem[];
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+export interface ClosetItemState {
+  closetitem: Closetitem | null;
+  loading: boolean;
   error: string | null;
 }
 
 // Define the initial state using that type
-const initialState: ClosetItemsState = {
-  closetitems: [],
-  status: 'idle',
+const initialState: ClosetItemState = {
+  closetitem: null,
+  loading: false,
   error: null,
 };
 
-const CLOSETITEMS_URL =
-  'mongodb+srv://fdmaloney:Daisl9515$!#@@fdmclustersandbox.0zdlunl.mongodb.net/syc-backend?retryWrites=true&w=majority&appName=FDMClusterSandbox/closetitems';
-export const fetchClosetitems = createAsyncThunk(
-  'closetitems/fetchClosetitems',
-  async () => {
-    const response = await axios.get(CLOSETITEMS_URL);
-    return response.data as Closetitem[];
-  }
-);
+const URL = 'http://localhost:3000';
 
 // async thunk for making the POST request
-export const postNewClosetitem = createAsyncThunk(
-  'closetitems/postClosetitem',
-  async (newClosetitem: Omit<Closetitem, 'id'>) => {
-    const response = await axios.post(CLOSETITEMS_URL, newClosetitem);
-    return response.data as Closetitem;
+export const addClosetitem = createAsyncThunk(
+  'closetitem/addClosetitem',
+  async (newClosetitemData: Omit<Closetitem, '_id'>, { rejectWithValue }) => {
+    if (!newClosetitemData.imageFile) {
+      throw new Error('No file provided');
+    }
+    console.log('addClosetitem, newClosetitemData: ' + newClosetitemData);
+
+    // const imageId = newClosetitemData.imageFile.name;
+    // newClosetitemData.imageId = imageId;
+
+    // const data = await createImage(newClosetitemData.imageFile);
+    // if (data != null) {
+    //   console.log('check if image was created.');
+    // }
+
+    // try {
+    //   console.log(
+    //     'addClosetitem:try, newClosetitemData: ' +
+    //       JSON.stringify(newClosetitemData)
+    //   );
+    //   const response = await axios.post(
+    //     `${URL}/syc/closetitems`,
+    //     newClosetitemData
+    //   );
+    //   return response.data as Closetitem;
+    // } catch (error: any) {
+    //   return rejectWithValue(error.response?.data || 'An error occurred');
+    // }
   }
 );
 
+// does this need to be a redux action?
+export async function createImage(file: string | Blob) {
+  const formData = new FormData();
+  formData.append('imageFile', file);
+
+  try {
+    const response = await axios.post(`${URL}/images`, formData, {
+      headers: {},
+    });
+  } catch (error) {
+    console.error('Error:', error);
+  }
+
 const closetitemSlice = createSlice({
-  name: 'closetitems',
+  name: 'closetitem',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchClosetitems.pending, (state) => {
-        state.status = 'loading';
+      .addCase(addClosetitem.pending, (state) => {
+        state.loading = true;
+        state.error = null;
       })
       .addCase(
-        fetchClosetitems.fulfilled,
-        (state, action: PayloadAction<Closetitem[]>) => {
-          state.status = 'succeeded';
-          state.closetitems = action.payload;
-        }
-      )
-      .addCase(fetchClosetitems.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message || 'Failed to fetch closetitems.';
-      })
-      .addCase(postNewClosetitem.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(
-        postNewClosetitem.fulfilled,
+        addClosetitem.fulfilled,
         (state, action: PayloadAction<Closetitem>) => {
-          state.status = 'succeeded';
-          state.closetitems.push(action.payload);
+          state.loading = false;
+          state.closetitem = action.payload;
         }
       )
-      .addCase(postNewClosetitem.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message || 'Failed to create closetitem.';
+      .addCase(addClosetitem.rejected, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
 
-export const closetitemSelector = (state: RootState) => state.closetitemReducer;
+//export const closetitemSelector = (state: RootState) => state.closetitemReducer;
 export default closetitemSlice.reducer;

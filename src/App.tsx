@@ -8,7 +8,7 @@ import { LandingPage } from './pages/LandingPage.tsx';
 import { UserAdminPage } from './pages/UserAdminPage.tsx';
 //import { LoginPage } from './pages/LoginPage';
 import { ProfilePage } from './pages/ProfilePage.tsx';
-//import { RegisterPage } from './pages/RegisterPage';
+import { RegistrationPage } from './pages/RegistrationPage';
 import { CreateClosetitemPage } from './features/closetitems/create-closetitem.tsx';
 import { ViewClosetitemDetailPage } from './features/closetitems/view-closetitem-detail.tsx';
 import { NotFoundPage } from './pages/NotFoundPage';

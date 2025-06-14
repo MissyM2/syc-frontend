@@ -5,15 +5,15 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import type { Option } from '@/interfaces/Interfaces.tsx';
 import { useNavigate } from 'react-router-dom';
-import { addUser } from './userSlice';
-import type { User } from './userSlice';
+import { registerUser } from '../features/users/authSlice.ts';
+import type { User } from '../features/users/authSlice.ts';
 import { useDispatch } from 'react-redux';
-import type { AppDispatch } from '../../app/store';
+import type { AppDispatch } from '../app/store.ts';
 
-import { Input } from '../../components/ui/input.tsx';
-import { Button } from '../../components/ui/button.tsx';
+import { Input } from '../components/ui/input.tsx';
+import { Button } from '../components/ui/button.tsx';
 
-import { createUser } from './user-api.ts';
+import { createUser } from '../features/users/user-api.ts';
 
 import {
   Form,
@@ -37,11 +37,13 @@ const FormSchema = z.object({
   dateCreated: z.date(),
 });
 
-interface UserAddPageProps {
+interface RegistrationPageProps {
   onUpdate: (newValue: boolean) => void;
 }
 
-export const UserAddPage: React.FC<UserAddPageProps> = ({ onUpdate }) => {
+export const RegistrationPage: React.FC<RegistrationPageProps> = ({
+  onUpdate,
+}) => {
   const handleClick = () => {
     onUpdate(false);
   };
@@ -57,7 +59,7 @@ export const UserAddPage: React.FC<UserAddPageProps> = ({ onUpdate }) => {
 
   async function onSubmit(newUserData: z.infer<typeof FormSchema>) {
     console.log('newUserData is ' + JSON.stringify(newUserData));
-    dispatch(addUser(newUserData));
+    dispatch(registerUser(newUserData));
     //let response = await createUser(userData);
 
     //console.log(response);

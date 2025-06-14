@@ -1,25 +1,26 @@
 import React, { useState } from 'react';
-import { UserAddPage } from '../features/users/user-add.tsx';
+import { RegistrationPage } from './RegistrationPage.tsx';
 import { UserLoginPage } from '../features/users/user-login.tsx';
 import { Button } from '../components/ui/button.tsx';
 
 export const LandingPage: React.FC = () => {
   // view == 0 ---> Login
   // view == 1 ----> Create
-  const [showUserAddPage, setShowUserAddPage] = useState<boolean>(false);
+  const [showRegistrationPage, setShowRegistrationPage] =
+    useState<boolean>(false);
 
   const handleViewUpdate = (newValue: boolean) => {
-    setShowUserAddPage(newValue);
+    setShowRegistrationPage(newValue);
   };
   return (
     <div className="bg-slate-50">
-      {!showUserAddPage ? (
+      {!showRegistrationPage ? (
         <>
           <UserLoginPage onUpdate={handleViewUpdate} />
         </>
       ) : (
         <>
-          <UserAddPage onUpdate={handleViewUpdate} />
+          <RegistrationPage onUpdate={handleViewUpdate} />
         </>
       )}
     </div>

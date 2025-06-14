@@ -7,20 +7,20 @@
 //   dateCreated: Date;
 //   //closetitems: [];
 // }
-export interface User {
-  _id: number;
-  name: string;
-  emailAddress: string;
-  password?: string;
-  dateCreated: Date;
-}
+// export interface User {
+//   _id: number;
+//   name: string;
+//   emailAddress: string;
+//   password?: string;
+//   dateCreated: Date;
+// }
 
-export interface LoginUser {
-  emailAddress: string;
-  password: string;
-  dateLogin: Date;
-  //closetitems: [];
-}
+// export interface LoginUser {
+//   emailAddress: string;
+//   password: string;
+//   dateLogin: Date;
+//   //closetitems: [];
+// }
 
 interface ImageData {
   data: string;

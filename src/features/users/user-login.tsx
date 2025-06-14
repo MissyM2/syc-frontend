@@ -8,7 +8,7 @@ import axios from 'axios';
 import { Input } from '../../components/ui/input.tsx';
 import { Button } from '../../components/ui/button.tsx';
 
-import { verifyUser } from './user-api.ts';
+//import { verifyUser } from './user-api.ts';
 
 import {
   Form,
@@ -45,14 +45,14 @@ export const UserLoginPage: React.FC<UserAddPageProps> = ({ onUpdate }) => {
   const navigate = useNavigate();
 
   async function onSubmit(userData: z.infer<typeof FormSchema>) {
-    let response = await verifyUser(userData);
-    if (response) {
-      sessionStorage.setItem('User', response);
-      axios.defaults.headers.common['authorization'] = `Bearer ${response}`;
-      navigate('/home');
-    } else {
-      alert('Login Failed');
-    }
+    // let response = await verifyUser(userData._id);
+    // if (response) {
+    //   sessionStorage.setItem('User', response);
+    //   axios.defaults.headers.common['authorization'] = `Bearer ${response}`;
+    //   navigate('/home');
+    // } else {
+    //   alert('Login Failed');
+    // }
   }
 
   return (

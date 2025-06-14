@@ -26,7 +26,6 @@ export const UserAdminPage: React.FC = () => {
       setError(null);
       try {
         const resultAction = await dispatch(fetchUsers());
-        // Only set users if fetch was fulfilled and payload exists
         if ('payload' in resultAction && Array.isArray(resultAction.payload)) {
           setUsers(resultAction.payload);
         } else {
