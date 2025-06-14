@@ -3,10 +3,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
-import axios from 'axios';
+//import axios from 'axios';
+import { loginUser } from '../features/users/authSlice.ts';
+import { useDispatch } from 'react-redux';
+import type { AppDispatch } from '../app/store.ts';
 
-import { Input } from '../../components/ui/input.tsx';
-import { Button } from '../../components/ui/button.tsx';
+import { Input } from '../components/ui/input.tsx';
+import { Button } from '../components/ui/button.tsx';
 
 //import { verifyUser } from './user-api.ts';
 
@@ -24,27 +27,31 @@ const FormSchema = z.object({
     .email()
     .max(40, 'name must be less than 40 characters'),
   password: z.string().min(5, 'Password must be at least 8 characters'),
-  dateLogin: z.date(),
+  //dateLogin: z.date(),
 });
 
 interface UserAddPageProps {
   onUpdate: (newValue: boolean) => void;
 }
 
-export const UserLoginPage: React.FC<UserAddPageProps> = ({ onUpdate }) => {
+export const LoginPage: React.FC<UserAddPageProps> = ({ onUpdate }) => {
   const handleClick = () => {
     onUpdate(true);
   };
+
+  const dispatch = useDispatch<AppDispatch>();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    defaultValues: {
-      dateLogin: new Date(),
-    },
+    // defaultValues: {
+    //   dateLogin: new Date(),
+    // },
   });
 
   const navigate = useNavigate();
 
   async function onSubmit(userData: z.infer<typeof FormSchema>) {
+    console.log('inside onSubmit');
+    dispatch(loginUser(userData));
     // let response = await verifyUser(userData._id);
     // if (response) {
     //   sessionStorage.setItem('User', response);

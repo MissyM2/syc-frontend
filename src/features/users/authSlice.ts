@@ -2,8 +2,9 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 //import type { RootState } from '../../app/store.ts';
 //import type { User, LoginUser } from '../../interfaces/Interfaces.tsx';
-import axios, { type AxiosResponse, AxiosError, isAxiosError } from 'axios';
+//import axios, { type AxiosResponse, AxiosError, isAxiosError } from 'axios';
 import axiosInstance from '../../api/axiosInstance';
+import { jwtDecode } from 'jwt-decode';
 
 // export interface UserState {
 //   user: User | null;
@@ -11,24 +12,38 @@ import axiosInstance from '../../api/axiosInstance';
 //   error: string | null;
 // }
 export interface User {
-  _id: number;
+  _id: string;
   name: string;
   emailAddress: string;
   password?: string;
+  token?: string;
   dateCreated: Date;
 }
 
+// export interface LoginRequest {
+//   username: string;
+//   password: string;
+// }
+
+// export interface LoginResponse {
+//   user: User;
+//   token: string;
+//   message: string;
+// }
+
 export interface AuthState {
-  user: User | null;
   token: string | null;
-  //isAuthenticated: boolean;
+  user: any | null;
+  isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
 }
 
+const token = localStorage.getItem('token');
 const initialState: AuthState = {
   user: null,
   token: null,
+  isAuthenticated: !!token,
   loading: false,
   error: null,
 };
@@ -52,10 +67,21 @@ export const registerUser = createAsyncThunk(
 
 export const loginUser = createAsyncThunk(
   'auth/login',
-  async (credentials: any, { rejectWithValue }) => {
+  async (
+    credentials: { name: string; password: string },
+    { rejectWithValue }
+  ) => {
+    console.log('inside loginuser');
     try {
-      const response = await axiosInstance.post('/login', credentials);
-      localStorage.setItem('token', response.data.token);
+      console.log('inside try ');
+      console.log('what are credentials? ' + JSON.stringify(credentials));
+      const response = await axiosInstance.post('api/login', credentials);
+      console.log('what is response? ' + JSON.stringify(response));
+      console.log('what is token? ' + response.data.token);
+      console.log('what is user? ' + response.data.user);
+      console.log('what is name? ' + response.data.name);
+
+      sessionStorage.setItem('token', response.data.token);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -65,13 +91,15 @@ export const loginUser = createAsyncThunk(
 
 export const verifyToken = createAsyncThunk(
   'auth/verifyToken',
-  async (token: string, { rejectWithValue }) => {
+  // async (token: string, { rejectWithValue }) => {
+  async (credentials, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get('/api/verifyToken', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      // const response = await axiosInstance.get('/verifyToken', {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // });
+      const response = await axiosInstance.post('/login', credentials);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -84,9 +112,9 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      //localStorage.removeItem('token');
       state.token = null;
       state.user = null;
+      localStorage.removeItem('token');
     },
   },
   extraReducers: (builder) => {
@@ -111,8 +139,11 @@ const authSlice = createSlice({
         loginUser.fulfilled,
         (state, action: PayloadAction<{ token: any; user: any }>) => {
           state.loading = false;
-          state.token = action.payload.token;
           state.user = action.payload.user;
+          state.isAuthenticated = true;
+          //state.token = action.payload.token;
+          sessionStorage.setItem('user', JSON.stringify(action.payload.user));
+          sessionStorage.setItem('token', action.payload.token);
         }
       )
       .addCase(loginUser.rejected, (state, action: PayloadAction<any>) => {
