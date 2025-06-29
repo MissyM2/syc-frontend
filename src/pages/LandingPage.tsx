@@ -1,25 +1,26 @@
 import React, { useState } from 'react';
-import { RegistrationPage } from './RegistrationPage.tsx';
-import { LoginPage } from './LoginPage.tsx';
+import RegisterPage from './RegisterPage.jsx';
+import LoginPage from './LoginPage.jsx';
 
-export const LandingPage: React.FC = () => {
-  const [showRegistrationPage, setShowRegistrationPage] =
-    useState<boolean>(false);
+// const LandingPage: React.FC = () => {
+//   const [showRegisterPage, setShowRegisterPage] = useState<boolean>(false);
 
-  const handleViewUpdate = (newValue: boolean) => {
-    setShowRegistrationPage(newValue);
-  };
-  return (
-    <div className="bg-slate-50">
-      {!showRegistrationPage ? (
-        <>
-          <LoginPage onUpdate={handleViewUpdate} />
-        </>
-      ) : (
-        <>
-          <RegistrationPage onUpdate={handleViewUpdate} />
-        </>
-      )}
-    </div>
-  );
-};
+//   const handleViewUpdate = (newValue: boolean) => {
+//     setShowRegisterPage(newValue);
+//   };
+//   return (
+//     <div className="bg-slate-50">
+//       {!showRegisterPage ? (
+//         <>
+//           <LoginPage onUpdate={handleViewUpdate} />
+//         </>
+//       ) : (
+//         <>
+//           <RegisterPage onUpdate={handleViewUpdate} />
+//         </>
+//       )}
+//     </div>
+//   );
+// };
+
+export default LandingPage;

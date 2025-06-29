@@ -1,68 +1,47 @@
-import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import type { RootState } from '../app/store';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { z } from 'zod';
-//import axios from 'axios';
-import { loginUser } from '../features/users/authSlice.ts';
-import { useDispatch } from 'react-redux';
-import type { AppDispatch } from '../app/store.ts';
+import { useDispatch, useSelector } from 'react-redux';
+import { userLogin } from '../features/auth/authActions';
+import { useEffect } from 'react';
+import type { RootState, AppDispatch } from '../app/store';
 
-import { Input } from '../components/ui/input.tsx';
-import { Button } from '../components/ui/button.tsx';
-
-//import { verifyUser } from './user-api.ts';
-
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from '@/components/ui/form';
-
-const FormSchema = z.object({
-  emailAddress: z
-    .string()
-    .email()
-    .max(40, 'name must be less than 40 characters'),
-  password: z.string().min(5, 'Password must be at least 8 characters'),
-  //dateLogin: z.date(),
-});
+import Error from '../components/Error';
+import Spinner from '../components/Spinner';
 
 interface UserAddPageProps {
-  onUpdate: (newValue: boolean) => void;
+  //onUpdate: (newValue: boolean) => void;
 }
 
-export const LoginPage: React.FC<UserAddPageProps> = ({ onUpdate }) => {
-  const isAuth = useSelector((state: RootState) => state.auth.isAuthenticated);
-  console.log('what is isAuth? ' + isAuth);
-  const handleClick = () => {
-    onUpdate(true);
-  };
+interface LoginFormInputs {
+  email: string;
+  password: string;
+}
 
+const LoginPage: React.FC<UserAddPageProps> = () => {
+  const { loading, userInfo, error } = useSelector(
+    (state: RootState) => state.auth
+  );
   const dispatch = useDispatch<AppDispatch>();
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    // defaultValues: {
-    //   dateLogin: new Date(),
-    // },
-  });
+
+  const { register, handleSubmit } = useForm<LoginFormInputs>();
 
   const navigate = useNavigate();
 
-  async function onSubmit(userData: z.infer<typeof FormSchema>) {
-    console.log('inside onSubmit');
-    dispatch(loginUser(userData));
-
-    if (isAuth === true) {
-      navigate('/home');
-    } else {
-      alert('Login Failed');
+  // redirect authenticated user to profile screen
+  useEffect(() => {
+    if (userInfo) {
+      navigate('/dashboard');
     }
-  }
+  }, [navigate, userInfo]);
+
+  const submitForm = (data: LoginFormInputs) => {
+    dispatch(userLogin(data));
+  };
+
+  const handleClick = () => {
+    //onUpdate(true);
+    navigate('/register');
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-8">
@@ -71,73 +50,43 @@ export const LoginPage: React.FC<UserAddPageProps> = ({ onUpdate }) => {
       rounded-2xl shadow-[0_20px_50px_rgba(0,_29,_61,_0.7)] backdrop-blur-xl 
       border border-blue-800/30 relative animate-fade-in"
       >
-        <h2 className="text-3xl font-extrabold text-zinc-800 text-center mb-2 tracking-tight">
+        <h2 className="text-3xl font-extrabold text-black-500  text-center mb-2 tracking-tight">
           Shop Your Closet
         </h2>
-        <h3 className="text-xl font-extrabold text-zinc-800 text-center mb-2 tracking-tight">
+        <h3 className="text-xl font-extrabold text-black-500  text-center mb-2 tracking-tight">
           Sign In
         </h3>
-        <p className="text-zinc-800 text-center mb-8">
+        <p className="text-black-500  text-center mb-8">
           Sign in to continue your journey
         </p>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="mt-8 space-y-5 perspective-1000"
+        <form onSubmit={handleSubmit(submitForm)}>
+          {error && <Error>{error}</Error>}
+          <div className="flex flex-col justify-center">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              className="w-full py-2 px-4 mb-4 rounded border border-[#999999]"
+              {...register('email')}
+              required
+            />
+          </div>
+          <div className="flex flex-col justify-center">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              className="w-full py-2 px-4 mb-4 rounded border border-[#999999]"
+              {...register('password')}
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="relative text-sm p-2 bg-red-200 text-black-500 rounded-sm ease-in-out"
+            disabled={loading}
           >
-            <div>
-              <FormField
-                control={form.control}
-                name="emailAddress"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        placeholder={'Email'}
-                        className="w-full p-4 bg-blue-100/30 rounded-xl border border-blue-500/50 text-rose-400 
-                                placeholder-blue-300/50 outline-none focus:ring-2 
-                                focus:ring-rose-400/50 focus:border-transparent transition-all"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div>
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        className="w-full p-4 bg-blue-100/30 rounded-xl border border-blue-500/50 text-rose-400 
-                                placeholder-blue-300/50 outline-none focus:ring-2 
-                                focus:ring-rose-400/50 focus:border-transparent transition-all"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <Button
-              type="submit"
-              className="group[ w-full p-4 mt-6 bg-gradient-to-r 
-            from-rose-400 to-rose-300 text-zinc-800 rounded-xl font-bold 
-            shadow-lg hover:shadow-rose-400/40 overflow-hidden transform transform-style-3d 
-            hover:-translate-y-0.5 hover:scale-105 hover:translate-z-20 
-            transition-all duration-300 relative"
-            >
-              Login
-            </Button>
-          </form>
-        </Form>
+            {loading ? <Spinner /> : 'Login'}
+          </button>
+        </form>
         <p className="mt-8 text-zinc-500/80 text-center">
           Need to create an account?
           <span
@@ -152,3 +101,5 @@ export const LoginPage: React.FC<UserAddPageProps> = ({ onUpdate }) => {
     </div>
   );
 };
+
+export default LoginPage;

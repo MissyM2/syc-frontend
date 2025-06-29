@@ -1,7 +1,16 @@
-import React from 'react';
+interface ErrorProps {
+  children: React.ReactNode;
+}
 
-const Error: React.FC = () => {
-  return <div>This is the Error Page</div>;
+const Error: React.FC<ErrorProps> = ({ children, ...props }) => {
+  return (
+    <div
+      style={{ color: '#f23838', textAlign: 'center', margin: '0.5rem 0' }}
+      {...props}
+    >
+      {children}
+    </div>
+  );
 };
 
 export default Error;

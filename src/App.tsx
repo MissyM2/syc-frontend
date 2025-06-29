@@ -1,79 +1,68 @@
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import {
+  Navigate,
+  RouterProvider,
+  createBrowserRouter,
+} from 'react-router-dom';
 
-//import Header from './components/HeaderPage.tsx';
+import ProfilePage from './pages/ProfilePage';
+import Dashboard from './pages/Dashboard';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import ProtectedRoute from './routing/ProtectedRoute';
+import RootLayout from './components/RootLayout';
 import { AboutPage } from './pages/AboutPage';
 import { ContactUsPage } from './pages/ContactUsPage.tsx';
-import { HomePage } from './pages/HomePage.tsx';
-import { LandingPage } from './pages/LandingPage.tsx';
+
 import { UserAdminPage } from './pages/UserAdminPage.tsx';
-//import { LoginPage } from './pages/LoginPage';
-import { ProfilePage } from './pages/ProfilePage.tsx';
-import { RegistrationPage } from './pages/RegistrationPage';
+
 import { CreateClosetitemPage } from './features/closetitems/create-closetitem.tsx';
 import { ViewClosetitemDetailPage } from './features/closetitems/view-closetitem-detail.tsx';
 import { NotFoundPage } from './pages/NotFoundPage';
 
-import { RootLayout } from './components/RootLayout';
-//import UserRegistrationPage from './features/users/user-reg.tsx';
-
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <LandingPage />,
+    element: <LoginPage />,
   },
   {
-    path: '/',
-    element: <RootLayout />,
+    path: '/register',
+    element: <RegisterPage />,
+  },
+  {
+    element: <ProtectedRoute />,
     children: [
       {
-        path: '/home',
-        element: <HomePage />,
-      },
-      // {
-      //   path: '/register',
-      //   element: <RegisterPage />,
-      // },
-      // {
-      //   path: '/login',
-      //   element: <LoginPage />,
-      // },
-      {
-        path: '/profile',
-        element: <ProfilePage />,
-      },
-      {
-        path: '/user-admin',
-        element: <UserAdminPage />,
-      },
-
-      {
-        path: '/create-closet-item',
-        element: <CreateClosetitemPage />,
-      },
-
-      {
-        path: '/view-closetitem-detail/:id',
-        element: <ViewClosetitemDetailPage />,
-      },
-      {
-        path: '/about',
-        element: <AboutPage />,
-      },
-      {
-        path: '/contact',
-        element: <ContactUsPage />,
-      },
-
-      {
-        path: '*',
-        element: <NotFoundPage />,
+        element: <RootLayout />,
+        children: [
+          {
+            path: '/dashboard',
+            element: <Dashboard />,
+          },
+          {
+            path: '*', // Catch-all route for any path not matched above
+            element: <Navigate to="/" replace />, // Redirect to home page
+          },
+        ],
       },
     ],
   },
 ]);
+//           {
+//             path: '/user-profile',
+//             element: <ProfilePage />,
+//           },
+//         ],
+//       },
+
+//       {
+//         path: '*', // Catch-all route for any path not matched above
+//         element: <Navigate to="/" replace />, // Redirect to home page
+//       },
+//     ],
+//   },
+// ]);
 
 function App() {
-  // return <UserRegistrationPage />;
   return <RouterProvider router={router} />;
 }
 
