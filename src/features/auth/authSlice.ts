@@ -34,6 +34,7 @@ const authSlice = createSlice({
       Object.assign(state, initialState);
     },
     setCredentials: (state, { payload }) => {
+      console.log('authSlice: payload is ' + JSON.stringify(payload));
       state.userInfo = payload;
     },
   },

@@ -24,7 +24,7 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     if (data) {
-      //console.log('inside useEffect, what is data? ' + JSON.stringify(data));
+      console.log('inside useEffect, what is data? ' + JSON.stringify(data));
       dispatch(setCredentials(data));
     }
   }, [data, dispatch]);
@@ -45,7 +45,7 @@ const Header: React.FC = () => {
           {isFetching
             ? `Fetching your profile...`
             : userInfo !== null
-            ? `Logged in as ${userInfo.name}`
+            ? `Logged in as ${userInfo.userName}`
             : "You're not logged in"}
         </span>
         <ul className="hidden md:flex flex-row justify-center items-center first:mt-2 md:flex-row md:w-auto md:space-x-10 md:flex`">
