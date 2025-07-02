@@ -29,11 +29,15 @@ interface ClosetitemSubmitted {
   string: string;
 }
 
+interface ClosetDataResponse {
+  closetitems: Closetitem[];
+}
+
 export interface FetchClosetitemsByUserArgs {
   userId: string;
 }
 
-//export type TClosetitemList = Closetitem[];
+export type TClosetitemList = Closetitem[];
 
 const URL = 'http://localhost:3000';
 
@@ -97,14 +101,14 @@ export const getClosetitemsByUserId = createAsyncThunk<
   Closetitem[],
   FetchClosetitemsByUserArgs,
   { rejectValue: AxiosError }
->('closetitems/getUserClosetitems', async (args, { rejectWithValue }) => {
+>('closetitems/getClosetitemsByUserId', async (args, { rejectWithValue }) => {
   try {
-    console.log('getClosetitemsByUser, inside');
-    const response: AxiosResponse<Closetitem[]> = await axios.get<Closetitem[]>(
-      `${URL}/api/closetitems?userId=${args.userId}`
-    );
+    const response: AxiosResponse<ClosetDataResponse> =
+      await axios.get<ClosetDataResponse>(
+        `${URL}/api/closetitems/user/${args}/closetitems`
+      );
 
-    return response.data;
+    return response.data.closetitems;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       return rejectWithValue(error); // Reject with the AxiosError

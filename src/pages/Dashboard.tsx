@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react';
-// import { FilterMenu } from '../features/closetitems/components/FilterMenu.tsx';
+import { FilterMenu } from '../features/closetitems/components/FilterMenu.tsx';
 import { OutputList } from '../features/closetitem/components/OutputList.tsx';
 import {
   //getAllClosetitems,
   getClosetitemsByUserId,
 } from '../features/closetitem/closetitemActions.ts';
-import { useDispatch } from 'react-redux';
-import type { AppDispatch } from '../app/store';
-
-//import type { FilterObject } from '../interfaces/Interfaces';
+import { useDispatch, useSelector } from 'react-redux';
+import type { RootState, AppDispatch } from '../app/store';
 
 //const URL = 'http://localhost:3000';
 
@@ -26,21 +24,30 @@ interface Closetitem {
 
 export type TClosetitemList = Closetitem[];
 
+interface FilterObject {
+  searchTerm: string;
+  categories: string[];
+  seasons: string[];
+  sizes: string[];
+  sort: string;
+}
+
 const Dashboard: React.FC = () => {
   const [closetitems, setClosetitems] = useState<Closetitem[]>([]);
-  //const [filteredClosetitems, setFilteredClosetitems] = useState<Closetitem[]>(
-  //   []
-  // );
+  const { userInfo } = useSelector((state: RootState) => state.auth);
+  const [filteredClosetitems, setFilteredClosetitems] = useState<Closetitem[]>(
+    []
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // const [filters, setFilters] = useState<FilterObject>({
-  //   searchTerm: '',
-  //   categories: [],
-  //   seasons: [],
-  //   sizes: [],
-  //   sort: 'asc',
-  // });
+  const [filters, setFilters] = useState<FilterObject>({
+    searchTerm: '',
+    categories: [],
+    seasons: [],
+    sizes: [],
+    sort: 'asc',
+  });
 
   // const handleCheckboxChange = useCallback(
   //   (filterName: string, value: string, isChecked: boolean) => {
@@ -72,41 +79,41 @@ const Dashboard: React.FC = () => {
   //   []
   // );
 
-  // const sortAndFilterClosetitems = (filterObj: FilterObject) => {
-  //   //console.log(filterObj.searchTerm);
-  //   //console.log(filterObj.category);
-  //   return closetitems.filter((closetitem) => {
-  //     return (
-  //       // filter by search term - check if closetitem.name includes the current search term
-  //       closetitem.name &&
-  //       closetitem.name
-  //         .toLowerCase()
-  //         .indexOf(filterObj.searchTerm.toLowerCase()) > -1 &&
-  //       //filter by category - check if closetitem.category is part of the options inside the filters.category array
-  //       (filterObj.categories.length > 0
-  //         ? filterObj.categories.includes(closetitem.category)
-  //         : true) &&
-  //       (filterObj.seasons.length > 0
-  //         ? filterObj.seasons.includes(closetitem.season)
-  //         : true) &&
-  //       (filterObj.sizes.length > 0
-  //         ? filterObj.sizes.includes(closetitem.size)
-  //         : true)
-  //     );
-  //     // expand with more checks to fit your data
-  //     //})
-  //     // .sort((a: any, b: any) => {
-  //     //   // first, get the name parameter
-  //     //   const seasonA = a.season.toLowerCase();
-  //     //   const seasonB = b.season.toLowerCase();
-  //     //   if (filterObj.sort === 'desc') {
-  //     //     //return seasonB.localeCompare(seasonA); // returns 1 if nameB > nameA and returns -1 if nameB < nameA
-  //     //   } else if (filterObj.sort === 'asc') {
-  //     //     return seasonA.localeCompare(seasonB); // returns 1 if nameA > nameB and returns -1 if nameA < nameB
-  //     //   }
-  //     return 0;
-  //   });
-  // };
+  const sortAndFilterClosetitems = (filterObj: FilterObject) => {
+    //console.log(filterObj.searchTerm);
+    //console.log(filterObj.category);
+    return closetitems.filter((closetitem) => {
+      return (
+        // filter by search term - check if closetitem.name includes the current search term
+        closetitem.itemName &&
+        closetitem.itemName
+          .toLowerCase()
+          .indexOf(filterObj.searchTerm.toLowerCase()) > -1 &&
+        //filter by category - check if closetitem.category is part of the options inside the filters.category array
+        (filterObj.categories.length > 0
+          ? filterObj.categories.includes(closetitem.category)
+          : true) &&
+        (filterObj.seasons.length > 0
+          ? filterObj.seasons.includes(closetitem.season)
+          : true) &&
+        (filterObj.sizes.length > 0
+          ? filterObj.sizes.includes(closetitem.size)
+          : true)
+      );
+      // expand with more checks to fit your data
+      //})
+      // .sort((a: any, b: any) => {
+      //   // first, get the name parameter
+      //   const seasonA = a.season.toLowerCase();
+      //   const seasonB = b.season.toLowerCase();
+      //   if (filterObj.sort === 'desc') {
+      //     //return seasonB.localeCompare(seasonA); // returns 1 if nameB > nameA and returns -1 if nameB < nameA
+      //   } else if (filterObj.sort === 'asc') {
+      //     return seasonA.localeCompare(seasonB); // returns 1 if nameA > nameB and returns -1 if nameA < nameB
+      //   }
+      return 0;
+    });
+  };
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -115,11 +122,8 @@ const Dashboard: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        const resultAction = await dispatch(getClosetitemsByUserId());
-        console.log(
-          'FE:Dashboard, useEffect, resultAction ' +
-            JSON.stringify(resultAction)
-        );
+        const userId = userInfo._id.toString();
+        const resultAction = await dispatch(getClosetitemsByUserId(userId));
 
         if ('payload' in resultAction && Array.isArray(resultAction.payload)) {
           setClosetitems(resultAction.payload);
@@ -135,10 +139,10 @@ const Dashboard: React.FC = () => {
     loadAllClosetitems();
   }, []);
 
-  // useEffect(() => {
-  //   const data = sortAndFilterClosetitems(filters);
-  //   setFilteredClosetitems(data);
-  // }, [filters, closetitems]);
+  useEffect(() => {
+    const data = sortAndFilterClosetitems(filters);
+    setFilteredClosetitems(data);
+  }, [filters, closetitems]);
 
   if (loading) {
     return <p>Loading Closet Items...</p>;
@@ -158,7 +162,7 @@ const Dashboard: React.FC = () => {
         onCheckboxChange={handleCheckboxChange}
       />
       Filters: {JSON.stringify(filters)}*/}
-      <OutputList data={closetitems} />
+      <OutputList data={filteredClosetitems} />
     </div>
   );
 };
