@@ -2,9 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 //import axios from 'axios';
 import type { User } from '../interfaces/Interfaces.tsx';
 
-import { OutputList } from '../features/users/components/OutputList.tsx';
+import { OutputList } from '../features/user/components/OutputList.tsx';
 //import { getAllUsers } from '../features/users/user-api.ts';
-import { fetchUsers } from '../features/users/usersSlice';
+import { fetchUsers } from '../features/user/userSlice.ts';
 import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '../app/store';
 

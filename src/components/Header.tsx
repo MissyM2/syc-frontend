@@ -24,7 +24,7 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     if (data) {
-      console.log('inside useEffect, what is data? ' + JSON.stringify(data));
+      //console.log('inside useEffect, what is data? ' + JSON.stringify(data));
       dispatch(setCredentials(data));
     }
   }, [data, dispatch]);

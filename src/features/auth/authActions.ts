@@ -1,12 +1,5 @@
-import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-
-const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000', // Replace with your API URL
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+import axios from 'axios';
 
 interface UserLoginCredentials {
   email: string;
@@ -14,21 +7,23 @@ interface UserLoginCredentials {
 }
 
 interface UserRegistrationCredentials {
-  name: string;
+  userName: string;
   email: string;
   password: string;
 }
 
+const URL = 'http://localhost:3000';
+
+// #1 User Login
 export const userLogin = createAsyncThunk(
   'auth/login',
   async ({ email, password }: UserLoginCredentials, { rejectWithValue }) => {
     try {
-      const { data } = await axiosInstance.post('/api/users/login', {
+      const { data } = await axios.post(`${URL}/api/users/login`, {
         email,
         password,
       });
 
-      // store user's token in local storage
       sessionStorage.setItem('userToken', data.userToken);
       return data;
     } catch (error: any) {
@@ -37,15 +32,16 @@ export const userLogin = createAsyncThunk(
   }
 );
 
+// #2 User Registration
 export const registerUser = createAsyncThunk(
   'auth/register',
   async (
-    { name, email, password }: UserRegistrationCredentials,
+    { userName, email, password }: UserRegistrationCredentials,
     { rejectWithValue }
   ) => {
     try {
-      const response = await axiosInstance.post('/api/users/register', {
-        name,
+      const response = await axios.post('/api/users/register', {
+        userName,
         email,
         password,
       });

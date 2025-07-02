@@ -15,8 +15,8 @@ import { ContactUsPage } from './pages/ContactUsPage.tsx';
 
 import { UserAdminPage } from './pages/UserAdminPage.tsx';
 
-import { CreateClosetitemPage } from './features/closetitems/create-closetitem.tsx';
-import { ViewClosetitemDetailPage } from './features/closetitems/view-closetitem-detail.tsx';
+import { CreateClosetitemPage } from './features/closetitem/create-closetitem.tsx';
+import { ViewClosetitemDetailPage } from './features/closetitem/view-closetitem-detail.tsx';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 const router = createBrowserRouter([

@@ -6,7 +6,7 @@ import { CheckboxGroup } from './CheckboxGroup.tsx';
 import type { ChangeEvent } from 'react';
 import { categoryItems, seasonItems, sizeItems } from '../Closetitem-datas.ts';
 
-import type { FilterObject } from '../../../interfaces/Interfaces';
+import type { FilterObject } from '../../../interfaces/Interfaces.tsx';
 import type { CSSProperties } from 'react';
 
 const { Panel } = Collapse;
