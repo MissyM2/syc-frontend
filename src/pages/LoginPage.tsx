@@ -61,20 +61,31 @@ const LoginPage: React.FC<UserAddPageProps> = () => {
         </p>
         <form onSubmit={handleSubmit(submitForm)}>
           {error && <Error>{error}</Error>}
-          <div className="flex flex-col justify-center">
-            <label htmlFor="email">Email</label>
+          <div className="mb-4">
+            <label
+              htmlFor="email"
+              className="block text-gray-700 text-sm font-bold mb-2"
+            >
+              Email
+            </label>
             <input
               type="email"
-              className="w-full py-2 px-4 mb-4 rounded border border-[#999999]"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               {...register('email')}
               required
             />
           </div>
-          <div className="flex flex-col justify-center">
-            <label htmlFor="password">Password</label>
+          <div className="mb-6">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="password"
+            >
+              Password
+            </label>
             <input
               type="password"
-              className="w-full py-2 px-4 mb-4 rounded border border-[#999999]"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="******************"
               {...register('password')}
               required
             />

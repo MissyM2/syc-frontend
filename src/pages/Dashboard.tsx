@@ -162,7 +162,7 @@ const Dashboard: React.FC = () => {
 
   const handleClick = () => {
     alert('Round button clicked!');
-    navigate('/create-closet-item');
+    navigate('/addclosetitem');
   };
 
   return (

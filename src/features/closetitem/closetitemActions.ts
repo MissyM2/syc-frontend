@@ -14,7 +14,7 @@ interface Closetitem {
   rating: string;
   imageFile: ImageData;
   imageId?: string;
-  user: string;
+  userId: string;
 }
 
 interface ClosetitemSubmitted {
@@ -26,7 +26,7 @@ interface ClosetitemSubmitted {
   rating: string;
   imageId: string;
   imageFile?: File;
-  string: string;
+  userId: string;
 }
 
 interface ClosetDataResponse {
@@ -47,7 +47,7 @@ export const addClosetitem = createAsyncThunk<
   ClosetitemSubmitted,
   { rejectValue: AxiosError }
 >(
-  'closetitems/addClosetitem',
+  'closetitems/addclosetitem',
   async (closetitem: ClosetitemSubmitted, { rejectWithValue }) => {
     try {
       if (!closetitem.imageFile) {
@@ -61,11 +61,17 @@ export const addClosetitem = createAsyncThunk<
         console.log('check if image was created.');
       }
 
+      console.log(
+        'what is closetitem before post? ' + JSON.stringify(closetitem)
+      );
+
       // Create the closet closetitem
       const response = await axios.post(
-        `${URL}/api/closetitems/create-closetitem`,
+        `${URL}/api/closetitems/addclosetitem`,
         closetitem
       );
+
+      console.log('what is response AFTER post? ' + JSON.stringify(response));
 
       // You might want to extract the relevant data from the response before returning
       return response.data as Closetitem; // Assuming the successful response data structure is ClosetClosetitem

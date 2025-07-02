@@ -15,7 +15,7 @@ import { ContactUsPage } from './pages/ContactUsPage.tsx';
 
 import { UserAdminPage } from './pages/UserAdminPage.tsx';
 
-import { CreateClosetitemPage } from './features/closetitem/create-closetitem.tsx';
+import { AddClosetitemPage } from './pages/AddClosetitemPage.tsx';
 import { ViewClosetitemDetailPage } from './features/closetitem/view-closetitem-detail.tsx';
 import { NotFoundPage } from './pages/NotFoundPage';
 
@@ -37,6 +37,10 @@ const router = createBrowserRouter([
           {
             path: '/dashboard',
             element: <Dashboard />,
+          },
+          {
+            path: '/addclosetitem',
+            element: <AddClosetitemPage />,
           },
           {
             path: '*', // Catch-all route for any path not matched above
