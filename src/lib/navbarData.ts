@@ -6,12 +6,6 @@ interface NavLinkType {
 
 export const navAdminLinks: NavLinkType[] = [
   {
-    name: 'Create Closet Item',
-    path: '/create-closet-item',
-    cname:
-      'flex md:hidden bg-gray-200 border-t border-white font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
-  },
-  {
     name: 'About Us',
     path: '/about',
     cname:
@@ -38,12 +32,6 @@ export const navAdminLinks: NavLinkType[] = [
 ];
 
 export const navLinks: NavLinkType[] = [
-  {
-    name: 'Create Closet Item',
-    path: '/create-closet-item',
-    cname:
-      'hidden md:flex bg-gray-200 border-t border-white font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
-  },
   {
     name: 'About Us',
     path: '/about',

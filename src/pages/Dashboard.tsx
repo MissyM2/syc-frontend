@@ -8,6 +8,11 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '../app/store';
 
+import { useNavigate } from 'react-router-dom';
+
+import { FaPlus } from 'react-icons/fa6';
+import RoundButton from '../features/closetitem/components/RoundButton.tsx';
+
 //const URL = 'http://localhost:3000';
 
 interface Closetitem {
@@ -48,6 +53,8 @@ const Dashboard: React.FC = () => {
     sizes: [],
     sort: 'asc',
   });
+
+  const navigate = useNavigate();
 
   // const handleCheckboxChange = useCallback(
   //   (filterName: string, value: string, isChecked: boolean) => {
@@ -153,9 +160,18 @@ const Dashboard: React.FC = () => {
   }
   //console.log('what is closetitems? ' + JSON.stringify(closetitems));
 
+  const handleClick = () => {
+    alert('Round button clicked!');
+    navigate('/create-closet-item');
+  };
+
   return (
     <div className="w-full">
-      missy
+      <div className="flex justify-end">
+        <RoundButton onClick={handleClick}>
+          <FaPlus className="h-10 w-10" />
+        </RoundButton>
+      </div>
       {/* <FilterMenu
         filters={filters}
         setFilters={setFilters}
