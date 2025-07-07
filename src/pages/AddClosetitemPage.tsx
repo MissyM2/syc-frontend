@@ -31,7 +31,6 @@ interface FormData {
   size: string;
   desc: string;
   rating: string;
-  //userToken: string;
   imageId: string;
   imageFile: FileList;
 }
@@ -39,7 +38,6 @@ interface FormData {
 export const AddClosetitemPage: React.FC = () => {
   //const { loading, error } = useSelector((state: RootState) => state.auth);
   const { userInfo } = useSelector((state: RootState) => state.auth);
-  //const { userToken } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
 
   // const [loading, setLoading] = useState<boolean>(true);
@@ -58,7 +56,6 @@ export const AddClosetitemPage: React.FC = () => {
       size: '',
       desc: '',
       rating: '',
-      //userToken: '',
       imageId: '',
     },
   });

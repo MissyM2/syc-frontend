@@ -138,7 +138,7 @@ const Dashboard: React.FC = () => {
           setClosetitems([]);
         }
       } catch (e: any) {
-        setError(e.message);
+        setError('missy' + e.message);
       } finally {
         setLoading(false);
       }

@@ -1,6 +1,6 @@
 import type { AppDispatch, RootState } from '@/app/store';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axiosInstance from 'axios';
+import { api } from '../../index.tsx';
 import type { AxiosError, AxiosResponse } from 'axios';
 
 export interface User {
@@ -17,12 +17,12 @@ export const getAllUsers = createAsyncThunk<
   { rejectValue: AxiosError }
 >('users/getAllUsers', async (_, { rejectWithValue }) => {
   try {
-    const response: AxiosResponse<User[]> = await axiosInstance.get<User[]>(
+    const response: AxiosResponse<User[]> = await api.get<User[]>(
       `${URL}/api/users`
     );
     return response.data;
   } catch (error) {
-    if (axiosInstance.isAxiosError(error)) {
+    if (api.isAxiosError(error)) {
       return rejectWithValue(error); // Reject with the AxiosError
     }
     throw error; // Re-throw other errors
@@ -49,7 +49,7 @@ export const updateUser = createAsyncThunk<
     const updatedUser = await response.json();
     return updatedUser;
   } catch (error) {
-    if (axiosInstance.isAxiosError(error)) {
+    if (api.isAxiosError(error)) {
       return rejectWithValue(error); // Reject with the AxiosError
     }
     throw error; // Re-throw other errors
@@ -73,7 +73,7 @@ export const deleteUser = createAsyncThunk<
     // Return the deleted user ID
     return userId;
   } catch (error) {
-    if (axiosInstance.isAxiosError(error)) {
+    if (api.isAxiosError(error)) {
       return rejectWithValue(error); // Reject with the AxiosError
     }
     throw error; // Re-throw other errors

@@ -1,53 +1,53 @@
-// import axios from 'axios';
-
-// const axiosInstance = axios.create({
-//   baseURL: 'http://localhost:3000', // Replace with your API URL
-//   headers: {
-//     'Content-Type': 'application/json',
-//   },
-// });
-
-// export default axiosInstance;
-
-// api/axiosInstance.ts
 import axios from 'axios';
-import store from './store';
-import { logout } from '../features/auth/authSlice';
+import type { AxiosInstance } from 'axios';
+import type { Store } from 'redux';
+import type { RootState } from './store';
+//import { logoutUser } from '../features/auth/authSlice';
 
-const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+const setupAxiosInterceptors = (store: Store<RootState>): AxiosInstance => {
+  const instance: AxiosInstance = axios.create({
+    baseURL: 'http://localhost:3000',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    timeout: 5000,
+  });
 
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = store.getState().auth.token;
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+  instance.interceptors.request.use(
+    (config) => {
+      const state = store.getState();
+      const token = state.auth.token; // Adjust path to your token in Redux state
+
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      console.log('inside axiosInstance: what is token? ' + token);
+      console.log(
+        'inside axiosInstance: what is config? ' + JSON.stringify(config)
+      );
+      return config;
+    },
+    (error) => Promise.reject(error)
+  );
+
+  // Response Interceptor: Handle token expiry and refresh (optional)
+  instance.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+      const originalRequest = error.config;
+      if (error.response.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        // Implement token refresh logic here, e.g., dispatch a refresh token action
+        // await store.dispatch(refreshTokenAction());
+        // const newToken = store.getState().auth.token; // Get new token from state
+        // originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        // return instance(originalRequest);
+      }
+      return Promise.reject(error);
     }
-    console.log('inside axiosInstance: what is token? ' + token);
-    console.log('inside axiosInstance: what is config? ' + config);
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+  );
 
-axiosInstance.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    if (error.response && error.response.status === 401) {
-      // Handle unauthorized access, e.g., clear token and redirect to login
-      store.dispatch(logout());
-      // Optionally, redirect to login page here using react-router-dom or similar
-    }
-    return Promise.reject(error);
-  }
-);
+  return instance;
+};
 
-export default axiosInstance;
+export default setupAxiosInterceptors;

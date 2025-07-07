@@ -1,5 +1,4 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axiosInstance from 'axios';
 import axios from 'axios';
 
 interface UserLoginCredentials {
@@ -20,7 +19,7 @@ export const userLogin = createAsyncThunk(
   'auth/login',
   async ({ email, password }: UserLoginCredentials, { rejectWithValue }) => {
     try {
-      const { data } = await axiosInstance.post(`${URL}/api/users/login`, {
+      const { data } = await axios.post(`${URL}/api/users/login`, {
         email,
         password,
       });

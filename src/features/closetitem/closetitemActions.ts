@@ -1,20 +1,10 @@
 import type { AppDispatch, RootState } from '@/app/store';
+import type { Closetitem } from './closetitemInterfaces';
+import type { TClosetitemList } from './closetitemTypes.ts';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axiosInstance from 'axios';
+import { api } from '../../index.tsx';
+//import api from 'axios';
 import type { AxiosError, AxiosResponse } from 'axios';
-
-interface Closetitem {
-  _id: string;
-  category: string;
-  itemName: string;
-  season: string;
-  size: string;
-  desc: string;
-  rating: string;
-  imageFile: ImageData;
-  imageId?: string;
-  userId: string;
-}
 
 interface ClosetitemSubmitted {
   category: string;
@@ -36,8 +26,6 @@ export interface FetchClosetitemsByUserArgs {
   userId: string;
 }
 
-export type TClosetitemList = Closetitem[];
-
 const URL = 'http://localhost:3000';
 
 export const getClosetitemsByUserId = createAsyncThunk<
@@ -47,23 +35,20 @@ export const getClosetitemsByUserId = createAsyncThunk<
 >('closetitems/getClosetitemsByUserId', async (args, { rejectWithValue }) => {
   try {
     const response: AxiosResponse<ClosetDataResponse> =
-      await axiosInstance.get<ClosetDataResponse>(
+      await api.get<ClosetDataResponse>(
         `${URL}/api/closetitems/user/${args}/closetitems`
       );
 
     return response.data.closetitems;
-  } catch (error) {
-    if (axiosInstance.isAxiosError(error)) {
-      return rejectWithValue(error); // Reject with the AxiosError
-    }
+  } catch (error: any) {
+    console.log('what is error? ' + error.message);
     throw error; // Re-throw other errors
   }
 });
 
 // async thunk for making the POST request
 export const addClosetitemWithImage = createAsyncThunk<
-  //Closetitem,
-  string,
+  Closetitem,
   ClosetitemSubmitted,
   { rejectValue: AxiosError }
 >(
@@ -82,36 +67,44 @@ export const addClosetitemWithImage = createAsyncThunk<
 
       // Dispatch the uploadImage thunk
       const uploadResult = await dispatch(uploadImage(imageFile));
-
-      console.log('what is upload result? .' + JSON.stringify(uploadResult));
-
-      const imageData = await uploadImage(closetitem.imageFile);
-
-      console.log('what is imageData? ' + imageData);
       if (uploadResult != null) {
-        console.log('check if image was created.');
+        console.log('there is imageData');
+      } else {
+        console.log('there is no image Data');
       }
 
-      console.log(
-        'what is closetitem before post? ' + JSON.stringify(closetitem)
-      );
+      //console.log('what is upload result? .' + JSON.stringify(uploadResult));
 
-      // Create the closet closetitem
-      // const response = await axiosInstance.post(
-      //   `${URL}/api/closetitems/addclosetitem`,
-      //   closetitem
+      // const imageData = await uploadImage(closetitem.imageFile);
+      // if (imageData != null) {
+      //   console.log('there is imageData');
+      // } else {
+      //   console.log('there is no image Data');
+      // }
+
+      // if (uploadResult != null) {
+      //   console.log('check if image was created.');
+      // }
+
+      // console.log(
+      //   'what is closetitem before post? ' + JSON.stringify(closetitem)
       // );
 
+      // Create the closet closetitem
+      const response = await api.post(
+        `${URL}/api/closetitems/addclosetitem`,
+        closetitem
+      );
+
       //console.log('what is response AFTER post? ' + JSON.stringify(response));
-      const missy = 'missy';
 
       // You might want to extract the relevant data from the response before returning
-      //return response.data as Closetitem; // Assuming the successful response data structure is ClosetClosetitem
-      return missy;
-    } catch (error) {
-      if (axiosInstance.isAxiosError(error)) {
-        return rejectWithValue(error);
-      }
+      return response.data as Closetitem; // Assuming the successful response data structure is ClosetClosetitem
+    } catch (error: any) {
+      // if (api.isAxiosError(error)) {
+      //   return rejectWithValue(error);
+      // }
+      console.log('what is error? ' + error.message);
       throw error; // Re-throw other errors
     }
   }
@@ -146,7 +139,7 @@ export const uploadImage = createAsyncThunk<
     console.log('what is formData? ' + JSON.stringify(formData));
 
     console.log('UploadImage, inside try:  about to try to upload image ');
-    const response = await axiosInstance.post<ImageUploadResponse>(
+    const response = await api.post<ImageUploadResponse>(
       `${URL}/api/images/upload-image`,
       formData
       // {
@@ -188,7 +181,7 @@ export const getImage = createAsyncThunk<UploadedImage, string>( // <ReturnType,
   'image/getImage',
   async (id: string, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get<UploadedImage>(
+      const response = await api.get<UploadedImage>(
         `${URL}/api/images/getimage/${id}`
       );
       return response.data; // Return the data part of the response

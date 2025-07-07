@@ -1,32 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
+import type { Closetitem, ClosetitemsState } from './closetitemInterfaces';
+import type { TClosetitemList } from './closetitemTypes.ts';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import {
   //getAllClosetitems,
   getClosetitemsByUserId,
-  addClosetitemWithImage,
+  //addClosetitemWithImage,
   //updateClosetitem,
   //deleteClosetitem,
 } from './closetitemActions';
 
-interface Closetitem {
-  _id: string;
-  category: string;
-  itemName: string;
-  season: string;
-  size: string;
-  desc: string;
-  rating: string;
-  imageFile: ImageData;
-  imageId?: string;
-  userId: string;
-}
-
-export interface ClosetitemsState {
-  closetitems: Closetitem[];
-  loading: boolean;
-  error: string | null;
-  success: boolean;
-}
+// initialize userToken from local storage
+// const userToken = sessionStorage.getItem('userToken')
+//   ? sessionStorage.getItem('userToken')
+//   : null;
 
 // Define the initial state using that type
 const initialState: ClosetitemsState = {
@@ -35,8 +22,6 @@ const initialState: ClosetitemsState = {
   error: null,
   success: false,
 };
-
-export type TClosetitemList = Closetitem[];
 
 const closetitemSlice = createSlice({
   name: 'closetitems',
@@ -59,10 +44,10 @@ const closetitemSlice = createSlice({
       //   state.loading = false;
       //   state.error = action.error.message || 'Failed to fetch users';
       // })
-      // .addCase(getClosetitemsByUserId.pending, (state) => {
-      //   state.loading = true;
-      //   state.error = null;
-      // })
+      .addCase(getClosetitemsByUserId.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(
         getClosetitemsByUserId.fulfilled,
         (state, action: PayloadAction<Closetitem[]>) => {
@@ -73,13 +58,13 @@ const closetitemSlice = createSlice({
       .addCase(getClosetitemsByUserId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Unknown error';
-      })
-      .addCase(
-        addClosetitemWithImage.fulfilled,
-        (state, action: PayloadAction<Closetitem>) => {
-          state.closetitems.push(action.payload);
-        }
-      );
+      });
+    // .addCase(
+    //   addClosetitemWithImage.fulfilled,
+    //   (state, action: PayloadAction<Closetitem>) => {
+    //     state.closetitems.push(action.payload);
+    //   }
+    // );
     // .addCase(updateClosetitem.pending, (state) => {
     //   state.loading = true;
     //   state.error = null;

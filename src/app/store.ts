@@ -7,9 +7,9 @@ import closetitemReducer from '../features/closetitem/closetitemSlice';
 const store = configureStore({
   reducer: {
     auth: authReducer,
+    closetitems: closetitemReducer,
     users: userReducer,
     [authApi.reducerPath]: authApi.reducer,
-    closetitems: closetitemReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(authApi.middleware),
