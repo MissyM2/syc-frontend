@@ -12,7 +12,7 @@ interface RegistrationPageProps {
 }
 
 interface RegistrationFormInputs {
-  name: string;
+  userName: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -73,11 +73,11 @@ const RegisterPage: React.FC<RegistrationPageProps> = () => {
           {error && <Error>{error}</Error>}
           {customError && <Error>{customError}</Error>}
           <div className="flex flex-col justify-center">
-            <label htmlFor="nameame">Name</label>
+            <label htmlFor="userName">Name</label>
             <input
               type="text"
               className="w-full py-2 px-4 mb-4 rounded border border-[#999999]"
-              {...register('name')}
+              {...register('userName')}
               required
             />
           </div>

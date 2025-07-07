@@ -11,7 +11,7 @@
 // interface ClosetitemDetails {
 //   id: string;
 //   category: string;
-//   name: string;
+//   itemName: string;
 //   season: string;
 //   size: string;
 //   desc: string;
@@ -53,7 +53,7 @@
 //         <img src={closetitem?.imageFile?.data} className="max-h-96 my-4" />
 //       </div>
 //       <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-2 text-primary">
-//         Name: {closetitem?.name}
+//         Name: {closetitem?.itemName}
 //       </h1>
 //       <h3 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 mb-2">
 //         Category: {closetitem?.category}

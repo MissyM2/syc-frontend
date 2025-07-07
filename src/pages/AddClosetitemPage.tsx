@@ -16,7 +16,7 @@ import {
 import Error from '../components/Error';
 import Spinner from '../components/Spinner';
 
-import { addClosetitem } from '../features/closetitem/closetitemActions.ts';
+import { addClosetitemWithImage } from '../features/closetitem/closetitemActions.ts';
 
 interface Option {
   value: string;
@@ -26,11 +26,12 @@ interface Option {
 interface FormData {
   userId: string;
   category: string;
-  name: string;
+  itemName: string;
   seasons: string[];
   size: string;
   desc: string;
   rating: string;
+  //userToken: string;
   imageId: string;
   imageFile: FileList;
 }
@@ -38,6 +39,7 @@ interface FormData {
 export const AddClosetitemPage: React.FC = () => {
   //const { loading, error } = useSelector((state: RootState) => state.auth);
   const { userInfo } = useSelector((state: RootState) => state.auth);
+  //const { userToken } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
 
   // const [loading, setLoading] = useState<boolean>(true);
@@ -51,11 +53,12 @@ export const AddClosetitemPage: React.FC = () => {
   } = useForm<FormData>({
     defaultValues: {
       category: '',
-      name: '',
+      itemName: '',
       seasons: [],
       size: '',
       desc: '',
       rating: '',
+      //userToken: '',
       imageId: '',
     },
   });
@@ -63,24 +66,27 @@ export const AddClosetitemPage: React.FC = () => {
   const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    console.log('data: ' + JSON.stringify(data));
+    //console.log('data: ' + JSON.stringify(data));
     if (data.imageFile && data.imageFile.length > 0) {
-      console.log('what is userInfo? ' + JSON.stringify(userInfo));
-      const userId = userInfo.id;
-      console.log('what is userID? ' + userId);
+      //console.log('what is userInfo? ' + JSON.stringify(userInfo));
+      const userId = userInfo._id;
+      //console.log('what is userID? ' + userId);
       const file = data.imageFile[0];
-      console.log('Selected image:', file);
+      //console.log('Selected image:', file);
       const modifiedData = {
         ...data,
         userId: userId,
-        imageId: data.imageFile[0].name,
+        //userToken: userToken,
+        imageId: file.name,
         imageFile: file,
       };
 
-      console.log('modified data: ' + JSON.stringify(modifiedData));
+      console.log(
+        'modified data: imageId' + JSON.stringify(modifiedData.imageId)
+      );
 
       // try {
-      const response = dispatch(addClosetitem(modifiedData));
+      const response = dispatch(addClosetitemWithImage(modifiedData));
       console.log(
         'AddClosetitemPage,  onSubmit: what is response? ' +
           JSON.stringify(response)
@@ -100,7 +106,7 @@ export const AddClosetitemPage: React.FC = () => {
   const watchSeasonOptions = watch('seasons');
   const watchSizeOption = watch('size');
   const watchCategoryOption = watch('category');
-  const watchNameOption = watch('name');
+  const watchNameOption = watch('itemName');
   const watchDescOption = watch('desc');
   const watchRatingOption = watch('desc');
 
@@ -122,18 +128,18 @@ export const AddClosetitemPage: React.FC = () => {
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="name"
+              htmlFor="itemName"
             >
               Name:
             </label>
             <input
               type="text"
-              id="name"
+              id="nameitemName"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               placeholder="Name"
-              {...register('name', { required: true })}
+              {...register('itemName', { required: true })}
             />
-            {errors.name && <span>This field is required</span>}
+            {errors.itemName && <span>This field is required</span>}
           </div>
 
           <div className="mb-4">

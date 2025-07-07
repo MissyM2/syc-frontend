@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import {
-  getAllClosetitems,
+  //getAllClosetitems,
   getClosetitemsByUserId,
-  addClosetitem,
-  updateClosetitem,
-  deleteClosetitem,
+  addClosetitemWithImage,
+  //updateClosetitem,
+  //deleteClosetitem,
 } from './closetitemActions';
 
 interface Closetitem {
@@ -18,7 +18,7 @@ interface Closetitem {
   rating: string;
   imageFile: ImageData;
   imageId?: string;
-  user: string;
+  userId: string;
 }
 
 export interface ClosetitemsState {
@@ -44,25 +44,25 @@ const closetitemSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getAllClosetitems.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(
-        getAllClosetitems.fulfilled,
-        (state, action: PayloadAction<Closetitem[]>) => {
-          state.loading = false;
-          state.closetitems = action.payload;
-        }
-      )
-      .addCase(getAllClosetitems.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || 'Failed to fetch users';
-      })
-      .addCase(getClosetitemsByUserId.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
+      // .addCase(getAllClosetitems.pending, (state) => {
+      //   state.loading = true;
+      //   state.error = null;
+      // })
+      // .addCase(
+      //   getAllClosetitems.fulfilled,
+      //   (state, action: PayloadAction<Closetitem[]>) => {
+      //     state.loading = false;
+      //     state.closetitems = action.payload;
+      //   }
+      // )
+      // .addCase(getAllClosetitems.rejected, (state, action) => {
+      //   state.loading = false;
+      //   state.error = action.error.message || 'Failed to fetch users';
+      // })
+      // .addCase(getClosetitemsByUserId.pending, (state) => {
+      //   state.loading = true;
+      //   state.error = null;
+      // })
       .addCase(
         getClosetitemsByUserId.fulfilled,
         (state, action: PayloadAction<Closetitem[]>) => {
@@ -75,50 +75,50 @@ const closetitemSlice = createSlice({
         state.error = action.error.message || 'Unknown error';
       })
       .addCase(
-        addClosetitem.fulfilled,
+        addClosetitemWithImage.fulfilled,
         (state, action: PayloadAction<Closetitem>) => {
           state.closetitems.push(action.payload);
         }
-      )
-      .addCase(updateClosetitem.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(
-        updateClosetitem.fulfilled,
-        (state, action: PayloadAction<Closetitem>) => {
-          state.loading = false;
-          const updatedClosetitem = action.payload;
-          const index = state.closetitems.findIndex(
-            (closetitem) => closetitem._id === updatedClosetitem._id
-          );
-          if (index !== -1) {
-            state.closetitems[index] = updatedClosetitem;
-          }
-        }
-      )
-      .addCase(updateClosetitem.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      })
-      .addCase(deleteClosetitem.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(
-        deleteClosetitem.fulfilled,
-        (state, action: PayloadAction<string>) => {
-          state.loading = false;
-          const deletedClosetitemId = action.payload;
-          state.closetitems = state.closetitems.filter(
-            (closetitem) => closetitem._id !== deletedClosetitemId
-          );
-        }
-      )
-      .addCase(deleteClosetitem.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      });
+      );
+    // .addCase(updateClosetitem.pending, (state) => {
+    //   state.loading = true;
+    //   state.error = null;
+    // })
+    // .addCase(
+    //   updateClosetitem.fulfilled,
+    //   (state, action: PayloadAction<Closetitem>) => {
+    //     state.loading = false;
+    //     const updatedClosetitem = action.payload;
+    //     const index = state.closetitems.findIndex(
+    //       (closetitem) => closetitem._id === updatedClosetitem._id
+    //     );
+    //     if (index !== -1) {
+    //       state.closetitems[index] = updatedClosetitem;
+    //     }
+    //   }
+    // )
+    // .addCase(updateClosetitem.rejected, (state, action) => {
+    //   state.loading = false;
+    //   state.error = action.payload as string;
+    // })
+    // .addCase(deleteClosetitem.pending, (state) => {
+    //   state.loading = true;
+    //   state.error = null;
+    // })
+    // .addCase(
+    //   deleteClosetitem.fulfilled,
+    //   (state, action: PayloadAction<string>) => {
+    //     state.loading = false;
+    //     const deletedClosetitemId = action.payload;
+    //     state.closetitems = state.closetitems.filter(
+    //       (closetitem) => closetitem._id !== deletedClosetitemId
+    //     );
+    //   }
+    // )
+    // .addCase(deleteClosetitem.rejected, (state, action) => {
+    //   state.loading = false;
+    //   state.error = action.payload as string;
+    // });
   },
 });
 
