@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { api } from '../index.tsx';
 import type { SubmitHandler } from 'react-hook-form';
 //import { Button, Form } from 'react-bootstrap';
-import axios from 'axios';
+//import axios from 'axios';
 
 // import { useNavigate } from 'react-router-dom';
 
@@ -72,7 +73,7 @@ export const AddClosetitemPage: React.FC = () => {
     if (imageFile) {
       const formData = new FormData();
       formData.append('image', data.image[0]);
-      const response = await axios.post(
+      const response = await api.post(
         'http://localhost:3000/api/images/upload-image',
         formData,
         {

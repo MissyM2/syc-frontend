@@ -16,7 +16,11 @@ const setupAxiosInterceptors = (store: Store<RootState>): AxiosInstance => {
   instance.interceptors.request.use(
     (config) => {
       const state = store.getState();
+      // to test upload without token
       //console.log('state is ' + JSON.stringify(state));
+
+      // state.auth.userToken = '';
+      // state.auth.isAuthenticated = false;
 
       const token = state.auth.userToken;
 
