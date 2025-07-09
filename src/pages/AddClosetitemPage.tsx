@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
 //import { Button, Form } from 'react-bootstrap';
+import axios from 'axios';
 
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState, AppDispatch } from '../app/store';
@@ -13,10 +14,11 @@ import {
   categoryItems,
 } from '../features/closetitem/Closetitem-datas.ts';
 
-import Error from '../components/Error';
-import Spinner from '../components/Spinner';
+// import Error from '../components/Error';
+// import Spinner from '../components/Spinner';
 
-import { addClosetitemWithImage } from '../features/closetitem/closetitemActions.ts';
+//import { addClosetitemWithImage } from '../features/closetitem/closetitemActions.ts';
+//import { uploadImage } from '../features/image/imageSlice.ts';
 
 interface Option {
   value: string;
@@ -32,7 +34,7 @@ interface FormData {
   desc: string;
   rating: string;
   imageId: string;
-  imageFile: FileList;
+  image: FileList;
 }
 
 export const AddClosetitemPage: React.FC = () => {
@@ -40,13 +42,15 @@ export const AddClosetitemPage: React.FC = () => {
   const { userInfo } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
 
+  console.log('what is userInfo? ' + JSON.stringify(userInfo));
+
   // const [loading, setLoading] = useState<boolean>(true);
   // const [error, setError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
-    control,
-    watch,
+    // control,
+    // watch,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
@@ -60,34 +64,48 @@ export const AddClosetitemPage: React.FC = () => {
     },
   });
 
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    //console.log('data: ' + JSON.stringify(data));
-    if (data.imageFile && data.imageFile.length > 0) {
-      //console.log('what is userInfo? ' + JSON.stringify(userInfo));
-      const userId = userInfo._id;
-      //console.log('what is userID? ' + userId);
-      const file = data.imageFile[0];
-      //console.log('Selected image:', file);
-      const modifiedData = {
-        ...data,
-        userId: userId,
-        //userToken: userToken,
-        imageId: file.name,
-        imageFile: file,
-      };
-
-      console.log(
-        'modified data: imageId' + JSON.stringify(modifiedData.imageId)
+    console.log('Form data:' + JSON.stringify(data));
+    const imageFile = data.image[0];
+    if (imageFile) {
+      const formData = new FormData();
+      formData.append('image', data.image[0]);
+      const response = await axios.post(
+        'http://localhost:3000/api/images/upload-image',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
       );
+
+      //if (file) {
+      // const modifiedData = {
+      //   ...data,
+      //   userId: userId,
+      //   imageId: file.name,
+      //   imageFile: file,
+      // };
 
       // try {
-      const response = dispatch(addClosetitemWithImage(modifiedData));
-      console.log(
-        'AddClosetitemPage,  onSubmit: what is response? ' +
-          JSON.stringify(response)
-      );
+      // const response = dispatch(addClosetitemWithImage(modifiedData));
+
+      console.log('Image file:', imageFile);
+      console.log(response.data.message);
+
+      if ((response.data.message = 'Image uploaded successfully!')) {
+        const modifiedData = {
+          ...data,
+          userId: userInfo._id,
+          imageId: imageFile.name,
+          imageFile: imageFile,
+        };
+        console.log('now upload the closetitem to mongodb');
+        console.log('data is ', JSON.stringify(modifiedData));
+      }
       //   const { errors = {} } = response?.data;
       //   if (response) {
       //     navigate('/home');
@@ -97,15 +115,18 @@ export const AddClosetitemPage: React.FC = () => {
       // }
       // } else {
       //   return;
+      //}
+    } else {
+      console.log('sorry, there is no file');
     }
   };
 
-  const watchSeasonOptions = watch('seasons');
-  const watchSizeOption = watch('size');
-  const watchCategoryOption = watch('category');
-  const watchNameOption = watch('itemName');
-  const watchDescOption = watch('desc');
-  const watchRatingOption = watch('desc');
+  // const watchSeasonOptions = watch('seasons');
+  // const watchSizeOption = watch('size');
+  // const watchCategoryOption = watch('category');
+  // const watchNameOption = watch('itemName');
+  // const watchDescOption = watch('desc');
+  // const watchRatingOption = watch('desc');
 
   // if (loading) {
   //   return <p>Loading Closet Items...</p>;
@@ -244,18 +265,18 @@ export const AddClosetitemPage: React.FC = () => {
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="category"
+              htmlFor="imageFile"
             >
-              Image
+              ImageFile
             </label>
             <input
               type="file"
               accept="image/*"
-              id="rating"
+              id="imageFile"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              {...register('imageFile', { required: true })}
+              {...register('image', { required: true })}
             />
-            {errors.desc && <span>This field is required</span>}
+            {/* {errors.desc && <span>This field is required</span>} */}
           </div>
           <div className="mb-6">
             <button
@@ -267,14 +288,14 @@ export const AddClosetitemPage: React.FC = () => {
             </button>
           </div>
         </div>
-        <div>
+        {/* <div>
           <p>Selected category: {watchCategoryOption || 'None'}</p>
           <p>Selected Size: {watchSizeOption || 'None'}</p>
           <p>Selected Seasons: {watchSeasonOptions?.join(', ') || 'None'}</p>
           <p>Selected Name: {watchNameOption || 'None'}</p>
           <p>Selected Desc: {watchDescOption || 'None'}</p>
           <p>Selected Rating: {watchRatingOption || 'None'}</p>
-        </div>
+        </div> */}
       </form>
     </div>
   );

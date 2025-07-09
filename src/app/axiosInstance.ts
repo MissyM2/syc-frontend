@@ -16,7 +16,9 @@ const setupAxiosInterceptors = (store: Store<RootState>): AxiosInstance => {
   instance.interceptors.request.use(
     (config) => {
       const state = store.getState();
-      const token = state.auth.token; // Adjust path to your token in Redux state
+      //console.log('state is ' + JSON.stringify(state));
+
+      const token = state.auth.userToken;
 
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;

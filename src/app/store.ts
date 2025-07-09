@@ -3,12 +3,14 @@ import authReducer from '../features/auth/authSlice';
 import { authApi } from './services/auth/authService';
 import userReducer from '../features/user/userSlice';
 import closetitemReducer from '../features/closetitem/closetitemSlice';
+//import imageUploadReducer from '../features/image/imageSlice';
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
     closetitems: closetitemReducer,
     users: userReducer,
+    //images: imageUploadReducer,
     [authApi.reducerPath]: authApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
