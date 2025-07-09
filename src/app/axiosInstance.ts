@@ -18,7 +18,6 @@ const setupAxiosInterceptors = (store: Store<RootState>): AxiosInstance => {
       const state = store.getState();
       // to test upload without token
       //console.log('state is ' + JSON.stringify(state));
-
       // state.auth.userToken = '';
       // state.auth.isAuthenticated = false;
 

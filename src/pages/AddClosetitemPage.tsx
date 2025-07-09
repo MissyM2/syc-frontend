@@ -18,7 +18,7 @@ import {
 // import Error from '../components/Error';
 // import Spinner from '../components/Spinner';
 
-//import { addClosetitemWithImage } from '../features/closetitem/closetitemActions.ts';
+import { addClosetitemWithImageData } from '../features/closetitem/closetitemActions.ts';
 //import { uploadImage } from '../features/image/imageSlice.ts';
 
 interface Option {
@@ -83,17 +83,6 @@ export const AddClosetitemPage: React.FC = () => {
         }
       );
 
-      //if (file) {
-      // const modifiedData = {
-      //   ...data,
-      //   userId: userId,
-      //   imageId: file.name,
-      //   imageFile: file,
-      // };
-
-      // try {
-      // const response = dispatch(addClosetitemWithImage(modifiedData));
-
       console.log('Image file:', imageFile);
       console.log(response.data.message);
 
@@ -106,6 +95,14 @@ export const AddClosetitemPage: React.FC = () => {
         };
         console.log('now upload the closetitem to mongodb');
         console.log('data is ', JSON.stringify(modifiedData));
+        try {
+          const response = dispatch(addClosetitemWithImageData(modifiedData));
+          console.log(
+            'what is response in AddClosetitemPage? ' + JSON.stringify(response)
+          );
+        } catch (error: any) {
+          console.log('what is error? ' + error);
+        }
       }
       //   const { errors = {} } = response?.data;
       //   if (response) {

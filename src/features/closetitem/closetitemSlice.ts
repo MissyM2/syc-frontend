@@ -5,7 +5,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import {
   //getAllClosetitems,
   getClosetitemsByUserId,
-  addClosetitemWithImage,
+  addClosetitemWithImageData,
   //updateClosetitem,
   //deleteClosetitem,
 } from './closetitemActions';
@@ -59,17 +59,17 @@ const closetitemSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || 'Unknown error';
       })
-      .addCase(addClosetitemWithImage.pending, (state) => {
+      .addCase(addClosetitemWithImageData.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(
-        addClosetitemWithImage.fulfilled,
+        addClosetitemWithImageData.fulfilled,
         (state, action: PayloadAction<Closetitem>) => {
           state.closetitems.push(action.payload);
         }
       )
-      .addCase(addClosetitemWithImage.rejected, (state, action) => {
+      .addCase(addClosetitemWithImageData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Unknown error';
       });
