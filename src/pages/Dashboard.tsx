@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { FilterMenu } from '../features/closetitems/components/FilterMenu.tsx';
 import { OutputList } from '../features/closetitem/components/OutputList.tsx';
+import type { Closetitem } from '../features/closetitem/closetitemInterfaces';
+////import type { TClosetitemList } from '../features/closetitem/closetitemInterfaces';
 import {
   //getAllClosetitems,
   getClosetitemsByUserId,
@@ -14,20 +16,6 @@ import { FaPlus } from 'react-icons/fa6';
 import RoundButton from '../features/closetitem/components/RoundButton.tsx';
 
 //const URL = 'http://localhost:3000';
-
-interface Closetitem {
-  _id: string;
-  category: string;
-  itemName: string;
-  season: string;
-  size: string;
-  desc: string;
-  rating: string;
-  imageFile: ImageData;
-  imageId?: string;
-}
-
-export type TClosetitemList = Closetitem[];
 
 interface FilterObject {
   searchTerm: string;

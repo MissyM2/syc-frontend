@@ -5,7 +5,7 @@ import type { SubmitHandler } from 'react-hook-form';
 //import { Button, Form } from 'react-bootstrap';
 //import axios from 'axios';
 
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState, AppDispatch } from '../app/store';
@@ -42,6 +42,7 @@ export const AddClosetitemPage: React.FC = () => {
   //const { loading, error } = useSelector((state: RootState) => state.auth);
   const { userInfo } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
   console.log('what is userInfo? ' + JSON.stringify(userInfo));
 
@@ -70,52 +71,46 @@ export const AddClosetitemPage: React.FC = () => {
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     console.log('Form data:' + JSON.stringify(data));
     const imageFile = data.image[0];
-    if (imageFile) {
-      const formData = new FormData();
-      formData.append('image', data.image[0]);
-      const response = await api.post(
-        'http://localhost:3000/api/images/upload-image',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
 
-      console.log('Image file:', imageFile);
-      console.log(response.data.message);
+    try {
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append('image', data.image[0]);
+        const response = await api.post(
+          'http://localhost:3000/api/images/upload-image',
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
 
-      if ((response.data.message = 'Image uploaded successfully!')) {
-        const modifiedData = {
-          ...data,
-          userId: userInfo._id,
-          imageId: imageFile.name,
-          imageFile: imageFile,
-        };
-        console.log('now upload the closetitem to mongodb');
-        console.log('data is ', JSON.stringify(modifiedData));
-        try {
+        console.log('what is the image Id? ' + JSON.stringify(response.data));
+
+        if ((response.data.message = 'Image uploaded successfully!')) {
+          const modifiedData = {
+            ...data,
+            userId: userInfo._id,
+            imageId: imageFile.name,
+            imageFile: imageFile,
+          };
+          console.log('now upload the closetitem to mongodb');
+          console.log('data is ', JSON.stringify(modifiedData));
           const response = dispatch(addClosetitemWithImageData(modifiedData));
           console.log(
             'what is response in AddClosetitemPage? ' + JSON.stringify(response)
           );
-        } catch (error: any) {
-          console.log('what is error? ' + error);
         }
+        const { errors = {} } = response?.data;
+        if (response) {
+          navigate('/dashboard');
+        }
+      } else {
+        return;
       }
-      //   const { errors = {} } = response?.data;
-      //   if (response) {
-      //     navigate('/home');
-      //   }
-      // } catch (error) {
-      //   alert('Submitting form failed!');
-      // }
-      // } else {
-      //   return;
-      //}
-    } else {
-      console.log('sorry, there is no file');
+    } catch (error) {
+      alert('Submitting form failed!');
     }
   };
 

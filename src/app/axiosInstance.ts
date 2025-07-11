@@ -26,10 +26,10 @@ const setupAxiosInterceptors = (store: Store<RootState>): AxiosInstance => {
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
-      console.log('inside axiosInstance: what is token? ' + token);
-      console.log(
-        'inside axiosInstance: what is config? ' + JSON.stringify(config)
-      );
+      // console.log('inside axiosInstance: what is token? ' + token);
+      // console.log(
+      //   'inside axiosInstance: what is config? ' + JSON.stringify(config)
+      // );
       return config;
     },
     (error) => Promise.reject(error)

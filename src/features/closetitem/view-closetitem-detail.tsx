@@ -17,7 +17,7 @@
 //   desc: string;
 //   rating: string;
 //   imageId: string;
-//   imageFile: ImageData;
+//   imageFile: FileList;
 // }
 
 // export const ViewClosetitemDetailPage: React.FC = (): React.JSX.Element => {

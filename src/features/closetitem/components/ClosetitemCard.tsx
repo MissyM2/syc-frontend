@@ -22,6 +22,9 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
   closetitem,
 }): React.JSX.Element => {
   const date = new Date(closetitem.dateCreated);
+  console.log('inside closetitemcard');
+  const imageData = closetitem?.imageFile?.data;
+  const imageSource = imageData ? `data:image/jpeg;base64,${imageData}` : '';
 
   const formattedDate = date.toLocaleDateString('en-US', {
     year: 'numeric',
@@ -38,11 +41,14 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
     <Link to={`/closetitem-detail-page/${closetitem._id}`} className="w-full">
       <Card className="w-full max-w-sm">
         <div className="grid w-full place-items-center overflow-x-scroll aspect-square  bg-gray-200">
-          <img
+          {imageSource && (
+            <img className="" src={imageSource} alt={closetitem.name} />
+          )}
+          {/* <img
             className="object-cover object-center w-full h-full"
             src={closetitem?.imageFile?.data}
             alt={closetitem.name}
-          />
+          /> */}
         </div>
         <CardHeader>
           <CardTitle>{closetitem.name}</CardTitle>

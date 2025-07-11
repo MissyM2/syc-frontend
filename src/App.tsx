@@ -4,20 +4,20 @@ import {
   createBrowserRouter,
 } from 'react-router-dom';
 
-import ProfilePage from './pages/ProfilePage';
+//import ProfilePage from './pages/ProfilePage';
 import Dashboard from './pages/Dashboard';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ProtectedRoute from './routing/ProtectedRoute';
 import RootLayout from './components/RootLayout';
-import { AboutPage } from './pages/AboutPage';
-import { ContactUsPage } from './pages/ContactUsPage.tsx';
+// import { AboutPage } from './pages/AboutPage';
+// import { ContactUsPage } from './pages/ContactUsPage.tsx';
 
-import { UserAdminPage } from './pages/UserAdminPage.tsx';
+// import { UserAdminPage } from './pages/UserAdminPage.tsx';
 
 import { AddClosetitemPage } from './pages/AddClosetitemPage.tsx';
-import { ViewClosetitemDetailPage } from './features/closetitem/view-closetitem-detail.tsx';
-import { NotFoundPage } from './pages/NotFoundPage';
+// import { ViewClosetitemDetailPage } from './features/closetitem/view-closetitem-detail.tsx';
+// import { NotFoundPage } from './pages/NotFoundPage';
 
 const router = createBrowserRouter([
   {
