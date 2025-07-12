@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { api } from '../index.tsx';
 import type { SubmitHandler } from 'react-hook-form';
 //import { Button, Form } from 'react-bootstrap';
-//import axios from 'axios';
+import axios from 'axios';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -40,11 +40,13 @@ interface FormData {
 
 export const AddClosetitemPage: React.FC = () => {
   //const { loading, error } = useSelector((state: RootState) => state.auth);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [message, setMessage] = useState('');
   const { userInfo } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  console.log('what is userInfo? ' + JSON.stringify(userInfo));
+  //console.log('what is userInfo? ' + JSON.stringify(userInfo));
 
   // const [loading, setLoading] = useState<boolean>(true);
   // const [error, setError] = useState<string | null>(null);
@@ -69,49 +71,92 @@ export const AddClosetitemPage: React.FC = () => {
   //const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    console.log('Form data:' + JSON.stringify(data));
+    //console.log('Form data:' + JSON.stringify(data));
     const imageFile = data.image[0];
 
     try {
-      if (imageFile) {
-        const formData = new FormData();
-        formData.append('image', data.image[0]);
-        const response = await api.post(
-          'http://localhost:3000/api/images/upload-image',
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
+      // 1. Get the presigned URL from your Node.js backend
+      const response = await api.post(
+        'http://localhost:3000/api/images/upload-url',
+        {
+          filename: imageFile.name,
+          contentType: imageFile.type,
+        }
+      );
+      console.log('what is response? ' + JSON.stringify(response));
+
+      console.log('response.data ' + JSON.stringify(response.data));
+      const { presignedUrl } = response.data;
+      setMessage('Pre-signed URL received. Uploading...');
+
+      console.log('what is presignedURL? ' + presignedUrl);
+      console.log('what is contentType? ' + imageFile.type);
+
+      // 2. Upload the file directly to S3 using the presigned URL
+      await axios.put(presignedUrl, imageFile, {
+        headers: {
+          'Content-Type': imageFile.type,
+        },
+        onUploadProgress: (progressEvent) => {
+          if (progressEvent.total) {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setUploadProgress(percentCompleted);
+          } else {
+            setUploadProgress(0);
           }
-        );
+        },
+      });
 
-        console.log('what is the image Id? ' + JSON.stringify(response.data));
+      setMessage('File uploaded successfully!');
+      setUploadProgress(0);
 
-        if ((response.data.message = 'Image uploaded successfully!')) {
-          const modifiedData = {
-            ...data,
-            userId: userInfo._id,
-            imageId: imageFile.name,
-            imageFile: imageFile,
-          };
-          console.log('now upload the closetitem to mongodb');
-          console.log('data is ', JSON.stringify(modifiedData));
-          const response = dispatch(addClosetitemWithImageData(modifiedData));
-          console.log(
-            'what is response in AddClosetitemPage? ' + JSON.stringify(response)
-          );
-        }
-        const { errors = {} } = response?.data;
-        if (response) {
-          navigate('/dashboard');
-        }
-      } else {
-        return;
-      }
+      // console.log('File uploaded successfully!');
     } catch (error) {
-      alert('Submitting form failed!');
+      console.error('Error uploading file:', error);
     }
+
+    // try {
+    //   if (imageFile) {
+    //     const formData = new FormData();
+    //     formData.append('image', data.image[0]);
+    //     const response = await api.post(
+    //       'http://localhost:3000/api/images/upload-image',
+    //       formData,
+    //       {
+    //         headers: {
+    //           'Content-Type': 'multipart/form-data',
+    //         },
+    //       }
+    //     );
+
+    //     console.log('what is the image Id? ' + JSON.stringify(response.data));
+
+    //     if ((response.data.message = 'Image uploaded successfully!')) {
+    //       const modifiedData = {
+    //         ...data,
+    //         userId: userInfo._id,
+    //         imageId: imageFile.name,
+    //         imageFile: imageFile,
+    //       };
+    //       console.log('now upload the closetitem to mongodb');
+    //       console.log('data is ', JSON.stringify(modifiedData));
+    //       const response = dispatch(addClosetitemWithImageData(modifiedData));
+    //       console.log(
+    //         'what is response in AddClosetitemPage? ' + JSON.stringify(response)
+    //       );
+    //     }
+    //     const { errors = {} } = response?.data;
+    //     if (response) {
+    //       navigate('/dashboard');
+    //     }
+    //   } else {
+    //     return;
+    //   }
+    // } catch (error) {
+    //   alert('Submitting form failed!');
+    // }
   };
 
   // const watchSeasonOptions = watch('seasons');
@@ -281,6 +326,7 @@ export const AddClosetitemPage: React.FC = () => {
             </button>
           </div>
         </div>
+
         {/* <div>
           <p>Selected category: {watchCategoryOption || 'None'}</p>
           <p>Selected Size: {watchSizeOption || 'None'}</p>
@@ -290,6 +336,10 @@ export const AddClosetitemPage: React.FC = () => {
           <p>Selected Rating: {watchRatingOption || 'None'}</p>
         </div> */}
       </form>
+      <div>
+        {uploadProgress > 0 && <p>Upload Progress: {uploadProgress}%</p>}
+        <p>{message}</p>
+      </div>
     </div>
   );
 };
