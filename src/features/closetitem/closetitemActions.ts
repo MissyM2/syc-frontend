@@ -16,7 +16,7 @@ interface ClosetitemSubmitted {
   desc: string;
   rating: string;
   imageId: string;
-  imageFile?: File;
+  imageUrl: string;
   userId: string;
 }
 

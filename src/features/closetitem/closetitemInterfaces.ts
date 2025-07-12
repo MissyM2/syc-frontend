@@ -6,7 +6,7 @@ export interface Closetitem {
   size: string;
   desc: string;
   rating: string;
-  imageFile: File;
+  imageUrl: string;
   imageId?: string;
   userId: string;
 }

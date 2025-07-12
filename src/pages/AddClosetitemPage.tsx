@@ -42,6 +42,7 @@ export const AddClosetitemPage: React.FC = () => {
   //const { loading, error } = useSelector((state: RootState) => state.auth);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [message, setMessage] = useState('');
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const { userInfo } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -71,26 +72,29 @@ export const AddClosetitemPage: React.FC = () => {
   //const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    //console.log('Form data:' + JSON.stringify(data));
-    const imageFile = data.image[0];
+    console.log('Form data:' + JSON.stringify(data));
+    //const imageFile = data.image[0];
+    if (!imageFile) {
+      setMessage('Please select an image file before submitting.');
+      return;
+    }
 
     try {
       // 1. Get the presigned URL from your Node.js backend
-      const response = await api.post(
-        'http://localhost:3000/api/images/upload-url',
-        {
-          filename: imageFile.name,
-          contentType: imageFile.type,
-        }
-      );
-      console.log('what is response? ' + JSON.stringify(response));
+      const {
+        data: { presignedUrl, imageUrl },
+      } = await api.post('http://localhost:3000/api/images/upload-url', {
+        filename: imageFile.name,
+        contentType: imageFile.type,
+      });
+      console.log('what is response? ' + JSON.stringify(data));
 
-      console.log('response.data ' + JSON.stringify(response.data));
-      const { presignedUrl } = response.data;
+      //console.log('response.data ' + JSON.stringify(response.data));
+      //const { presignedUrl } = response.data;
       setMessage('Pre-signed URL received. Uploading...');
 
-      console.log('what is presignedURL? ' + presignedUrl);
-      console.log('what is contentType? ' + imageFile.type);
+      //console.log('what is presignedURL? ' + presignedUrl);
+      //console.log('what is contentType? ' + imageFile.type);
 
       // 2. Upload the file directly to S3 using the presigned URL
       await axios.put(presignedUrl, imageFile, {
@@ -112,26 +116,24 @@ export const AddClosetitemPage: React.FC = () => {
       setMessage('File uploaded successfully!');
       setUploadProgress(0);
 
+      // Save closetitem details and S3 image URL to MongoDB atlas
+
+      const modifiedData = {
+        ...data,
+        userId: userInfo._id,
+        imageId: imageFile.name,
+        imageUrl: imageUrl,
+      };
+
+      const response = dispatch(addClosetitemWithImageData(modifiedData));
+      console.log(
+        'what is response in AddClosetitemPage? ' + JSON.stringify(response)
+      );
+
       // console.log('File uploaded successfully!');
     } catch (error) {
       console.error('Error uploading file:', error);
     }
-
-    // try {
-    //   if (imageFile) {
-    //     const formData = new FormData();
-    //     formData.append('image', data.image[0]);
-    //     const response = await api.post(
-    //       'http://localhost:3000/api/images/upload-image',
-    //       formData,
-    //       {
-    //         headers: {
-    //           'Content-Type': 'multipart/form-data',
-    //         },
-    //       }
-    //     );
-
-    //     console.log('what is the image Id? ' + JSON.stringify(response.data));
 
     //     if ((response.data.message = 'Image uploaded successfully!')) {
     //       const modifiedData = {
@@ -173,6 +175,10 @@ export const AddClosetitemPage: React.FC = () => {
   // if (error) {
   //   return <p>Error: {error}</p>;
   // }
+
+  const handleFileChange = (e) => {
+    setImageFile(e.target.files[0]);
+  };
 
   return (
     <div className="w-full max-w-lg">
@@ -310,9 +316,11 @@ export const AddClosetitemPage: React.FC = () => {
             <input
               type="file"
               accept="image/*"
+              onChange={handleFileChange}
+              required
               id="imageFile"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              {...register('image', { required: true })}
+              // {...register('image', { required: true })}
             />
             {/* {errors.desc && <span>This field is required</span>} */}
           </div>
