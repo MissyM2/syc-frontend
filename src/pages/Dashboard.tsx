@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { FilterMenu } from '../features/closetitems/components/FilterMenu.tsx';
 import { OutputList } from '../features/closetitem/components/OutputList.tsx';
 import type { Closetitem } from '../features/closetitem/closetitemInterfaces';
@@ -14,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { FaPlus } from 'react-icons/fa6';
 import RoundButton from '../features/closetitem/components/RoundButton.tsx';
+import { json } from 'stream/consumers';
 
 //const URL = 'http://localhost:3000';
 
@@ -31,6 +33,8 @@ const Dashboard: React.FC = () => {
   const [filteredClosetitems, setFilteredClosetitems] = useState<Closetitem[]>(
     []
   );
+
+  const [presignedUrls, setPresignedUrls] = useState({});
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -131,8 +135,28 @@ const Dashboard: React.FC = () => {
         setLoading(false);
       }
     };
+
     loadAllClosetitems();
   }, []);
+
+  useEffect(() => {
+    async function getPresignedUrls() {
+      if (closetitems.length > 0) {
+        const urls = {};
+        for (const item of closetitems) {
+          // Simulate fetching presigned URL
+          console.log('closetitem? ' + JSON.stringify(item));
+          const url = await axios.get(
+            `http://localhost:3000/api/images/download-url/${item.imageId}`
+          );
+          console.log('what is url? ' + JSON.stringify(url));
+          // urls[item._id] = url;
+        }
+        setPresignedUrls(urls);
+      }
+    }
+    getPresignedUrls();
+  }, [closetitems]); // Rerun when 'items' state changes
 
   useEffect(() => {
     const data = sortAndFilterClosetitems(filters);

@@ -41,21 +41,21 @@ export const getClosetitemsByUserId = createAsyncThunk<
         `${URL}/api/closetitems/user/${args}/closetitems`
       );
 
-    if (response.status === 200) {
-      for (const item of response.data.closetitems) {
-        console.log(
-          'inside loop to get image, what is imageId ' + item.imageId
-        );
-        const itemImg = await getImage(item.imageId);
-        item.imageFile = itemImg;
-      }
-      return response.data.closetitems;
-    } else {
-      // Always use rejectWithValue for errors/unexpected cases
-      return rejectWithValue(
-        new AxiosError(`Unexpected status: ${response.status}`)
-      ) as any;
-    }
+    // if (response.status === 200) {
+    //   for (const item of response.data.closetitems) {
+    //     console.log(
+    //       'inside loop to get image, what is imageId ' + item.imageId
+    //     );
+    //     const itemImg = await getImage(item.imageId);
+    //     item.imageFile = itemImg;
+    //   }
+    return response.data.closetitems;
+    // } else {
+    // Always use rejectWithValue for errors/unexpected cases
+    return rejectWithValue(
+      new AxiosError(`Unexpected status: ${response.status}`)
+    ) as any;
+    // }
   } catch (error: any) {
     console.log('what is error? ' + error.message);
     return rejectWithValue(error); // Use rejectWithValue for errors

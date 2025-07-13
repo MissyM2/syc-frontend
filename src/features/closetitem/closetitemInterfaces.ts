@@ -1,4 +1,5 @@
 export interface Closetitem {
+  presignedUrl: any;
   _id: string;
   category: string;
   itemName: string;
@@ -7,6 +8,7 @@ export interface Closetitem {
   desc: string;
   rating: string;
   imageUrl: string;
+  imagePresignedUrl: string;
   imageId?: string;
   userId: string;
 }
