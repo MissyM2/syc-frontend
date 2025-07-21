@@ -7,6 +7,10 @@ import { api } from '../../index.tsx';
 import { AxiosError } from 'axios';
 import type { AxiosResponse } from 'axios';
 import { uploadImage } from '../image/imageSlice.ts';
+import {
+  getPresignedUrl,
+  uploadImageToS3,
+} from '../../lib/images/uploaderFunctions.ts';
 
 interface ClosetitemSubmitted {
   category: string;
@@ -16,6 +20,7 @@ interface ClosetitemSubmitted {
   desc: string;
   rating: string;
   imageId: string;
+  image: FileList;
   imageUrl: string;
   userId: string;
 }
@@ -87,8 +92,36 @@ export const addClosetitemWithImageData = createAsyncThunk<
 >(
   'closetitems/addclosetitem',
   async (closetitem: ClosetitemSubmitted, { rejectWithValue }) => {
-    console.log('what is closetitem? ' + JSON.stringify(closetitem));
+    console.log(
+      'inside addClosetitemWithImageData:received closetitem? ' +
+        JSON.stringify(closetitem)
+    );
+
     try {
+      // get the presigned url
+      const getPresignedUrlResponse = await getPresignedUrl(
+        closetitem.image[0].name,
+        closetitem.image[0].type
+      );
+      console.log(
+        'inside addClosetitemWithImageData:getPresignedUrlResponse? ' +
+          JSON.stringify(getPresignedUrlResponse)
+      );
+
+      closetitem.imageUrl = getPresignedUrlResponse;
+
+      // upload image
+
+      const uploadImageResponse = await uploadImageToS3(
+        getPresignedUrlResponse,
+        closetitem.image[0]
+      );
+
+      console.log(
+        'inside addClosetitemWithImageData:closetitem should have imageURl ' +
+          JSON.stringify(closetitem)
+      );
+
       //Create the closet closetitem
       const response = await api.post(
         `${URL}/api/closetitems/addclosetitem`,

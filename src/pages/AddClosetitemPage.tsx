@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { api } from '../index.tsx';
 import type { SubmitHandler } from 'react-hook-form';
@@ -19,6 +19,11 @@ import {
 // import Spinner from '../components/Spinner';
 
 import { addClosetitemWithImageData } from '../features/closetitem/closetitemActions.ts';
+
+import {
+  getPresignedUrl,
+  uploadImageToS3,
+} from '../lib/images/uploaderFunctions.ts';
 //import { uploadImage } from '../features/image/imageSlice.ts';
 
 interface Option {
@@ -36,29 +41,33 @@ interface FormData {
   rating: string;
   imageId: string;
   image: FileList;
+  imageUrl: string;
 }
 
 export const AddClosetitemPage: React.FC = () => {
-  //const { loading, error } = useSelector((state: RootState) => state.auth);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [message, setMessage] = useState('');
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  // const { loading, error} = useSelector((state: RootState) => state.auth);
   const { userInfo } = useSelector((state: RootState) => state.auth);
+  const userId = useSelector((state: RootState) => state.auth.userInfo._id);
+  //const [uploadProgress, setUploadProgress] = useState(0);
+  //const [uploadUrl, setUploadUrl] = useState<string>('');
+  const [message, setMessage] = useState('');
+  //const [imageFile, setImageFile] = useState<File | null>(null);
+
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-
-  //console.log('what is userInfo? ' + JSON.stringify(userInfo));
 
   // const [loading, setLoading] = useState<boolean>(true);
   // const [error, setError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
+    setValue,
     // control,
     // watch,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
+      userId: userInfo?._id,
       category: '',
       itemName: '',
       seasons: [],
@@ -66,99 +75,32 @@ export const AddClosetitemPage: React.FC = () => {
       desc: '',
       rating: '',
       imageId: '',
+      imageUrl: '',
     },
   });
 
   //const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    console.log('Form data:' + JSON.stringify(data));
+    console.log('inside submitHandler Form data:' + JSON.stringify(data));
     //const imageFile = data.image[0];
-    if (!imageFile) {
-      setMessage('Please select an image file before submitting.');
-      return;
-    }
+    console.log('inside submitHandler');
 
     try {
-      // 1. Get the presigned URL from your Node.js backend
-      const {
-        data: { presignedUrl, imageUrl },
-      } = await api.post('http://localhost:3000/api/images/upload-url', {
-        filename: imageFile.name,
-        contentType: imageFile.type,
-      });
-      console.log('what is response? ' + JSON.stringify(data));
+      // if (!imageFile) {
+      //   setMessage('Please select an image file before submitting.');
+      //   return;
+      // }
 
-      //console.log('response.data ' + JSON.stringify(response.data));
-      //const { presignedUrl } = response.data;
-      setMessage('Pre-signed URL received. Uploading...');
+      const response = dispatch(addClosetitemWithImageData(data));
 
-      //console.log('what is presignedURL? ' + presignedUrl);
-      //console.log('what is contentType? ' + imageFile.type);
-
-      // 2. Upload the file directly to S3 using the presigned URL
-      await axios.put(presignedUrl, imageFile, {
-        headers: {
-          'Content-Type': imageFile.type,
-        },
-        onUploadProgress: (progressEvent) => {
-          if (progressEvent.total) {
-            const percentCompleted = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-            setUploadProgress(percentCompleted);
-          } else {
-            setUploadProgress(0);
-          }
-        },
-      });
-
-      setMessage('File uploaded successfully!');
-      setUploadProgress(0);
-
-      // Save closetitem details and S3 image URL to MongoDB atlas
-
-      const modifiedData = {
-        ...data,
-        userId: userInfo._id,
-        imageId: imageFile.name,
-        imageUrl: imageUrl,
-      };
-
-      const response = dispatch(addClosetitemWithImageData(modifiedData));
       console.log(
-        'what is response in AddClosetitemPage? ' + JSON.stringify(response)
+        'onSubmit:should have presignedurl, uploaded image and uploaded item: ' +
+          JSON.stringify(response)
       );
-
-      // console.log('File uploaded successfully!');
     } catch (error) {
-      console.error('Error uploading file:', error);
+      alert('Submitting form failed!');
     }
-
-    //     if ((response.data.message = 'Image uploaded successfully!')) {
-    //       const modifiedData = {
-    //         ...data,
-    //         userId: userInfo._id,
-    //         imageId: imageFile.name,
-    //         imageFile: imageFile,
-    //       };
-    //       console.log('now upload the closetitem to mongodb');
-    //       console.log('data is ', JSON.stringify(modifiedData));
-    //       const response = dispatch(addClosetitemWithImageData(modifiedData));
-    //       console.log(
-    //         'what is response in AddClosetitemPage? ' + JSON.stringify(response)
-    //       );
-    //     }
-    //     const { errors = {} } = response?.data;
-    //     if (response) {
-    //       navigate('/dashboard');
-    //     }
-    //   } else {
-    //     return;
-    //   }
-    // } catch (error) {
-    //   alert('Submitting form failed!');
-    // }
   };
 
   // const watchSeasonOptions = watch('seasons');
@@ -176,8 +118,15 @@ export const AddClosetitemPage: React.FC = () => {
   //   return <p>Error: {error}</p>;
   // }
 
-  const handleFileChange = (e) => {
-    setImageFile(e.target.files[0]);
+  const handleImageChange = (e: any) => {
+    //setImageFile(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) {
+      // Assuming you want to store the file name
+      setValue('imageId', file.name);
+      // You might also want to store the file object itself for later use
+      // setValue('imageFile', file);
+    }
   };
 
   return (
@@ -316,11 +265,11 @@ export const AddClosetitemPage: React.FC = () => {
             <input
               type="file"
               accept="image/*"
-              onChange={handleFileChange}
               required
               id="imageFile"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              // {...register('image', { required: true })}
+              {...register('image', { required: true })}
+              onChange={handleImageChange}
             />
             {/* {errors.desc && <span>This field is required</span>} */}
           </div>
@@ -344,10 +293,10 @@ export const AddClosetitemPage: React.FC = () => {
           <p>Selected Rating: {watchRatingOption || 'None'}</p>
         </div> */}
       </form>
-      <div>
+      {/* <div>
         {uploadProgress > 0 && <p>Upload Progress: {uploadProgress}%</p>}
         <p>{message}</p>
-      </div>
+      </div> */}
     </div>
   );
 };
