@@ -122,7 +122,7 @@ export const FilterMenu: React.FC<FilterMenuProps> = ({
             </fieldset>
           </form>
         </div>
-        {/* <div className="flex flex-row">
+        <div className="flex flex-row">
           <div className="w-1/2 me-3">
             <ConfigProvider
               theme={{
@@ -142,9 +142,9 @@ export const FilterMenu: React.FC<FilterMenuProps> = ({
                 items={getFilterItems(panelStyle)}
               />
             </ConfigProvider>
-          </div> */}
+          </div>
 
-        {/* <div className="w-1/2 ms-3">
+          <div className="w-1/2 ms-3">
             <ConfigProvider
               theme={{
                 token: {},
@@ -171,8 +171,8 @@ export const FilterMenu: React.FC<FilterMenuProps> = ({
                 </Panel>
               </Collapse>
             </ConfigProvider>
-          </div> 
-        </div>*/}
+          </div>
+        </div>
       </div>
     </div>
   );
