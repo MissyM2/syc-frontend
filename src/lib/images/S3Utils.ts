@@ -19,7 +19,7 @@ export const getPresignedUrl = async (
     const apiEndpoint =
       'https://bku01dtzd0.execute-api.us-east-1.amazonaws.com/dev/images';
 
-    const getUrlResponse = await axios.get(
+    const getUrlResponse = await api.get(
       `${apiEndpoint}?${new URLSearchParams({
         userId: userId,
         filename: selectedFile,
@@ -66,11 +66,10 @@ export const getPresignedUrlForDownload = async (
     return;
   }
   try {
-    console.log('getPresignedUrlForDownload, inside Try');
     const apiEndpoint =
       'https://9bk5hiz6jb.execute-api.us-east-1.amazonaws.com/dev/images';
 
-    const getUrlResponse = await axios.get<{ downloadUrl: string }>(
+    const getUrlResponse = await api.get<{ downloadUrl: string }>(
       `${apiEndpoint}?${new URLSearchParams({
         userId: userId,
         filename: filename,
@@ -78,8 +77,6 @@ export const getPresignedUrlForDownload = async (
     );
 
     const { downloadUrl } = getUrlResponse.data;
-
-    console.log('getPresignedUrlForDownload, downloadURl' + downloadUrl);
 
     return downloadUrl;
   } catch (error) {
