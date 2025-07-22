@@ -51,6 +51,7 @@ export const getClosetitemsByUserId = createAsyncThunk<
       for (const item of response.data.closetitems) {
         if (item.imageId) {
           const getPresignedUrlResponse = await getPresignedUrlForDownload(
+            item.userId,
             item.imageId
           );
 
@@ -76,23 +77,6 @@ export const getClosetitemsByUserId = createAsyncThunk<
   }
 });
 
-export async function getImage(id: any) {
-  try {
-    const response = await api.get(`${URL}/api/images/sycstorage/${id}`, {
-      responseType: 'arraybuffer',
-    });
-    const imageBuffer = Buffer.from(response.data);
-    const base64Image = imageBuffer.toString('base64');
-    const mimeType = response.headers['content-type']; // Get the content type from S3
-    return `data:${mimeType};base64,${base64Image}`;
-
-    //return response.data;
-  } catch (error) {
-    console.error('Error fetching image from S3:', error);
-    return null;
-  }
-}
-
 // async thunk for making the POST request
 export const addClosetitemWithImageData = createAsyncThunk<
   Closetitem,
@@ -104,6 +88,7 @@ export const addClosetitemWithImageData = createAsyncThunk<
     try {
       // get the presigned url
       const getPresignedUrlResponse = await getPresignedUrl(
+        closetitem.userId,
         closetitem.image[0].name,
         closetitem.image[0].type
       );
@@ -127,17 +112,3 @@ export const addClosetitemWithImageData = createAsyncThunk<
     }
   }
 );
-
-// export const getImage = createAsyncThunk<UploadedImage, string>( // <ReturnType, ArgType>
-//   'image/getImage',
-//   async (id: string, { rejectWithValue }) => {
-//     try {
-//       const response = await api.get<UploadedImage>(
-//         `${URL}/api/images/getimage/${id}`
-//       );
-//       return response.data; // Return the data part of the response
-//     } catch (error: any) {
-//       return rejectWithValue(error.response?.data || error.message);
-//     }
-//   }
-// );

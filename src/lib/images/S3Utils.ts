@@ -7,6 +7,7 @@ import { api } from '../../index.tsx';
 //   fileType: string;
 // }
 export const getPresignedUrl = async (
+  userId: string,
   selectedFile: string,
   fileType: string
 ) => {
@@ -20,6 +21,7 @@ export const getPresignedUrl = async (
 
     const getUrlResponse = await axios.get(
       `${apiEndpoint}?${new URLSearchParams({
+        userId: userId,
         filename: selectedFile,
         contentType: fileType,
       })}`
@@ -55,22 +57,29 @@ export const uploadImageToS3 = async (
   }
 };
 
-export const getPresignedUrlForDownload = async (imageKey: string) => {
-  if (!imageKey) {
+export const getPresignedUrlForDownload = async (
+  userId: string,
+  filename: string
+) => {
+  if (!userId || !filename) {
     console.log('selected file is missing');
     return;
   }
   try {
+    console.log('getPresignedUrlForDownload, inside Try');
     const apiEndpoint =
       'https://9bk5hiz6jb.execute-api.us-east-1.amazonaws.com/dev/images';
 
     const getUrlResponse = await axios.get<{ downloadUrl: string }>(
       `${apiEndpoint}?${new URLSearchParams({
-        filename: imageKey,
+        userId: userId,
+        filename: filename,
       })}`
     );
 
     const { downloadUrl } = getUrlResponse.data;
+
+    console.log('getPresignedUrlForDownload, downloadURl' + downloadUrl);
 
     return downloadUrl;
   } catch (error) {
