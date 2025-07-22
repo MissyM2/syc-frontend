@@ -16,7 +16,7 @@ export const getPresignedUrl = async (
   }
   try {
     const apiEndpoint =
-      'https://bku01dtzd0.execute-api.us-east-1.amazonaws.com/Dev/upload_image'; // e.g., /get-presigned-url
+      'https://bku01dtzd0.execute-api.us-east-1.amazonaws.com/dev/images';
 
     const getUrlResponse = await axios.get(
       `${apiEndpoint}?${new URLSearchParams({
@@ -48,12 +48,33 @@ export const uploadImageToS3 = async (
         'Content-Type': selectedFile.type, // Important: Set the Content-Type header
       },
     });
-    console.log('response ' + response);
-
-    console.log('Image uploaded successfully!');
     return response;
   } catch (error) {
     console.error('Error uploading image:', error);
+    throw error;
+  }
+};
+
+export const getPresignedUrlForDownload = async (imageKey: string) => {
+  if (!imageKey) {
+    console.log('selected file is missing');
+    return;
+  }
+  try {
+    const apiEndpoint =
+      'https://9bk5hiz6jb.execute-api.us-east-1.amazonaws.com/dev/images';
+
+    const getUrlResponse = await axios.get<{ downloadUrl: string }>(
+      `${apiEndpoint}?${new URLSearchParams({
+        filename: imageKey,
+      })}`
+    );
+
+    const { downloadUrl } = getUrlResponse.data;
+
+    return downloadUrl;
+  } catch (error) {
+    console.error('Error getting presigned URL:', error);
     throw error;
   }
 };

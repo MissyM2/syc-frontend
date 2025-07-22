@@ -6,13 +6,15 @@ import { api } from '../../index.tsx';
 //import api from 'axios';
 import { AxiosError } from 'axios';
 import type { AxiosResponse } from 'axios';
-import { uploadImage } from '../image/imageSlice.ts';
+//import { uploadImage } from '../image/imageSlice.ts';
 import {
   getPresignedUrl,
   uploadImageToS3,
-} from '../../lib/images/uploaderFunctions.ts';
+  getPresignedUrlForDownload,
+} from '../../lib/images/S3Utils.ts';
 
 interface ClosetitemSubmitted {
+  userId: string;
   category: string;
   itemName: string;
   seasons: string[];
@@ -22,7 +24,6 @@ interface ClosetitemSubmitted {
   imageId: string;
   image: FileList;
   imageUrl: string;
-  userId: string;
 }
 
 interface ClosetDataResponse {
@@ -46,21 +47,29 @@ export const getClosetitemsByUserId = createAsyncThunk<
         `${URL}/api/closetitems/user/${args}/closetitems`
       );
 
-    // if (response.status === 200) {
-    //   for (const item of response.data.closetitems) {
-    //     console.log(
-    //       'inside loop to get image, what is imageId ' + item.imageId
-    //     );
-    //     const itemImg = await getImage(item.imageId);
-    //     item.imageFile = itemImg;
-    //   }
-    return response.data.closetitems;
-    // } else {
-    // Always use rejectWithValue for errors/unexpected cases
-    return rejectWithValue(
-      new AxiosError(`Unexpected status: ${response.status}`)
-    ) as any;
-    // }
+    if (response.status === 200) {
+      for (const item of response.data.closetitems) {
+        if (item.imageId) {
+          const getPresignedUrlResponse = await getPresignedUrlForDownload(
+            item.imageId
+          );
+
+          if (getPresignedUrlResponse) {
+            item.imageUrl = getPresignedUrlResponse;
+          }
+        } else {
+          // Handle the case where imageId is undefined
+          console.warn('No imageId found for item:', item);
+          // Optionally set getPresignedUrlResponse = null or handle as needed
+        }
+      }
+      return response.data.closetitems;
+    } else {
+      // Always use rejectWithValue for errors/unexpected cases
+      return rejectWithValue(
+        new AxiosError(`Unexpected status: ${response.status}`)
+      ) as any;
+    }
   } catch (error: any) {
     console.log('what is error? ' + error.message);
     return rejectWithValue(error); // Use rejectWithValue for errors
@@ -92,44 +101,23 @@ export const addClosetitemWithImageData = createAsyncThunk<
 >(
   'closetitems/addclosetitem',
   async (closetitem: ClosetitemSubmitted, { rejectWithValue }) => {
-    console.log(
-      'inside addClosetitemWithImageData:received closetitem? ' +
-        JSON.stringify(closetitem)
-    );
-
     try {
       // get the presigned url
       const getPresignedUrlResponse = await getPresignedUrl(
         closetitem.image[0].name,
         closetitem.image[0].type
       );
-      console.log(
-        'inside addClosetitemWithImageData:getPresignedUrlResponse? ' +
-          JSON.stringify(getPresignedUrlResponse)
-      );
 
       closetitem.imageUrl = getPresignedUrlResponse;
 
       // upload image
 
-      const uploadImageResponse = await uploadImageToS3(
-        getPresignedUrlResponse,
-        closetitem.image[0]
-      );
-
-      console.log(
-        'inside addClosetitemWithImageData:closetitem should have imageURl ' +
-          JSON.stringify(closetitem)
-      );
+      await uploadImageToS3(getPresignedUrlResponse, closetitem.image[0]);
 
       //Create the closet closetitem
       const response = await api.post(
         `${URL}/api/closetitems/addclosetitem`,
         closetitem
-      );
-
-      console.log(
-        'what is response AFTER post? ' + JSON.stringify(response.data)
       );
 
       //You might want to extract the relevant data from the response before returning

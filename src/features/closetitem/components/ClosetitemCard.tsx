@@ -22,9 +22,7 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
   closetitem,
 }): React.JSX.Element => {
   const date = new Date(closetitem.dateCreated);
-  //console.log('inside closetitemcard');
   const imageData = closetitem?.imageFile?.data;
-  const imageSource = imageData ? `data:image/jpeg;base64,${imageData}` : '';
 
   const formattedDate = date.toLocaleDateString('en-US', {
     year: 'numeric',

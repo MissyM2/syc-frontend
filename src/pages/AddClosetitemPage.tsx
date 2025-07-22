@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { api } from '../index.tsx';
 import type { SubmitHandler } from 'react-hook-form';
 //import { Button, Form } from 'react-bootstrap';
-import axios from 'axios';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -19,12 +17,6 @@ import {
 // import Spinner from '../components/Spinner';
 
 import { addClosetitemWithImageData } from '../features/closetitem/closetitemActions.ts';
-
-import {
-  getPresignedUrl,
-  uploadImageToS3,
-} from '../lib/images/uploaderFunctions.ts';
-//import { uploadImage } from '../features/image/imageSlice.ts';
 
 interface Option {
   value: string;
@@ -49,9 +41,7 @@ export const AddClosetitemPage: React.FC = () => {
   const { userInfo } = useSelector((state: RootState) => state.auth);
   const userId = useSelector((state: RootState) => state.auth.userInfo._id);
   //const [uploadProgress, setUploadProgress] = useState(0);
-  //const [uploadUrl, setUploadUrl] = useState<string>('');
   const [message, setMessage] = useState('');
-  //const [imageFile, setImageFile] = useState<File | null>(null);
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -79,36 +69,16 @@ export const AddClosetitemPage: React.FC = () => {
     },
   });
 
-  //const navigate = useNavigate();
-
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    console.log('inside submitHandler Form data:' + JSON.stringify(data));
-    //const imageFile = data.image[0];
-    console.log('inside submitHandler');
-
     try {
-      // if (!imageFile) {
-      //   setMessage('Please select an image file before submitting.');
-      //   return;
-      // }
-
-      const response = dispatch(addClosetitemWithImageData(data));
-
-      console.log(
-        'onSubmit:should have presignedurl, uploaded image and uploaded item: ' +
-          JSON.stringify(response)
-      );
+      const response = await dispatch(addClosetitemWithImageData(data));
+      if (response) {
+        navigate('/home');
+      }
     } catch (error) {
       alert('Submitting form failed!');
     }
   };
-
-  // const watchSeasonOptions = watch('seasons');
-  // const watchSizeOption = watch('size');
-  // const watchCategoryOption = watch('category');
-  // const watchNameOption = watch('itemName');
-  // const watchDescOption = watch('desc');
-  // const watchRatingOption = watch('desc');
 
   // if (loading) {
   //   return <p>Loading Closet Items...</p>;
@@ -119,7 +89,6 @@ export const AddClosetitemPage: React.FC = () => {
   // }
 
   const handleImageChange = (e: any) => {
-    //setImageFile(e.target.files[0]);
     const file = e.target.files[0];
     if (file) {
       // Assuming you want to store the file name
