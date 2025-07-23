@@ -9,7 +9,7 @@ interface CollapsibleOptionGroupProps {
 export const CollapsibleOptionGroup: React.FC<CollapsibleOptionGroupProps> = ({
   label,
   children,
-  initialCollapsed = false,
+  initialCollapsed = true,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(initialCollapsed);
 
@@ -19,8 +19,8 @@ export const CollapsibleOptionGroup: React.FC<CollapsibleOptionGroupProps> = ({
 
   return (
     <div className="collapsible-option-group">
-      <div className="group-header" onClick={toggleCollapse}>
-        <h3>{label}</h3>
+      <div className="group-header flex flex-row" onClick={toggleCollapse}>
+        <h3 className="pr-4">{label}</h3>
         <span>{isCollapsed ? '▼' : '▲'}</span>{' '}
         {/* Indicator for collapsed/expanded */}
       </div>

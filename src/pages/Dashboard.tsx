@@ -16,7 +16,14 @@ import { useNavigate } from 'react-router-dom';
 
 import { FaPlus } from 'react-icons/fa6';
 import RoundButton from '../features/closetitem/components/RoundButton.tsx';
-import { urlToHttpOptions } from 'url';
+
+interface FilterObject {
+  searchTerm: string;
+  // categories: string[];
+  // seasons: string[];
+  // sizes: string[];
+  // sort: string;
+}
 
 const Dashboard: React.FC = () => {
   const [closetitems, setClosetitems] = useState<Closetitem[]>([]);
@@ -25,11 +32,57 @@ const Dashboard: React.FC = () => {
   const [filteredClosetitems, setFilteredClosetitems] = useState<Closetitem[]>(
     []
   );
+
+  const [filters, setFilters] = useState<FilterObject>({
+    searchTerm: '',
+    // categories: [],
+    // seasons: [],
+    // sizes: [],
+    // sort: 'asc',
+  });
+
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const dispatch = useDispatch<AppDispatch>();
+
+  const sortAndFilterClosetitems = (filterObj: FilterObject) => {
+    console.log(filterObj.searchTerm);
+    //console.log(filterObj.category);
+    return closetitems.filter((closetitem) => {
+      return (
+        // filter by search term - check if closetitem.name includes the current search term
+        closetitem.itemName &&
+        closetitem.itemName
+          .toLowerCase()
+          .indexOf(filterObj.searchTerm.toLowerCase()) > -1
+        // .indexOf(filterObj.searchTerm.toLowerCase()) > -1 &&
+        //filter by category - check if closetitem.category is part of the options inside the filters.category array
+        // (filterObj.categories.length > 0
+        //   ? filterObj.categories.includes(closetitem.category)
+        //   : true) &&
+        // (filterObj.seasons.length > 0
+        //   ? filterObj.seasons.includes(closetitem.season)
+        //   : true) &&
+        // (filterObj.sizes.length > 0
+        //   ? filterObj.sizes.includes(closetitem.size)
+        //   : true)
+      );
+      // expand with more checks to fit your data
+      //})
+      // .sort((a: any, b: any) => {
+      //   // first, get the name parameter
+      //   const seasonA = a.season.toLowerCase();
+      //   const seasonB = b.season.toLowerCase();
+      //   if (filterObj.sort === 'desc') {
+      //     //return seasonB.localeCompare(seasonA); // returns 1 if nameB > nameA and returns -1 if nameB < nameA
+      //   } else if (filterObj.sort === 'asc') {
+      //     return seasonA.localeCompare(seasonB); // returns 1 if nameA > nameB and returns -1 if nameA < nameB
+      //   }
+      return 0;
+    });
+  };
 
   useEffect(() => {
     const loadAllClosetitems = async () => {
@@ -54,10 +107,10 @@ const Dashboard: React.FC = () => {
     loadAllClosetitems();
   }, []);
 
-  // useEffect(() => {
-  //   const data = sortAndFilterClosetitems(filters);
-  //   setFilteredClosetitems(data);
-  // }, [filters, closetitems]);
+  useEffect(() => {
+    const data = sortAndFilterClosetitems(filters);
+    setFilteredClosetitems(data);
+  }, [filters, closetitems]);
 
   if (loading) {
     return <p>Loading Closet Items...</p>;
@@ -74,7 +127,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="w-full">
-      <div className="flex justify-end">
+      <div className="flex justify-end p-4">
         <RoundButton onClick={handleClick}>
           <FaPlus className="h-10 w-10" />
         </RoundButton>
@@ -82,41 +135,51 @@ const Dashboard: React.FC = () => {
       <SearchBox searchTerm={searchTerm} onSearch={setSearchTerm} />
       {/* <FilterMenu filters={filters} setFilters={setFilters} />
       Filters: {JSON.stringify(filters)} */}
-      <div className="flex flex-row gap-2 bg-red-200 p-4">
-        <div className="bg-blue-200">
+      <div className="grid grid-cols-4 w-3/4">
+        <div className="p-2">
           <CollapsibleOptionGroup label="Category">
-            <div className="flex flex-col gap-2 bg-red-200">
+            <div className="flex flex-col gap-2">
               {categoryItems.map((option) => (
-                <label>
+                <label className="text-sm text-rose-400">
                   <input type="checkbox" name={option.value} /> {option.value}
                 </label>
               ))}
             </div>
           </CollapsibleOptionGroup>
         </div>
-        <div className="bg-green-200">
+        <div className="p-2">
           <CollapsibleOptionGroup label="Season" initialCollapsed={true}>
-            <div className="flex flex-col gap-2 bg-red-200">
+            <div className="flex flex-col gap-2">
               {seasonItems.map((option) => (
-                <label>
+                <label className="text-sm text-rose-400">
                   <input type="checkbox" name={option.value} /> {option.value}
                 </label>
               ))}
             </div>
           </CollapsibleOptionGroup>
         </div>
-        <div className="bg-orange-200">
+        <div className="p-2">
           <CollapsibleOptionGroup label="Size">
-            <div className="flex flex-col gap-2 bg-red-200">
+            <div className="flex flex-col gap-2">
               {sizeItems.map((option) => (
-                <label>
+                <label className="text-sm text-rose-400">
                   <input type="radio" name={option.value} /> {option.value}
                 </label>
               ))}
             </div>
           </CollapsibleOptionGroup>
         </div>
+        <div className="p-2">
+          <CollapsibleOptionGroup label="Rating">
+            <div className="flex flex-col gap-2">
+              <label className="text-sm text-rose-400">
+                <input type="radio" name="rating" /> Rating
+              </label>
+            </div>
+          </CollapsibleOptionGroup>
+        </div>
       </div>
+      <div className="col-span-1"></div>
       <OutputList data={filteredClosetitems} />
     </div>
   );
