@@ -9,13 +9,13 @@ export interface Closetitem {
   rating: string;
   imageUrl: string;
   imagePresignedUrl: string;
-  imageId?: string;
+  imageId: string;
   userId: string;
 }
 
-export interface ClosetitemsState {
+export interface ClosetState {
   closetitems: Closetitem[];
-  loading: boolean;
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
   success: boolean;
 }

@@ -1,9 +1,9 @@
-import type { AppDispatch, RootState } from '@/app/store';
+//import type { AppDispatch, RootState } from '@/app/store';
 import type { Closetitem } from './closetitemInterfaces';
-import type { TClosetitemList } from './closetitemTypes.ts';
+//import type { TClosetitemList } from './closetitemTypes.ts';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '../../index.tsx';
-//import api from 'axios';
+import axios from 'axios';
 import { AxiosError } from 'axios';
 import type { AxiosResponse } from 'axios';
 //import { uploadImage } from '../image/imageSlice.ts';
@@ -11,6 +11,7 @@ import {
   getPresignedUrl,
   uploadImageToS3,
   getPresignedUrlForDownload,
+  deleteSingleImageFromS3ByUser,
 } from '../../lib/images/S3Utils.ts';
 
 interface ClosetitemSubmitted {
@@ -30,12 +31,48 @@ interface ClosetDataResponse {
   closetitems: Closetitem[];
 }
 
+const URL = 'http://localhost:3000';
+
+// create a closetitem, with image, for a specific user
+export const addClosetitemWithImageData = createAsyncThunk<
+  Closetitem,
+  ClosetitemSubmitted,
+  { rejectValue: AxiosError }
+>(
+  'closetitems/addclosetitem',
+  async (closetitem: ClosetitemSubmitted, { rejectWithValue }) => {
+    try {
+      // get the presigned url
+      const getPresignedUrlResponse = await getPresignedUrl(
+        closetitem.userId,
+        closetitem.image[0].name,
+        closetitem.image[0].type
+      );
+
+      closetitem.imageUrl = getPresignedUrlResponse;
+
+      // upload image
+
+      await uploadImageToS3(getPresignedUrlResponse, closetitem.image[0]);
+
+      //Create the closet closetitem
+      const response = await api.post(
+        `${URL}/api/closetitems/addclosetitem`,
+        closetitem
+      );
+
+      //You might want to extract the relevant data from the response before returning
+      return response.data as Closetitem; // Assuming the successful response data structure is ClosetClosetitem
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export interface FetchClosetitemsByUserArgs {
   userId: string;
 }
-
-const URL = 'http://localhost:3000';
-
+// Get all closetitems for a specific user
 export const getClosetitemsByUserId = createAsyncThunk<
   Closetitem[],
   FetchClosetitemsByUserArgs,
@@ -77,38 +114,49 @@ export const getClosetitemsByUserId = createAsyncThunk<
   }
 });
 
-// async thunk for making the POST request
-export const addClosetitemWithImageData = createAsyncThunk<
-  Closetitem,
-  ClosetitemSubmitted,
-  { rejectValue: AxiosError }
->(
-  'closetitems/addclosetitem',
-  async (closetitem: ClosetitemSubmitted, { rejectWithValue }) => {
-    try {
-      // get the presigned url
-      const getPresignedUrlResponse = await getPresignedUrl(
-        closetitem.userId,
-        closetitem.image[0].name,
-        closetitem.image[0].type
-      );
+// delete specific closetitem
 
-      closetitem.imageUrl = getPresignedUrlResponse;
+export interface DeleteClosetitemArgs {
+  itemId: string;
+  userId: string;
+  imageId: string;
+}
 
-      // upload image
+export const deleteClosetitemAndImageData = createAsyncThunk<
+  string,
+  DeleteClosetitemArgs,
+  { rejectValue: string }
+>('closetitems/deleteclosetitem', async (args, { rejectWithValue }) => {
+  console.log('inside deleteClosetitemAndImageData');
+  try {
+    // 1. delete image from S3 first
+    const response = await deleteSingleImageFromS3ByUser(
+      args.userId,
+      args.imageId
+    );
+    console.log(
+      'after deleteSingleImageFromS3ByUser. what is response? ' +
+        JSON.stringify(response)
+    );
 
-      await uploadImageToS3(getPresignedUrlResponse, closetitem.image[0]);
+    // 2. delete the closetitem from MongoDB
+    const res = await api.delete(`${URL}/api/closetitems/${args.itemId}`);
+    console.log(
+      'after deletion of closetitem. what is res? ' + JSON.stringify(res)
+    );
 
-      //Create the closet closetitem
-      const response = await api.post(
-        `${URL}/api/closetitems/addclosetitem`,
-        closetitem
-      );
+    // 3. update the array in the user object to remove the item with args.closetitemId
+    await api.delete(`${URL}/api/users/${args.userId}`);
+    console.log('after update of user array');
 
-      //You might want to extract the relevant data from the response before returning
-      return response.data as Closetitem; // Assuming the successful response data structure is ClosetClosetitem
-    } catch (error: any) {
-      return rejectWithValue(error.response.data);
+    return args.itemId;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      // Handle Axios specific errors
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to delete item'
+      ); //
     }
+    return rejectWithValue('An unknown error occurred'); //
   }
-);
+});

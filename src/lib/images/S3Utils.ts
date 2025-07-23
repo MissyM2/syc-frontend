@@ -84,3 +84,44 @@ export const getPresignedUrlForDownload = async (
     throw error;
   }
 };
+
+export const deleteSingleImageFromS3ByUser = async (
+  userKey: string,
+  imageKey: string
+) => {
+  if (!userKey || !imageKey) {
+    console.log('selected file is missing');
+    return;
+  }
+  try {
+    console.log('inside S3Utils: deleteSingleImageFromS3ByUser');
+    const apiEndpoint =
+      'https://vwja68xdu0.execute-api.us-east-1.amazonaws.com/dev/images';
+
+    // const responseFromDeletion = await api.delete<{ response: string }>(
+    //   `${apiEndpoint}?${new URLSearchParams({
+    //     userKey: userId,
+    //     imageKey: imageFilename,
+    //   })}`
+    // );
+
+    const responseFromDeletion = await api.delete<{ response: string }>(
+      `${apiEndpoint}/${userKey}/${imageKey}`
+    );
+
+    console.log(
+      'what is S3Utils: deleteSingleImageFromS3ByUser, response? ' +
+        JSON.stringify(responseFromDeletion)
+    );
+    console.log(
+      'what is responseFromDeletion.data? ' + responseFromDeletion.data
+    );
+
+    //const { downloadUrl } = responseFromDeletion.data;
+
+    return responseFromDeletion.data;
+  } catch (error) {
+    console.error('Error getting presigned URL:', error);
+    throw error;
+  }
+};
