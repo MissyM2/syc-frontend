@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import type { Closetitem } from '../../../interfaces/Interfaces.tsx';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { FaMinus } from 'react-icons/fa6';
+import { FaEdit } from 'react-icons/fa';
+import RoundButtonSmall from './RoundButtonSmall.tsx';
 
 import {
   Card,
@@ -35,9 +38,31 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
     minute: '2-digit',
   });
 
+  const handleClickDelete = () => {
+    alert('Delete button clicked!');
+    //navigate('/addclosetitem');
+  };
+
+  const handleClickEdit = () => {
+    alert('Edit button clicked!');
+    //navigate('/addclosetitem');
+  };
+
   return (
     <Link to={`/closetitem-detail-page/${closetitem._id}`} className="w-full">
       <Card className="w-full max-w-sm">
+        <div className="flex justify-end bg-green-200">
+          <div className="ps-1 pe-1">
+            <RoundButtonSmall onClick={handleClickDelete}>
+              <FaMinus className="h-4 w-4" />
+            </RoundButtonSmall>
+          </div>
+          <div className="ps-1 pe-1">
+            <RoundButtonSmall onClick={handleClickEdit}>
+              <FaEdit className="h-4 w-4" />
+            </RoundButtonSmall>
+          </div>
+        </div>
         <div className="grid w-full place-items-center overflow-x-scroll aspect-square  bg-gray-200">
           {closetitem.imageUrl && (
             <img className="" src={closetitem.imageUrl} alt={closetitem.name} />

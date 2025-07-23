@@ -11,7 +11,7 @@ export const OutputList: React.FC<OutputListProps> = ({ data }) => {
     return <h1>There are no items to show.</h1>;
   }
   return (
-    <div className="grid gap-4 p-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+    <div className="grid gap-2 p-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
       {/* <div>
         <img className="" src={data?.imageFile?.data} alt={data.closetitem.itemName} />
       </div> */}
