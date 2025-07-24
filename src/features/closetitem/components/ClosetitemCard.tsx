@@ -47,12 +47,10 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
   });
 
   const handleDelete = () => {
-    console.log(
-      'inside handleDelete. what is closetitem? ' + JSON.stringify(closetitem)
-    );
+    console.log('inside handleDelete');
     dispatch(
       deleteClosetitemAndImageData({
-        itemId: closetitem._id,
+        closetitemId: closetitem._id,
         userId: closetitem.userId,
         imageId: closetitem.imageId,
       })

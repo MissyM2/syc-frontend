@@ -2,10 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 import { registerUser, userLogin } from './authActions';
+import type { User } from '../user/userInterfaces.ts';
+import type { TClosetitemList } from '../closetitem/closetitemTypes.ts';
 
 export interface AuthState {
   loading: boolean;
-  userInfo: any;
+  userInfo: User | null;
   userToken: string | null;
   error: string | null;
   success: boolean;
@@ -27,6 +29,13 @@ const initialState: AuthState = {
   token: sessionStorage.getItem('userToken'), // initial load from sessionStorage
   isAuthenticated: !!sessionStorage.getItem('userToken'),
 };
+
+export interface UserLoginReturnPayload {
+  _id: string;
+  userName: string;
+  email: string;
+  closetitems: TClosetitemList;
+}
 
 const authSlice = createSlice({
   name: 'auth',
@@ -63,12 +72,29 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(userLogin.fulfilled, (state, { payload }) => {
-        state.loading = false;
-        state.userInfo = payload;
-        state.userToken = payload.userToken;
-        state.isAuthenticated = true;
-      })
+      .addCase(
+        userLogin.fulfilled,
+        (
+          state,
+          action: PayloadAction<{
+            loggedInUserInfo: UserLoginReturnPayload;
+            token: string;
+          }>
+        ) => {
+          // console.log(
+          //   'inside userLogin.fulfilled case.  What is loggedInUserInfo? ' +
+          //     JSON.stringify(action.payload)
+          // );
+          state.loading = false;
+          state.userInfo = action.payload.loggedInUserInfo;
+          state.userToken = action.payload.token;
+          state.isAuthenticated = true;
+          // console.log(
+          //   'inside userLogin.fulfilled case.  waht is state after update? ' +
+          //     JSON.stringify(state.userInfo)
+          // );
+        }
+      )
       .addCase(userLogin.rejected, (state, { payload }) => {
         state.loading = false;
         state.error =

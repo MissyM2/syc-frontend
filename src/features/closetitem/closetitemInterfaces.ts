@@ -19,3 +19,9 @@ export interface ClosetState {
   error: string | null;
   success: boolean;
 }
+
+export interface DeleteClosetitemArgs {
+  userId: string;
+  closetitemId: string;
+  imageId: string;
+}

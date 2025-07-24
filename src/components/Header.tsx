@@ -8,7 +8,6 @@ import { navLinks, navAdminLinks } from '../lib/navbarData';
 import { cn } from '../lib/utils';
 import { BiMenu } from 'react-icons/bi';
 import type { RootState, AppDispatch } from '../app/store';
-//import { authApi } from '../app/services/auth/authService.js';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);

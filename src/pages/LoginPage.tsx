@@ -1,12 +1,15 @@
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { userLogin } from '../features/auth/authActions';
+import { addUserAfterAuth } from '../features/user/userSlice';
 import { useEffect } from 'react';
 import type { RootState, AppDispatch } from '../app/store';
 
 import Error from '../components/Error';
 import Spinner from '../components/Spinner';
+import { authApi } from '@/app/services/auth/authService';
 
 interface UserAddPageProps {
   //onUpdate: (newValue: boolean) => void;
@@ -21,6 +24,10 @@ const LoginPage: React.FC<UserAddPageProps> = () => {
   const { loading, userInfo, error } = useSelector(
     (state: RootState) => state.auth
   );
+
+  const authSt = useSelector((state: RootState) => state.auth);
+
+  const userSt = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
 
   const { register, handleSubmit } = useForm<LoginFormInputs>();
@@ -34,8 +41,29 @@ const LoginPage: React.FC<UserAddPageProps> = () => {
     }
   }, [navigate, userInfo]);
 
-  const submitForm = (data: LoginFormInputs) => {
-    dispatch(userLogin(data));
+  const submitForm = async (data: LoginFormInputs) => {
+    //console.log('auth: what are users BEFORE login? ' + JSON.stringify(authSt));
+
+    const resultAction = await dispatch(userLogin(data));
+    // console.log(
+    //   'after fulfillment.  waht is state after update? ' +
+    //     JSON.stringify(authSt.userInfo)
+    // );
+    // console.log('auth: what are users AFTER login? ' + JSON.stringify(authSt));
+    // console.log('users: what are users before login? ' + JSON.stringify(users));
+
+    const { loggedInUserInfo } = unwrapResult(resultAction);
+    //console.log('what is userInfo? ' + JSON.stringify(userInfo));
+
+    // console.log(
+    //   'Before User update: submit Form userSt' + JSON.stringify(userSt)
+    // );
+
+    dispatch(addUserAfterAuth(loggedInUserInfo));
+
+    // console.log(
+    //   'AFTER User update: submit Form userSt' + JSON.stringify(userSt)
+    // );
   };
 
   const handleClick = () => {

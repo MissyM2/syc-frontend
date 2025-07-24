@@ -1,83 +1,101 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { updateUser, deleteUser, getAllUsers } from './userActions';
+import type {
+  User,
+  UserState,
+  UserClosetitemReferencePayload,
+} from './userInterfaces';
+//import type { TUserList } from './userTypes';
 
-export interface User {
-  _id: string;
-  userName: string;
-  email: string;
-  password?: string;
-}
+import {
+  // updateUser,
+  // deleteUser,
+  // getAllUsers,
+  removeUserClosetitemReference,
+  addUserClosetitemReference,
+} from './userActions';
 
-export interface UsersState {
-  users: User[];
-  loading: boolean;
-  error: string | null;
-  success: boolean;
-}
-
-const initialState: UsersState = {
-  users: [],
-  loading: false,
+const initialState: UserState = {
+  userInfo: null,
+  status: 'idle',
   error: null,
   success: false,
 };
 
-export type TUserList = User[];
-
 const userSlice = createSlice({
-  name: 'users',
+  name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    addUserAfterAuth: (state, action: PayloadAction<User>) => {
+      console.log(
+        'inside addUserAfterAuth BEFORE UPDATE' + JSON.stringify(state.userInfo)
+      );
+
+      state.userInfo = action.payload;
+      console.log(
+        'inside addUserAfterAuth AFTER UPDATE' + JSON.stringify(state.userInfo)
+      );
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(getAllUsers.pending, (state) => {
-        state.loading = true;
+      .addCase(removeUserClosetitemReference.pending, (state) => {
+        state.status = 'loading';
         state.error = null;
       })
       .addCase(
-        getAllUsers.fulfilled,
-        (state, action: PayloadAction<User[]>) => {
-          state.loading = false;
-          state.users = action.payload;
+        removeUserClosetitemReference.fulfilled,
+        (state, action: PayloadAction<UserClosetitemReferencePayload>) => {
+          console.log('deleteClosetitemIdFromUser');
+          console.log(
+            'inside deleteClosetitemIdFromUser BEFORE FILTER' +
+              JSON.stringify(state.userInfo?.closetitems.length)
+          );
+          const deletedItemId = action.payload.closetitemId;
+
+          if (state.userInfo) {
+            state.userInfo.closetitems = state.userInfo.closetitems.filter(
+              (id) => id !== deletedItemId
+            );
+          }
+          console.log(
+            'deleteClosetitemIdFromUser AFTER FILTER' +
+              JSON.stringify(state.userInfo?.closetitems.length)
+          );
         }
       )
-      .addCase(getAllUsers.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || 'Failed to fetch users';
+
+      .addCase(removeUserClosetitemReference.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Unknown error';
       })
-      .addCase(updateUser.pending, (state) => {
-        state.loading = true;
+      .addCase(addUserClosetitemReference.pending, (state) => {
+        state.status = 'loading';
         state.error = null;
       })
-      .addCase(updateUser.fulfilled, (state, action: PayloadAction<User>) => {
-        state.loading = false;
-        const updatedClosetitem = action.payload;
-        const index = state.users.findIndex(
-          (user) => user._id === updatedClosetitem._id
-        );
-        if (index !== -1) {
-          state.users[index] = updatedClosetitem;
+      .addCase(
+        addUserClosetitemReference.fulfilled,
+        (state, action: PayloadAction<UserClosetitemReferencePayload>) => {
+          console.log('deleteClosetitemIdFromUser');
+          console.log(
+            'inside deleteClosetitemIdFromUser BEFORE FILTER' +
+              JSON.stringify(state.userInfo?.closetitems.length)
+          );
+          const deletedItemId = action.payload.closetitemId;
+
+          if (state.userInfo) {
+            state.userInfo.closetitems = state.userInfo.closetitems.filter(
+              (id) => id !== deletedItemId
+            );
+          }
+          console.log(
+            'deleteClosetitemIdFromUser AFTER FILTER' +
+              JSON.stringify(state.userInfo?.closetitems.length)
+          );
         }
-      })
-      .addCase(updateUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      })
-      .addCase(deleteUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(deleteUser.fulfilled, (state, action: PayloadAction<string>) => {
-        state.loading = false;
-        const deletedUserId = action.payload;
-        state.users = state.users.filter((user) => user._id !== deletedUserId);
-      })
-      .addCase(deleteUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      });
+      );
   },
 });
 
+export const { addUserAfterAuth } = userSlice.actions;
 export default userSlice.reducer;

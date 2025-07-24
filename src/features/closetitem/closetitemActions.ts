@@ -1,12 +1,18 @@
-//import type { AppDispatch, RootState } from '@/app/store';
-import type { Closetitem } from './closetitemInterfaces';
-//import type { TClosetitemList } from './closetitemTypes.ts';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '@/app/store';
+import type { Closetitem, DeleteClosetitemArgs } from './closetitemInterfaces';
+import type { TClosetitemList } from './closetitemTypes.ts';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '../../index.tsx';
 import axios from 'axios';
 import { AxiosError } from 'axios';
 import type { AxiosResponse } from 'axios';
-//import { uploadImage } from '../image/imageSlice.ts';
+import {
+  removeUserClosetitemReference,
+  addUserClosetitemReference,
+} from '../user/userActions.ts';
+import type { UserClosetitemReferencePayload } from '../user/userInterfaces.ts';
+
 import {
   getPresignedUrl,
   uploadImageToS3,
@@ -28,7 +34,7 @@ interface ClosetitemSubmitted {
 }
 
 interface ClosetDataResponse {
-  closetitems: Closetitem[];
+  closetitems: TClosetitemList;
 }
 
 const URL = 'http://localhost:3000';
@@ -40,7 +46,7 @@ export const addClosetitemWithImageData = createAsyncThunk<
   { rejectValue: AxiosError }
 >(
   'closetitems/addclosetitem',
-  async (closetitem: ClosetitemSubmitted, { rejectWithValue }) => {
+  async (closetitem: ClosetitemSubmitted, { dispatch, rejectWithValue }) => {
     try {
       // get the presigned url
       const getPresignedUrlResponse = await getPresignedUrl(
@@ -51,15 +57,25 @@ export const addClosetitemWithImageData = createAsyncThunk<
 
       closetitem.imageUrl = getPresignedUrlResponse;
 
-      // upload image
+      // 1. upload image
 
       await uploadImageToS3(getPresignedUrlResponse, closetitem.image[0]);
 
-      //Create the closet closetitem
+      // 2. Create the closet closetitem
       const response = await api.post(
         `${URL}/api/closetitems/addclosetitem`,
         closetitem
       );
+
+      //onst newClosetitem: Closetitem = response.data;
+      //console.log('what is newClosetitem? ' + JSON.stringify(newClosetitem));
+      const newClosetitem: UserClosetitemReferencePayload = {
+        userId: response.data.userId,
+        closetitemId: response.data._id,
+      };
+
+      // 3. add closet item Id to User
+      dispatch(addUserClosetitemReference(newClosetitem));
 
       //You might want to extract the relevant data from the response before returning
       return response.data as Closetitem; // Assuming the successful response data structure is ClosetClosetitem
@@ -69,13 +85,10 @@ export const addClosetitemWithImageData = createAsyncThunk<
   }
 );
 
-export interface FetchClosetitemsByUserArgs {
-  userId: string;
-}
 // Get all closetitems for a specific user
 export const getClosetitemsByUserId = createAsyncThunk<
   Closetitem[],
-  FetchClosetitemsByUserArgs,
+  string,
   { rejectValue: AxiosError }
 >('closetitems/getClosetitemsByUserId', async (args, { rejectWithValue }) => {
   try {
@@ -110,53 +123,57 @@ export const getClosetitemsByUserId = createAsyncThunk<
     }
   } catch (error: any) {
     console.log('what is error? ' + error.message);
-    return rejectWithValue(error); // Use rejectWithValue for errors
+    return rejectWithValue(error);
   }
 });
 
 // delete specific closetitem
 
-export interface DeleteClosetitemArgs {
-  itemId: string;
-  userId: string;
-  imageId: string;
-}
-
 export const deleteClosetitemAndImageData = createAsyncThunk<
   string,
   DeleteClosetitemArgs,
-  { rejectValue: string }
->('closetitems/deleteclosetitem', async (args, { rejectWithValue }) => {
-  console.log('inside deleteClosetitemAndImageData');
-  try {
-    // 1. delete image from S3 first
-    const response = await deleteSingleImageFromS3ByUser(
-      args.userId,
-      args.imageId
-    );
-    console.log(
-      'after deleteSingleImageFromS3ByUser. what is response? ' +
-        JSON.stringify(response)
-    );
+  { state: RootState; dispatch: AppDispatch }
+>(
+  'closetitems/deleteclosetitem',
+  async (args: DeleteClosetitemArgs, { dispatch, rejectWithValue }) => {
+    //console.log('inside deleteClosetitemAndImageData');
+    //const userId = getState().auth.userInfo._id;
 
-    // 2. delete the closetitem from MongoDB
-    const res = await api.delete(`${URL}/api/closetitems/${args.itemId}`);
-    console.log(
-      'after deletion of closetitem. what is res? ' + JSON.stringify(res)
-    );
+    try {
+      //const userId = getState().auth.userInfo._id;
 
-    // 3. update the array in the user object to remove the item with args.closetitemId
-    await api.delete(`${URL}/api/users/${args.userId}`);
-    console.log('after update of user array');
+      // 1. delete image from S3 first
+      const deleteImageResponse = await deleteSingleImageFromS3ByUser(
+        args.userId,
+        args.imageId
+      );
+      //console.log('After Deleting item: 1.deleteSingleImageFromS3ByUser');
 
-    return args.itemId;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      // Handle Axios specific errors
-      return rejectWithValue(
-        error.response?.data?.message || 'Failed to delete item'
-      ); //
+      // 2. delete the closetitem from MongoDB
+
+      const deleteClosetitemResponse = await api.delete(
+        `${URL}/api/closetitems/${args.closetitemId}`
+      );
+      //console.log('After Deleting item: 2. after deletion of closetitem.');
+
+      // 3. update the array in the user object to remove the item with args.closetitemId
+      const deleteClosetitemRefResponse = await dispatch(
+        removeUserClosetitemReference({
+          userId: args.userId,
+          closetitemId: args.closetitemId,
+        })
+      );
+      console.log('After Deleting item: 3. after update of user array.');
+
+      return args.closetitemId;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        // Handle Axios specific errors
+        return rejectWithValue(
+          error.response?.data?.message || 'Failed to delete item'
+        );
+      }
+      return rejectWithValue('An unknown error occurred'); //
     }
-    return rejectWithValue('An unknown error occurred'); //
   }
-});
+);

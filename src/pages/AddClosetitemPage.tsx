@@ -39,6 +39,8 @@ interface FormData {
 export const AddClosetitemPage: React.FC = () => {
   // const { loading, error} = useSelector((state: RootState) => state.auth);
   const { userInfo } = useSelector((state: RootState) => state.auth);
+  const closetState = useSelector((state: RootState) => state.closetitem);
+  const userState = useSelector((state: RootState) => state.user);
   const userId = useSelector((state: RootState) => state.auth.userInfo._id);
   //const [uploadProgress, setUploadProgress] = useState(0);
   const [message, setMessage] = useState('');
@@ -72,6 +74,16 @@ export const AddClosetitemPage: React.FC = () => {
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
       const response = await dispatch(addClosetitemWithImageData(data));
+      if (response) {
+        // console.log(
+        //   'show closetitem state after adding item. ' +
+        //     JSON.stringify(closetState)
+        // );
+        console.log(
+          'show user state after adding item. ' +
+            JSON.stringify(userState.userInfo?.closetitems.length)
+        );
+      }
       if (response) {
         navigate('/home');
       }

@@ -17,12 +17,12 @@ export const navAdminLinks: NavLinkType[] = [
     cname:
       'flex md:hidden bg-gray-200 border-t border-white font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
   },
-  {
-    name: 'Profile',
-    path: '/profile',
-    cname:
-      'bg-gray-200 border-t border-white font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
-  },
+  // {
+  //   name: 'Profile',
+  //   path: '/profile',
+  //   cname:
+  //     'bg-gray-200 border-t border-white font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
+  // },
   {
     name: 'User Admin',
     path: '/user-admin',

@@ -19,26 +19,18 @@ import RoundButton from '../features/closetitem/components/RoundButton.tsx';
 
 interface FilterObject {
   searchTerm: string;
-  // categories: string[];
-  // seasons: string[];
-  // sizes: string[];
-  // sort: string;
 }
 
 const Dashboard: React.FC = () => {
   const [closetitems, setClosetitems] = useState<Closetitem[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const { userInfo } = useSelector((state: RootState) => state.auth);
+  const { userInfo } = useSelector((state: RootState) => state.user);
   const [filteredClosetitems, setFilteredClosetitems] = useState<Closetitem[]>(
     []
   );
 
   const [filters, setFilters] = useState<FilterObject>({
     searchTerm: '',
-    // categories: [],
-    // seasons: [],
-    // sizes: [],
-    // sort: 'asc',
   });
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -57,29 +49,8 @@ const Dashboard: React.FC = () => {
         closetitem.itemName
           .toLowerCase()
           .indexOf(filterObj.searchTerm.toLowerCase()) > -1
-        // .indexOf(filterObj.searchTerm.toLowerCase()) > -1 &&
-        //filter by category - check if closetitem.category is part of the options inside the filters.category array
-        // (filterObj.categories.length > 0
-        //   ? filterObj.categories.includes(closetitem.category)
-        //   : true) &&
-        // (filterObj.seasons.length > 0
-        //   ? filterObj.seasons.includes(closetitem.season)
-        //   : true) &&
-        // (filterObj.sizes.length > 0
-        //   ? filterObj.sizes.includes(closetitem.size)
-        //   : true)
       );
-      // expand with more checks to fit your data
-      //})
-      // .sort((a: any, b: any) => {
-      //   // first, get the name parameter
-      //   const seasonA = a.season.toLowerCase();
-      //   const seasonB = b.season.toLowerCase();
-      //   if (filterObj.sort === 'desc') {
-      //     //return seasonB.localeCompare(seasonA); // returns 1 if nameB > nameA and returns -1 if nameB < nameA
-      //   } else if (filterObj.sort === 'asc') {
-      //     return seasonA.localeCompare(seasonB); // returns 1 if nameA > nameB and returns -1 if nameA < nameB
-      //   }
+
       return 0;
     });
   };
@@ -89,7 +60,14 @@ const Dashboard: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        const userId = userInfo._id.toString();
+        let userId: string | undefined;
+        if (userInfo) {
+          userId = userInfo._id;
+        }
+
+        if (!userId) {
+          return console.log('User ID not found');
+        }
         const resultAction = await dispatch(getClosetitemsByUserId(userId));
 
         if ('payload' in resultAction && Array.isArray(resultAction.payload)) {
@@ -120,15 +98,14 @@ const Dashboard: React.FC = () => {
     return <p>Error: {error}</p>;
   }
 
-  const handleClick = () => {
-    alert('Round button clicked!');
+  const handleAddClosetitem = () => {
     navigate('/addclosetitem');
   };
 
   return (
     <div className="w-full">
       <div className="flex justify-end p-4">
-        <RoundButton onClick={handleClick}>
+        <RoundButton onClick={handleAddClosetitem}>
           <FaPlus className="h-10 w-10" />
         </RoundButton>
       </div>

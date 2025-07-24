@@ -1,81 +1,62 @@
+import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '@/app/store';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '../../index.tsx';
+import axios from 'axios';
 import type { AxiosError, AxiosResponse } from 'axios';
+import type { User, UserClosetitemReferencePayload } from './userInterfaces';
+import type { DeleteClosetitemArgs } from '../closetitem/closetitemInterfaces';
 
-export interface User {
-  _id: string;
-  userName: string;
-  email: string;
-  password?: string;
-}
+const URL = 'http://localhost:3000';
 
-//  #1 Get all users
-export const getAllUsers = createAsyncThunk<
-  User[],
-  void,
-  { rejectValue: AxiosError }
->('users/getAllUsers', async (_, { rejectWithValue }) => {
-  try {
-    const response: AxiosResponse<User[]> = await api.get<User[]>(
-      `${URL}/api/users`
-    );
-    return response.data;
-  } catch (error) {
-    if (api.isAxiosError(error)) {
-      return rejectWithValue(error); // Reject with the AxiosError
+export const addUserClosetitemReference = createAsyncThunk<
+  UserClosetitemReferencePayload, // return type
+  UserClosetitemReferencePayload, // argument type
+  { state: RootState; dispatch: AppDispatch } // thunk API config
+>(
+  'users/addUserItemReference',
+  async ({ userId, closetitemId }, { dispatch, rejectWithValue }) => {
+    try {
+      //console.log('inside userActions:deleteUserClosetitemReference');
+
+      await api.post(`${URL}/api/users/${userId}/closetitems/${closetitemId}`);
+
+      return { userId, closetitemId };
+    } catch (error) {
+      console.error('Error removing item reference from user:', error);
+      if (typeof error === 'object' && error !== null && 'response' in error) {
+        return rejectWithValue(
+          (error as any).response?.data || 'Unknown error'
+        );
+      }
+      return rejectWithValue('Unknown error');
     }
-    throw error; // Re-throw other errors
   }
-});
+);
 
-export const updateUser = createAsyncThunk<
-  User,
-  User,
-  { state: RootState; dispatch: AppDispatch }
->('users/updateClosetitem', async (user: User, { rejectWithValue }) => {
-  try {
-    // Simulate an API call to update the user
-    const response = await fetch(`/api/users/${user._id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(user),
-    });
+export const removeUserClosetitemReference = createAsyncThunk<
+  UserClosetitemReferencePayload, // return type
+  UserClosetitemReferencePayload, // argument type
+  { state: RootState; dispatch: AppDispatch } // thunk API config
+>(
+  'users/removeUserItemReference',
+  async ({ userId, closetitemId }, { rejectWithValue }) => {
+    try {
+      //console.log('inside userActions:deleteUserClosetitemReference');
 
-    if (!response.ok) {
-      throw new Error('Failed to update user');
+      await api.delete(
+        `${URL}/api/users/${userId}/closetitems/${closetitemId}`
+      );
+
+      return { userId, closetitemId };
+    } catch (error) {
+      console.error('Error removing item reference from user:', error);
+      if (typeof error === 'object' && error !== null && 'response' in error) {
+        return rejectWithValue(
+          (error as any).response?.data || 'Unknown error'
+        );
+      }
+      return rejectWithValue('Unknown error');
     }
-
-    const updatedUser = await response.json();
-    return updatedUser;
-  } catch (error) {
-    if (api.isAxiosError(error)) {
-      return rejectWithValue(error); // Reject with the AxiosError
-    }
-    throw error; // Re-throw other errors
   }
-});
-
-export const deleteUser = createAsyncThunk<
-  string,
-  string,
-  { state: RootState; dispatch: AppDispatch }
->('users/deleteUser', async (userId: string, { rejectWithValue }) => {
-  try {
-    const response = await fetch(`/api/users/${userId}`, {
-      method: 'DELETE',
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to delete user');
-    }
-
-    // Return the deleted user ID
-    return userId;
-  } catch (error) {
-    if (api.isAxiosError(error)) {
-      return rejectWithValue(error); // Reject with the AxiosError
-    }
-    throw error; // Re-throw other errors
-  }
-});
+);
