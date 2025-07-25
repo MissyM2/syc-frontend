@@ -1,10 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
-import type { Closetitem, ClosetState } from './closetitemInterfaces';
+import type {
+  Closetitem,
+  ClosetState,
+} from '../../interfaces/closetitemInterfaces';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import {
   //getAllClosetitems,
-  getClosetitemsByUserId,
+  fetchClosetitems,
   addClosetitemWithImageData,
   //updateClosetitem,
   deleteClosetitemAndImageData,
@@ -18,7 +21,7 @@ const initialState: ClosetState = {
 };
 
 const closetitemSlice = createSlice({
-  name: 'closetitem',
+  name: 'closet',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -33,13 +36,9 @@ const closetitemSlice = createSlice({
       .addCase(
         addClosetitemWithImageData.fulfilled,
         (state, action: PayloadAction<Closetitem>) => {
-          console.log(
-            'what does the state.closetitems look like? ' +
-              state.closetitems.length
-          );
           state.closetitems.push(action.payload);
           console.log(
-            'what does the state.closetitems look like AFTER push? ' +
+            'inside addClosetitemWithImageData.fulfilled. state.closetitems.length: ' +
               state.closetitems.length
           );
         }
@@ -49,18 +48,22 @@ const closetitemSlice = createSlice({
         state.error = action.error.message || 'Unknown error';
       })
 
-      .addCase(getClosetitemsByUserId.pending, (state) => {
+      .addCase(fetchClosetitems.pending, (state) => {
         state.status = 'loading';
         state.error = null;
       })
       .addCase(
-        getClosetitemsByUserId.fulfilled,
+        fetchClosetitems.fulfilled,
         (state, action: PayloadAction<Closetitem[]>) => {
           state.status = 'succeeded';
+          console.log(
+            'inside fetchClosetitems.fulfilled. state.closetitems.length:' +
+              state.closetitems.length
+          );
           state.closetitems = action.payload;
         }
       )
-      .addCase(getClosetitemsByUserId.rejected, (state, action) => {
+      .addCase(fetchClosetitems.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message || 'Unknown error';
       })
@@ -75,7 +78,12 @@ const closetitemSlice = createSlice({
           state.status = 'succeeded';
           state.closetitems = state.closetitems.filter(
             (item) => item._id !== action.payload
-          ); // Remove the deleted item from the state
+          );
+
+          console.log(
+            'inside deleteClosetitemAndImageData.fulfilled. state.closetitems.length: ' +
+              state.closetitems.length
+          );
         }
       )
       .addCase(deleteClosetitemAndImageData.rejected, (state, action) => {

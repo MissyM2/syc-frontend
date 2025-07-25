@@ -1,4 +1,5 @@
 export interface Closetitem {
+  dateCreated: string | number | Date;
   presignedUrl: any;
   _id: string;
   category: string;

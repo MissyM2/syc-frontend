@@ -4,7 +4,7 @@ import type {
   User,
   UserState,
   UserClosetitemReferencePayload,
-} from './userInterfaces';
+} from '../../interfaces/userInterfaces';
 //import type { TUserList } from './userTypes';
 
 import {
@@ -27,14 +27,16 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     addUserAfterAuth: (state, action: PayloadAction<User>) => {
-      console.log(
-        'inside addUserAfterAuth BEFORE UPDATE' + JSON.stringify(state.userInfo)
-      );
+      // console.log(
+      //   'inside addUserAfterAuth BEFORE UPDATE' +
+      //     JSON.stringify(state.userInfo?.closetitems.length)
+      // );
 
       state.userInfo = action.payload;
-      console.log(
-        'inside addUserAfterAuth AFTER UPDATE' + JSON.stringify(state.userInfo)
-      );
+      // console.log(
+      //   'inside addUserAfterAuth AFTER UPDATE' +
+      //     JSON.stringify(state.userInfo.closetitems.length)
+      // );
     },
   },
   extraReducers: (builder) => {
@@ -46,11 +48,11 @@ const userSlice = createSlice({
       .addCase(
         removeUserClosetitemReference.fulfilled,
         (state, action: PayloadAction<UserClosetitemReferencePayload>) => {
-          console.log('deleteClosetitemIdFromUser');
-          console.log(
-            'inside deleteClosetitemIdFromUser BEFORE FILTER' +
-              JSON.stringify(state.userInfo?.closetitems.length)
-          );
+          // console.log('deleteClosetitemIdFromUser');
+          // console.log(
+          //   'inside deleteClosetitemIdFromUser BEFORE FILTER' +
+          //     JSON.stringify(state.userInfo?.closetitems.length)
+          // );
           const deletedItemId = action.payload.closetitemId;
 
           if (state.userInfo) {
@@ -59,8 +61,8 @@ const userSlice = createSlice({
             );
           }
           console.log(
-            'deleteClosetitemIdFromUser AFTER FILTER' +
-              JSON.stringify(state.userInfo?.closetitems.length)
+            'inside removeUserClosetitemReference.fulfilled state.userInfo?.closetitems.length: ' +
+              state.userInfo?.closetitems.length
           );
         }
       )
@@ -76,21 +78,16 @@ const userSlice = createSlice({
       .addCase(
         addUserClosetitemReference.fulfilled,
         (state, action: PayloadAction<UserClosetitemReferencePayload>) => {
-          console.log('deleteClosetitemIdFromUser');
-          console.log(
-            'inside deleteClosetitemIdFromUser BEFORE FILTER' +
-              JSON.stringify(state.userInfo?.closetitems.length)
-          );
-          const deletedItemId = action.payload.closetitemId;
+          // console.log('deleteClosetitemIdFromUser');
+          // console.log(
+          //   'inside deleteClosetitemIdFromUser BEFORE FILTER' +
+          //     JSON.stringify(state.userInfo?.closetitems.length)
+          // );
 
-          if (state.userInfo) {
-            state.userInfo.closetitems = state.userInfo.closetitems.filter(
-              (id) => id !== deletedItemId
-            );
-          }
+          state.userInfo?.closetitems.push(action.payload.closetitemId);
           console.log(
-            'deleteClosetitemIdFromUser AFTER FILTER' +
-              JSON.stringify(state.userInfo?.closetitems.length)
+            'inside deleteClosetitemIdFromUser.fulfilled. state.userInfo?.closetitems.length: ' +
+              state.userInfo?.closetitems.length
           );
         }
       );

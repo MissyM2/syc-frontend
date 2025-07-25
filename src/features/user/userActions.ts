@@ -4,8 +4,11 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '../../index.tsx';
 import axios from 'axios';
 import type { AxiosError, AxiosResponse } from 'axios';
-import type { User, UserClosetitemReferencePayload } from './userInterfaces';
-import type { DeleteClosetitemArgs } from '../closetitem/closetitemInterfaces';
+import type {
+  User,
+  UserClosetitemReferencePayload,
+} from '../../interfaces/userInterfaces.ts';
+import type { DeleteClosetitemArgs } from '../../interfaces/closetitemInterfaces.ts';
 
 const URL = 'http://localhost:3000';
 
@@ -17,13 +20,15 @@ export const addUserClosetitemReference = createAsyncThunk<
   'users/addUserItemReference',
   async ({ userId, closetitemId }, { dispatch, rejectWithValue }) => {
     try {
-      //console.log('inside userActions:deleteUserClosetitemReference');
+      console.log('inside userActions:addUserClosetitemReference');
+      console.log('what is userId? ' + userId);
+      console.log('what is closetitemId? ' + closetitemId);
 
       await api.post(`${URL}/api/users/${userId}/closetitems/${closetitemId}`);
 
       return { userId, closetitemId };
     } catch (error) {
-      console.error('Error removing item reference from user:', error);
+      console.error('Error adding item reference from user:', error);
       if (typeof error === 'object' && error !== null && 'response' in error) {
         return rejectWithValue(
           (error as any).response?.data || 'Unknown error'

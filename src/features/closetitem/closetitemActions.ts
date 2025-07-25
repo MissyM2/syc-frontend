@@ -1,7 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '@/app/store';
-import type { Closetitem, DeleteClosetitemArgs } from './closetitemInterfaces';
-import type { TClosetitemList } from './closetitemTypes.ts';
+import type {
+  Closetitem,
+  DeleteClosetitemArgs,
+} from '../../interfaces/closetitemInterfaces.ts';
+import type { TClosetitemList } from '../../interfaces/closetitemTypes.ts';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '../../index.tsx';
 import axios from 'axios';
@@ -11,7 +14,7 @@ import {
   removeUserClosetitemReference,
   addUserClosetitemReference,
 } from '../user/userActions.ts';
-import type { UserClosetitemReferencePayload } from '../user/userInterfaces.ts';
+import type { UserClosetitemReferencePayload } from '../../interfaces/userInterfaces.ts';
 
 import {
   getPresignedUrl,
@@ -75,7 +78,7 @@ export const addClosetitemWithImageData = createAsyncThunk<
       };
 
       // 3. add closet item Id to User
-      dispatch(addUserClosetitemReference(newClosetitem));
+      await dispatch(addUserClosetitemReference(newClosetitem));
 
       //You might want to extract the relevant data from the response before returning
       return response.data as Closetitem; // Assuming the successful response data structure is ClosetClosetitem
@@ -86,11 +89,11 @@ export const addClosetitemWithImageData = createAsyncThunk<
 );
 
 // Get all closetitems for a specific user
-export const getClosetitemsByUserId = createAsyncThunk<
+export const fetchClosetitems = createAsyncThunk<
   Closetitem[],
   string,
   { rejectValue: AxiosError }
->('closetitems/getClosetitemsByUserId', async (args, { rejectWithValue }) => {
+>('closetitems/fetchClosetitems', async (args, { rejectWithValue }) => {
   try {
     const response: AxiosResponse<ClosetDataResponse> =
       await api.get<ClosetDataResponse>(
@@ -163,7 +166,7 @@ export const deleteClosetitemAndImageData = createAsyncThunk<
           closetitemId: args.closetitemId,
         })
       );
-      console.log('After Deleting item: 3. after update of user array.');
+      //console.log('After Deleting item: 3. after update of user array.');
 
       return args.closetitemId;
     } catch (error) {
