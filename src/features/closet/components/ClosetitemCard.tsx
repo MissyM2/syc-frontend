@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux';
-import type { RootState, AppDispatch } from '../../../app/store';
-import { deleteClosetitemAndImageData } from '../closetitemActions';
+import type { RootState, AppDispatch } from '../../../app/store.ts';
+import { deleteClosetitemAndImageData } from '../closetActions.ts';
 
 import ownerImg from '../../../assets/ownerImg.jpg';
 import { Link } from 'react-router-dom';
-import type { Closetitem } from '../../../interfaces/closetitemInterfaces.ts';
+import type { Closetitem } from '../../../interfaces/closetInterfaces.ts';
 //import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { FaMinus } from 'react-icons/fa6';
@@ -62,7 +62,7 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
   };
 
   return (
-    <Link to={`/closetitem-detail-page/${closetitem._id}`} className="w-full">
+    <Link to={`/closet-detail-page/${closetitem._id}`} className="w-full">
       <Card className="w-full max-w-sm">
         <div className="flex justify-end bg-green-200">
           <div className="ps-1 pe-1">
@@ -103,7 +103,7 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
               <Label>{closetitem.category}</Label>
             </div>
             <div className="">
-              <Label>{closetitem.season}</Label>
+              <Label>{closetitem.seasons}</Label>
             </div>
             <div className="">
               <Label>{closetitem.rating}</Label>

@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { AxiosError } from 'axios';
 import type { User } from '../../interfaces/userInterfaces.ts';
-import type { TClosetitemList } from '../../interfaces/closetitemTypes.ts';
+import type { TClosetitemList } from '../../interfaces/closetTypes.ts';
 
 export interface UserLoginPayload {
   email: string;

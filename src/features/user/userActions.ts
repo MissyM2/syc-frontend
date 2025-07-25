@@ -6,27 +6,32 @@ import axios from 'axios';
 import type { AxiosError, AxiosResponse } from 'axios';
 import type {
   User,
-  UserClosetitemReferencePayload,
+  UserClosetitemReferenceReturn,
+  UserClosetitemReferenceArgs,
 } from '../../interfaces/userInterfaces.ts';
-import type { DeleteClosetitemArgs } from '../../interfaces/closetitemInterfaces.ts';
+import type { DeleteClosetitemArgs } from '../../interfaces/closetInterfaces.ts';
 
 const URL = 'http://localhost:3000';
 
 export const addUserClosetitemReference = createAsyncThunk<
-  UserClosetitemReferencePayload, // return type
-  UserClosetitemReferencePayload, // argument type
+  UserClosetitemReferenceReturn, // return type
+  UserClosetitemReferenceArgs, // argument type
   { state: RootState; dispatch: AppDispatch } // thunk API config
 >(
-  'users/addUserItemReference',
-  async ({ userId, closetitemId }, { dispatch, rejectWithValue }) => {
+  'closet/addUserItemReference',
+  async (args: UserClosetitemReferenceArgs, { dispatch, rejectWithValue }) => {
     try {
-      console.log('inside userActions:addUserClosetitemReference');
-      console.log('what is userId? ' + userId);
-      console.log('what is closetitemId? ' + closetitemId);
+      // 1. ADD CLOSETITEM ID to USER.CLOSETITEMS ARRAY
 
-      await api.post(`${URL}/api/users/${userId}/closetitems/${closetitemId}`);
+      const postAddUserClosetitemRefRes = await api.post(
+        `${URL}/api/users/${args.userId}/closetitems/${args.closetitemId}`
+      );
 
-      return { userId, closetitemId };
+      console.log(
+        '1. ADD CLOSETITEM ID to USER.CLOSETITEMS ARRAY is completed'
+      );
+
+      return postAddUserClosetitemRefRes.data as UserClosetitemReferenceReturn;
     } catch (error) {
       console.error('Error adding item reference from user:', error);
       if (typeof error === 'object' && error !== null && 'response' in error) {
@@ -40,20 +45,20 @@ export const addUserClosetitemReference = createAsyncThunk<
 );
 
 export const removeUserClosetitemReference = createAsyncThunk<
-  UserClosetitemReferencePayload, // return type
-  UserClosetitemReferencePayload, // argument type
+  UserClosetitemReferenceReturn, // return type
+  UserClosetitemReferenceArgs, // argument type
   { state: RootState; dispatch: AppDispatch } // thunk API config
 >(
   'users/removeUserItemReference',
-  async ({ userId, closetitemId }, { rejectWithValue }) => {
+  async (args: UserClosetitemReferenceArgs, { rejectWithValue }) => {
     try {
       //console.log('inside userActions:deleteUserClosetitemReference');
 
-      await api.delete(
-        `${URL}/api/users/${userId}/closetitems/${closetitemId}`
+      const postAddUserClosetitemRefRes = await api.delete(
+        `${URL}/api/users/${args.userId}/closetitems/${args.closetitemId}`
       );
 
-      return { userId, closetitemId };
+      return postAddUserClosetitemRefRes.data as UserClosetitemReferenceReturn;
     } catch (error) {
       console.error('Error removing item reference from user:', error);
       if (typeof error === 'object' && error !== null && 'response' in error) {

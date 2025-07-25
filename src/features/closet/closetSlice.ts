@@ -3,15 +3,15 @@ import { AxiosError } from 'axios';
 import type {
   Closetitem,
   ClosetState,
-} from '../../interfaces/closetitemInterfaces';
+} from '../../interfaces/closetInterfaces';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import {
   //getAllClosetitems,
   fetchClosetitems,
-  addClosetitemWithImageData,
+  addClosetItem,
   //updateClosetitem,
   deleteClosetitemAndImageData,
-} from './closetitemActions';
+} from './closetActions';
 
 const initialState: ClosetState = {
   closetitems: [],
@@ -20,13 +20,13 @@ const initialState: ClosetState = {
   success: false,
 };
 
-const closetitemSlice = createSlice({
+const closetSlice = createSlice({
   name: 'closet',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(addClosetitemWithImageData.pending, (state) => {
+      .addCase(addClosetItem.pending, (state) => {
         state.status = 'loading';
         // console.log(
         //   'inside closetitem slice what is state. status? ' + state.status
@@ -34,16 +34,16 @@ const closetitemSlice = createSlice({
         state.error = null;
       })
       .addCase(
-        addClosetitemWithImageData.fulfilled,
+        addClosetItem.fulfilled,
         (state, action: PayloadAction<Closetitem>) => {
           state.closetitems.push(action.payload);
           console.log(
-            'inside addClosetitemWithImageData.fulfilled. state.closetitems.length: ' +
+            'inside addClosetItem.fulfilled. state.closetitems.length: ' +
               state.closetitems.length
           );
         }
       )
-      .addCase(addClosetitemWithImageData.rejected, (state, action) => {
+      .addCase(addClosetItem.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message || 'Unknown error';
       })
@@ -106,4 +106,4 @@ const closetitemSlice = createSlice({
   },
 });
 
-export default closetitemSlice.reducer;
+export default closetSlice.reducer;

@@ -1,17 +1,17 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { SearchBox } from '../features/closetitem/components/SearchBox.tsx';
-import { CollapsibleOptionGroup } from '../features/closetitem/components/CollapsibleOptionGroup.tsx';
-//import { CheckboxGroup } from '../features/closetitem/components/CheckboxGroup.tsx';
-import { OutputList } from '../features/closetitem/components/OutputList.tsx';
+import { SearchBox } from '../features/closet/components/SearchBox.tsx';
+import { CollapsibleOptionGroup } from '../features/closet/components/CollapsibleOptionGroup.tsx';
+//import { CheckboxGroup } from '../features/closet/components/CheckboxGroup.tsx';
+import { OutputList } from '../features/closet/components/OutputList.tsx';
 
-import { fetchClosetitems } from '../features/closetitem/closetitemActions.ts';
+import { fetchClosetitems } from '../features/closet/closetActions.ts';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '../app/store';
 
 import { useNavigate } from 'react-router-dom';
 
 import { FaPlus } from 'react-icons/fa6';
-import RoundButton from '../features/closetitem/components/RoundButton.tsx';
+import RoundButton from '../features/closet/components/RoundButton.tsx';
 
 // interface FilterObject {
 //   searchTerm: string;
@@ -30,6 +30,7 @@ const Dashboard: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
+    console.log('Dashboard: inside useEffect.');
     if (userId) {
       dispatch(fetchClosetitems(userId));
     }

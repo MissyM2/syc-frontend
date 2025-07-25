@@ -3,7 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import type { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 import { registerUser, userLogin } from './authActions';
 import type { User } from '../../interfaces/userInterfaces.ts';
-import type { TClosetitemList } from '../../interfaces/closetitemTypes.ts';
+import type { TClosetitemList } from '../../interfaces/closetTypes.ts';
 
 export interface AuthState {
   loading: boolean;

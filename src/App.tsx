@@ -16,7 +16,7 @@ import RootLayout from './components/RootLayout';
 // import { UserAdminPage } from './pages/UserAdminPage.tsx';
 
 import { AddClosetitemPage } from './pages/AddClosetitemPage.tsx';
-// import { ViewClosetitemDetailPage } from './features/closetitem/view-closetitem-detail.tsx';
+// import { ViewClosetitemDetailPage } from './features/closet/view-closetitem-detail.tsx';
 // import { NotFoundPage } from './pages/NotFoundPage';
 
 const router = createBrowserRouter([

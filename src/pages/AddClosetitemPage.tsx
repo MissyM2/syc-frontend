@@ -11,12 +11,12 @@ import {
   seasonItems,
   sizeItems,
   categoryItems,
-} from '../features/closetitem/Closetitem-datas.ts';
+} from '../features/closet/Closetitem-datas.ts';
 
 // import Error from '../components/Error';
 // import Spinner from '../components/Spinner';
 
-import { addClosetitemWithImageData } from '../features/closetitem/closetitemActions.ts';
+import { addClosetItem } from '../features/closet/closetActions.ts';
 
 interface Option {
   value: string;
@@ -73,7 +73,7 @@ export const AddClosetitemPage: React.FC = () => {
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
-      const response = await dispatch(addClosetitemWithImageData(data));
+      const response = await dispatch(addClosetItem(data));
       if (response) {
         // console.log(
         //   'show closetitem state after adding item. ' +

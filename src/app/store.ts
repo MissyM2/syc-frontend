@@ -2,13 +2,13 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/authSlice';
 import { authApi } from './services/auth/authService';
 import userReducer from '../features/user/userSlice';
-import closetitemReducer from '../features/closetitem/closetitemSlice';
+import closetReducer from '../features/closet/closetSlice';
 //import imageUploadReducer from '../features/image/imageSlice';
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
-    closet: closetitemReducer,
+    closet: closetReducer,
     user: userReducer,
     [authApi.reducerPath]: authApi.reducer,
   },

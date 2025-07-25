@@ -1,4 +1,4 @@
-// import { getClosetitem } from './closetitem-api.ts';
+// import { getClosetitem } from './closet-api.ts';
 // import { useParams, useNavigate } from 'react-router-dom';
 // import { useState, useEffect } from 'react';
 // import { Button } from '@/components/ui/button';
