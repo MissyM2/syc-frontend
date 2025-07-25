@@ -6,7 +6,7 @@ import { api } from '../../index.tsx';
 //   fileName: string;
 //   fileType: string;
 // }
-export const getPresignedUrl = async (
+export const getPresignedUrlForUpload = async (
   userId: string,
   selectedFile: string,
   fileType: string

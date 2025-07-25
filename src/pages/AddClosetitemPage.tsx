@@ -39,9 +39,9 @@ interface FormData {
 export const AddClosetitemPage: React.FC = () => {
   // const { loading, error} = useSelector((state: RootState) => state.auth);
   const { userInfo } = useSelector((state: RootState) => state.auth);
-  const closetState = useSelector((state: RootState) => state.closetitem);
+  const closetState = useSelector((state: RootState) => state.closet);
   const userState = useSelector((state: RootState) => state.user);
-  const userId = useSelector((state: RootState) => state.auth.userInfo._id);
+  const userId = useSelector((state: RootState) => state.auth.userInfo?._id);
   //const [uploadProgress, setUploadProgress] = useState(0);
   const [message, setMessage] = useState('');
 

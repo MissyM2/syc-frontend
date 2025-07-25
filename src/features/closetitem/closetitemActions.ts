@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
 import type { AppDispatch, RootState } from '@/app/store';
 import type {
   Closetitem,
@@ -17,7 +18,7 @@ import {
 import type { UserClosetitemReferencePayload } from '../../interfaces/userInterfaces.ts';
 
 import {
-  getPresignedUrl,
+  getPresignedUrlForUpload,
   uploadImageToS3,
   getPresignedUrlForDownload,
   deleteSingleImageFromS3ByUser,
@@ -51,10 +52,20 @@ export const addClosetitemWithImageData = createAsyncThunk<
   'closetitems/addclosetitem',
   async (closetitem: ClosetitemSubmitted, { dispatch, rejectWithValue }) => {
     try {
+      // sanitize image file name
+      const originalFilename = closetitem.image[0].name;
+      const sanitizedFilename = originalFilename.replace(/\s/g, '_');
+
+      // add a unique identifier to the beginning of the filename
+      const uniqueId = uuidv4();
+      const newFilename = `${uniqueId}_${sanitizedFilename}`;
+
+      // change original file name to sanitized version so it is uploaded to mongodb
       // get the presigned url
-      const getPresignedUrlResponse = await getPresignedUrl(
+      const getPresignedUrlResponse = await getPresignedUrlForUpload(
         closetitem.userId,
-        closetitem.image[0].name,
+        //closetitem.image[0].name,
+        newFilename,
         closetitem.image[0].type
       );
 
@@ -65,9 +76,21 @@ export const addClosetitemWithImageData = createAsyncThunk<
       await uploadImageToS3(getPresignedUrlResponse, closetitem.image[0]);
 
       // 2. Create the closet closetitem
+
+      // Create a new object with all the same properties as the ClosetitemSubmitted but
+      // change the image URL and the sanitized filename
+      const closetitemToSend = {
+        ...closetitem,
+        imageUrl: getPresignedUrlResponse,
+        imageId: newFilename, // add this field if needed by backend
+      };
+
+      console.log(
+        'what is closetitemToSend? ' + JSON.stringify(closetitemToSend)
+      );
       const response = await api.post(
         `${URL}/api/closetitems/addclosetitem`,
-        closetitem
+        closetitemToSend
       );
 
       //onst newClosetitem: Closetitem = response.data;
