@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '../../../app/store.ts';
-import { deleteClosetitemAndImageData } from '../closetActions.ts';
+import { deleteClosetItem } from '../closetActions.ts';
 
 import ownerImg from '../../../assets/ownerImg.jpg';
 import { Link } from 'react-router-dom';
@@ -49,7 +49,7 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
   const handleDelete = () => {
     //console.log('inside handleDelete');
     dispatch(
-      deleteClosetitemAndImageData({
+      deleteClosetItem({
         closetitemId: closetitem._id,
         userId: closetitem.userId,
         imageId: closetitem.imageId,

@@ -10,11 +10,11 @@ import {
   fetchClosetitems,
   addClosetItem,
   //updateClosetitem,
-  deleteClosetitemAndImageData,
+  deleteClosetItem,
 } from './closetActions';
 
 const initialState: ClosetState = {
-  closetitems: [],
+  closetitems: [] as Closetitem[],
   status: 'idle',
   error: null,
   success: false,
@@ -68,12 +68,12 @@ const closetSlice = createSlice({
         state.error = action.error.message || 'Unknown error';
       })
 
-      .addCase(deleteClosetitemAndImageData.pending, (state) => {
+      .addCase(deleteClosetItem.pending, (state) => {
         // Pending state when deletion starts
         state.status = 'loading';
       })
       .addCase(
-        deleteClosetitemAndImageData.fulfilled,
+        deleteClosetItem.fulfilled,
         (state, action: PayloadAction<string>) => {
           state.status = 'succeeded';
           state.closetitems = state.closetitems.filter(
@@ -81,12 +81,12 @@ const closetSlice = createSlice({
           );
 
           console.log(
-            'inside deleteClosetitemAndImageData.fulfilled. state.closetitems.length: ' +
+            'inside deleteClosetItem.fulfilled. state.closetitems.length: ' +
               state.closetitems.length
           );
         }
       )
-      .addCase(deleteClosetitemAndImageData.rejected, (state, action) => {
+      .addCase(deleteClosetItem.rejected, (state, action) => {
         // Rejected state when deletion fails
         state.status = 'failed';
         if (

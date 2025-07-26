@@ -24,6 +24,7 @@ const Dashboard: React.FC = () => {
   const closetitems = useSelector(
     (state: RootState) => state.closet.closetitems
   );
+  const closetStatus = useSelector((state: RootState) => state.closet.status);
 
   const navigate = useNavigate();
 
@@ -31,7 +32,8 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     console.log('Dashboard: inside useEffect.');
-    if (userId) {
+    // if (userId) {
+    if ((closetStatus === 'idle' || closetStatus === 'succeeded') && userId) {
       dispatch(fetchClosetitems(userId));
     }
   }, [dispatch, userId]);

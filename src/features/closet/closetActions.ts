@@ -175,14 +175,14 @@ export const fetchClosetitems = createAsyncThunk<
 
 // delete specific closetitem
 
-export const deleteClosetitemAndImageData = createAsyncThunk<
+export const deleteClosetItem = createAsyncThunk<
   string,
   DeleteClosetitemArgs,
   { state: RootState; dispatch: AppDispatch }
 >(
   'closet/deleteclosetitem',
   async (args: DeleteClosetitemArgs, { dispatch, rejectWithValue }) => {
-    //console.log('inside deleteClosetitemAndImageData');
+    //console.log('inside deleteClosetItem');
     //const userId = getState().auth.userInfo._id;
 
     try {
@@ -194,7 +194,7 @@ export const deleteClosetitemAndImageData = createAsyncThunk<
         await deleteSingleImageFromS3ByUser(args.userId, args.imageId);
       if (deleteSingleImageFromS3ByUserRes) {
         console.log(
-          'deleteClosetitemAndImageData: 1.  DELETE IMAGE FROM S3 has been completed.'
+          'deleteClosetItem: 1.  DELETE IMAGE FROM S3 has been completed.'
         );
       }
 
@@ -206,7 +206,7 @@ export const deleteClosetitemAndImageData = createAsyncThunk<
       );
       if (deleteClosetitemFromMongoDbRes) {
         console.log(
-          'deleteClosetitemAndImageData: 2.  DELETE THE CLOSETITEM FROM MongoDB has been completed.'
+          'deleteClosetItem: 2.  DELETE THE CLOSETITEM FROM MongoDB has been completed.'
         );
       }
 
@@ -220,7 +220,7 @@ export const deleteClosetitemAndImageData = createAsyncThunk<
       );
       if (deleteClosetitemRefInUserRes) {
         console.log(
-          'deleteClosetitemAndImageData: 3. REMOVE THE _ID OF CLOSETITEM IN CLOSETITEMS ARRAY OF USER OBJECT has been completed.'
+          'deleteClosetItem: 3. REMOVE THE _ID OF CLOSETITEM IN CLOSETITEMS ARRAY OF USER OBJECT has been completed.'
         );
       }
 
