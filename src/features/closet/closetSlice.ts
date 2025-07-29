@@ -8,9 +8,9 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import {
   //getAllClosetitems,
   fetchClosetitems,
-  addClosetItem,
+  addClosetitem,
   //updateClosetitem,
-  deleteClosetItem,
+  deleteClosetitem,
 } from './closetActions';
 
 const initialState: ClosetState = {
@@ -26,24 +26,19 @@ const closetSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(addClosetItem.pending, (state) => {
+      .addCase(addClosetitem.pending, (state) => {
         state.status = 'loading';
-        // console.log(
-        //   'inside closetitem slice what is state. status? ' + state.status
-        // );
+
         state.error = null;
       })
       .addCase(
-        addClosetItem.fulfilled,
+        addClosetitem.fulfilled,
         (state, action: PayloadAction<Closetitem>) => {
           state.closetitems.push(action.payload);
-          console.log(
-            'inside addClosetItem.fulfilled. state.closetitems.length: ' +
-              state.closetitems.length
-          );
+          state.status = 'loading';
         }
       )
-      .addCase(addClosetItem.rejected, (state, action) => {
+      .addCase(addClosetitem.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message || 'Unknown error';
       })
@@ -56,10 +51,7 @@ const closetSlice = createSlice({
         fetchClosetitems.fulfilled,
         (state, action: PayloadAction<Closetitem[]>) => {
           state.status = 'succeeded';
-          console.log(
-            'inside fetchClosetitems.fulfilled. state.closetitems.length:' +
-              state.closetitems.length
-          );
+
           state.closetitems = action.payload;
         }
       )
@@ -68,25 +60,20 @@ const closetSlice = createSlice({
         state.error = action.error.message || 'Unknown error';
       })
 
-      .addCase(deleteClosetItem.pending, (state) => {
+      .addCase(deleteClosetitem.pending, (state) => {
         // Pending state when deletion starts
         state.status = 'loading';
       })
       .addCase(
-        deleteClosetItem.fulfilled,
+        deleteClosetitem.fulfilled,
         (state, action: PayloadAction<string>) => {
           state.status = 'succeeded';
           state.closetitems = state.closetitems.filter(
             (item) => item._id !== action.payload
           );
-
-          console.log(
-            'inside deleteClosetItem.fulfilled. state.closetitems.length: ' +
-              state.closetitems.length
-          );
         }
       )
-      .addCase(deleteClosetItem.rejected, (state, action) => {
+      .addCase(deleteClosetitem.rejected, (state, action) => {
         // Rejected state when deletion fails
         state.status = 'failed';
         if (

@@ -16,7 +16,7 @@ import {
 // import Error from '../components/Error';
 // import Spinner from '../components/Spinner';
 
-import { addClosetItem } from '../features/closet/closetActions.ts';
+import { addClosetitem } from '../features/closet/closetActions.ts';
 
 interface Option {
   value: string;
@@ -73,17 +73,21 @@ export const AddClosetitemPage: React.FC = () => {
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
-      const response = await dispatch(addClosetItem(data));
-      if (response) {
-        // console.log(
-        //   'show closetitem state after adding item. ' +
-        //     JSON.stringify(closetState)
-        // );
-        console.log(
-          'show user state after adding item. ' +
-            JSON.stringify(userState.userInfo?.closetitems.length)
-        );
-      }
+      const response = await dispatch(addClosetitem(data));
+      //if (response) {
+      // console.log(
+      //   'show closetitem state after adding item. ' +
+      //     JSON.stringify(closetState)
+      // );
+      // console.log(
+      //   'show closetitem state after adding item. ' +
+      //     JSON.stringify(userState)
+      // );
+      // console.log(
+      //   'show user state after adding item. ' +
+      //     JSON.stringify(userState.userInfo?.closetitems.length)
+      // );
+      // }
       if (response) {
         navigate('/home');
       }

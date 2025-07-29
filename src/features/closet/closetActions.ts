@@ -26,7 +26,7 @@ import {
 const URL = 'http://localhost:3000';
 
 // create a closetitem, with image, for a specific user
-export const addClosetItem = createAsyncThunk<
+export const addClosetitem = createAsyncThunk<
   Closetitem, // ReturnType: value returned by the fulfilled action's payload
   AddClosetitemArgs, // PayloadCreatorArgumentType: argument passed to the payload creator function when dispatching the thunk.
   { state: RootState; dispatch: AppDispatch; rejectValue: AxiosError } // ThunkApiConfig: an object for configuring types related to rejectWithValue, state and dispatch
@@ -43,32 +43,32 @@ export const addClosetItem = createAsyncThunk<
       const uniqueId = uuidv4();
       const newFilename = `${uniqueId}_${sanitizedFilename}`;
 
-      console.log('AddClosetitem: 1.  image has been prepped.');
+      //console.log('AddClosetitem: 1.  image has been prepped.');
 
-      // 2.  GET THE PRESIGNED URL
-      const presignedUrlForDownloadRes = await getPresignedUrlForUpload(
+      // 2.  GET THE PRESIGNED URL FOR UPLOAD
+      const presignedUrlForUploadRes = await getPresignedUrlForUpload(
         newClosetitem.userId,
         newFilename,
         newClosetitem.image[0].type
       );
 
-      if (presignedUrlForDownloadRes) {
-        console.log('AddClosetitem: 2.  PRESIGNED URL has been generated');
-      }
+      // if (presignedUrlForUploadRes) {
+      //   console.log('AddClosetitem: 2.  PRESIGNED URL has been generated');
+      // }
 
-      newClosetitem.imageUrl = presignedUrlForDownloadRes;
+      newClosetitem.imageUrl = presignedUrlForUploadRes;
 
       // 3. UPLOAD THE IMAGE
-      await uploadImageToS3(presignedUrlForDownloadRes, newClosetitem.image[0]);
+      await uploadImageToS3(presignedUrlForUploadRes, newClosetitem.image[0]);
 
-      console.log('AddClosetitem: 3.  UPLOAD THE IMAGE has been completed.');
+      //console.log('AddClosetitem: 3.  UPLOAD THE IMAGE has been completed.');
 
       // 4. CREATE THE CLOSET ITEM IN ATLAS
       // Create a new object with all the same properties as the ClosetitemSubmitted but
       // change the image URL and the sanitized filename
       const closetitemToSend = {
         ...newClosetitem,
-        imageUrl: presignedUrlForDownloadRes,
+        imageUrl: presignedUrlForUploadRes,
         imageId: newFilename, // add this field if needed by backend
       };
 
@@ -77,17 +77,19 @@ export const addClosetItem = createAsyncThunk<
         closetitemToSend
       );
 
-      if (postClosetitemToAtlasRes) {
-        console.log(
-          'AddClosetitem: 4.  CREATE THE CLOSET ITEM IN ATLAS has been completed.'
-        );
-      }
+      // if (postClosetitemToAtlasRes) {
+      //   console.log(
+      //     'AddClosetitem: 4.  CREATE THE CLOSET ITEM IN ATLAS has been completed.'
+      //   );
+      // }
+
+      const currentUserId = postClosetitemToAtlasRes.data.userId;
 
       // const existingUserId = response.data.userId;
       // const newClosetitemId = response.data._id;
 
       const updatedClosetitem = {
-        userId: postClosetitemToAtlasRes.data.userId,
+        userId: currentUserId,
         closetitemId: postClosetitemToAtlasRes.data._id,
       };
 
@@ -96,11 +98,14 @@ export const addClosetItem = createAsyncThunk<
         addUserClosetitemReference(updatedClosetitem)
       );
 
-      if (addUserClosetitemRefRes) {
-        console.log(
-          'AddClosetitem: 5.  ADD CLOSET ITEM ID TO USER has been completed.'
-        );
-      }
+      // if (addUserClosetitemRefRes) {
+      //   console.log(
+      //     'AddClosetitem: 5.  ADD CLOSET ITEM ID TO USER has been completed.'
+      //   );
+      // }
+
+      // 6. Fetch Closetitems
+      const fetchRes = await dispatch(fetchClosetitems(currentUserId));
 
       //You might want to extract the relevant data from the response before returning
       return postClosetitemToAtlasRes.data as Closetitem; // Assuming the successful response data structure is ClosetClosetitem
@@ -116,6 +121,7 @@ export const fetchClosetitems = createAsyncThunk<
   string,
   { rejectValue: AxiosError }
 >('closet/fetchClosetitems', async (args, { rejectWithValue }) => {
+  let tempNum = 0;
   try {
     // 1. GET ALL CLOSET ITEMS FROM ATLAS
     const getAllClosetitemsFromAtlasRes: AxiosResponse<ClosetDataResponse> =
@@ -123,16 +129,18 @@ export const fetchClosetitems = createAsyncThunk<
         `${URL}/api/closet/user/${args}/closetitems`
       );
 
-    if (getAllClosetitemsFromAtlasRes) {
-      console.log(
-        'fetchClosetitems: 1.  GET ALL CLOSET ITEMS FROM ATLAS has been completed.'
-      );
-    }
+    // if (getAllClosetitemsFromAtlasRes) {
+    //   console.log(
+    //     'fetchClosetitems: 1.  GET ALL CLOSET ITEMS FROM ATLAS has been completed.'
+    //   );
+    // }
 
     // 2. GET ALL PRESIGNED URLS FOR DOWNLOAD OF IMAGES
-
+    console.log('fetch: getting presignedurls');
     if (getAllClosetitemsFromAtlasRes.status === 200) {
       for (const item of getAllClosetitemsFromAtlasRes.data.closetitems) {
+        console.log('after for');
+
         if (item.imageId) {
           const getPresignedUrlResponse = await getPresignedUrlForDownload(
             item.userId,
@@ -141,10 +149,13 @@ export const fetchClosetitems = createAsyncThunk<
 
           if (getPresignedUrlResponse) {
             item.imageUrl = getPresignedUrlResponse;
-            console.log(
-              'fetchClosetitems: 2. PRESIGNED URL FOR DOWNLOAD OF IMAGE has been completed. ' +
-                item.imageId
-            );
+            tempNum += 1;
+            console.log('image number gotten ' + tempNum);
+
+            // console.log(
+            //   'fetchClosetitems: 2. PRESIGNED URL FOR DOWNLOAD OF IMAGE has been completed. ' +
+            //     item.imageId
+            // );
           }
         } else {
           // Handle the case where imageId is undefined
@@ -152,10 +163,9 @@ export const fetchClosetitems = createAsyncThunk<
           // Optionally set getPresignedUrlResponse = null or handle as needed
         }
       }
-
       console.log(
-        'fetchClosetitems: Finally: give me data for all closetitems: ' +
-          getAllClosetitemsFromAtlasRes.data.closetitems.length
+        'what is the data? ' +
+          JSON.stringify(getAllClosetitemsFromAtlasRes.data.closetitems)
       );
 
       return getAllClosetitemsFromAtlasRes.data.closetitems;
@@ -175,28 +185,23 @@ export const fetchClosetitems = createAsyncThunk<
 
 // delete specific closetitem
 
-export const deleteClosetItem = createAsyncThunk<
+export const deleteClosetitem = createAsyncThunk<
   string,
   DeleteClosetitemArgs,
   { state: RootState; dispatch: AppDispatch }
 >(
   'closet/deleteclosetitem',
   async (args: DeleteClosetitemArgs, { dispatch, rejectWithValue }) => {
-    //console.log('inside deleteClosetItem');
-    //const userId = getState().auth.userInfo._id;
-
     try {
-      //const userId = getState().auth.userInfo._id;
-
       // 1. DELETE IMAGE FROM S3
-      // const deleteImageResponse = await deleteSingleImageFromS3ByUser(
+
       const deleteSingleImageFromS3ByUserRes =
         await deleteSingleImageFromS3ByUser(args.userId, args.imageId);
-      if (deleteSingleImageFromS3ByUserRes) {
-        console.log(
-          'deleteClosetItem: 1.  DELETE IMAGE FROM S3 has been completed.'
-        );
-      }
+      // if (deleteSingleImageFromS3ByUserRes) {
+      //   console.log(
+      //     'deleteClosetitemAndImageData: 1.  DELETE IMAGE FROM S3 has been completed.'
+      //   );
+      // }
 
       // 2. DELETE THE CLOSETITEM FROM MongoDB
 
@@ -204,11 +209,11 @@ export const deleteClosetItem = createAsyncThunk<
       const deleteClosetitemFromMongoDbRes = await api.delete(
         `${URL}/api/closet/${args.closetitemId}`
       );
-      if (deleteClosetitemFromMongoDbRes) {
-        console.log(
-          'deleteClosetItem: 2.  DELETE THE CLOSETITEM FROM MongoDB has been completed.'
-        );
-      }
+      // if (deleteClosetitemFromMongoDbRes) {
+      //   console.log(
+      //     'deleteClosetitemAndImageData: 2.  DELETE THE CLOSETITEM FROM MongoDB has been completed.'
+      //   );
+      // }
 
       // 3. REMOVE THE _ID OF CLOSETITEM IN CLOSETITEMS ARRAY OF USER OBJECT
       // const deleteClosetitemRefResponse = await dispatch(
@@ -218,11 +223,11 @@ export const deleteClosetItem = createAsyncThunk<
           closetitemId: args.closetitemId,
         })
       );
-      if (deleteClosetitemRefInUserRes) {
-        console.log(
-          'deleteClosetItem: 3. REMOVE THE _ID OF CLOSETITEM IN CLOSETITEMS ARRAY OF USER OBJECT has been completed.'
-        );
-      }
+      // if (deleteClosetitemRefInUserRes) {
+      //   console.log(
+      //     'deleteClosetitemAndImageData: 3. REMOVE THE _ID OF CLOSETITEM IN CLOSETITEMS ARRAY OF USER OBJECT has been completed.'
+      //   );
+      // }
 
       return args.closetitemId;
     } catch (error) {

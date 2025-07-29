@@ -21,17 +21,24 @@ export const addUserClosetitemReference = createAsyncThunk<
   'closet/addUserItemReference',
   async (args: UserClosetitemReferenceArgs, { dispatch, rejectWithValue }) => {
     try {
+      //console.log('inside userActions:addUserClosetitemReference');
       // 1. ADD CLOSETITEM ID to USER.CLOSETITEMS ARRAY
+      const closetitemIdToAdd = args.closetitemId;
+      // console.log(
+      //   'inside userActions:addUserClosetitemReference: itemId ' +
+      //     closetitemIdToAdd
+      // );
 
-      const postAddUserClosetitemRefRes = await api.post(
-        `${URL}/api/users/${args.userId}/closetitems/${args.closetitemId}`
+      const putAddUserClosetitemRefRes = await api.put(
+        `${URL}/api/users/${args.userId}/closetitems/${args.closetitemId}`,
+        { closetitemId: closetitemIdToAdd }
       );
 
-      console.log(
-        '1. ADD CLOSETITEM ID to USER.CLOSETITEMS ARRAY is completed'
-      );
+      // console.log(
+      //   '1. ADD CLOSETITEM ID to USER.CLOSETITEMS ARRAY is completed'
+      // );
 
-      return postAddUserClosetitemRefRes.data as UserClosetitemReferenceReturn;
+      return putAddUserClosetitemRefRes.data as UserClosetitemReferenceReturn;
     } catch (error) {
       console.error('Error adding item reference from user:', error);
       if (typeof error === 'object' && error !== null && 'response' in error) {
@@ -52,7 +59,7 @@ export const removeUserClosetitemReference = createAsyncThunk<
   'users/removeUserItemReference',
   async (args: UserClosetitemReferenceArgs, { rejectWithValue }) => {
     try {
-      //console.log('inside userActions:deleteUserClosetitemReference');
+      console.log('inside userActions:deleteUserClosetitemReference');
 
       const postAddUserClosetitemRefRes = await api.delete(
         `${URL}/api/users/${args.userId}/closetitems/${args.closetitemId}`
