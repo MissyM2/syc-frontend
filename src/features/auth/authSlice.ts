@@ -3,18 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import type { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 import { registerUser, userLogin } from './authActions';
 import type { User } from '../../interfaces/userInterfaces.ts';
-import type { TClosetitemList } from '../../interfaces/closetTypes.ts';
 import type { AuthState } from '../../interfaces/authInterfaces.ts';
-
-// export interface AuthState {
-//   loading: boolean;
-//   userInfo: User | null;
-//   userToken: string | null;
-//   error: string | null;
-//   success: boolean;
-//   token: string | null;
-//   isAuthenticated: boolean;
-// }
 
 // initialize userToken from local storage
 const userToken = sessionStorage.getItem('userToken')
@@ -29,13 +18,6 @@ const initialState: AuthState = {
   userToken: sessionStorage.getItem('userToken'), // initial load from sessionStorage
   isAuthenticated: !!sessionStorage.getItem('userToken'),
 };
-
-// export interface UserLoginReturnPayload {
-//   _id: string;
-//   userName: string;
-//   email: string;
-//   closetitems: TClosetitemList;
-// }
 
 const authSlice = createSlice({
   name: 'auth',
@@ -66,7 +48,6 @@ const authSlice = createSlice({
     //   Object.assign(state, initialState);
     // },
     setCredentials: (state, { payload }) => {
-      //console.log('authSlice: payload is ' + JSON.stringify(payload));
       state.userInfo = payload;
     },
   },
@@ -86,10 +67,6 @@ const authSlice = createSlice({
           state.success = true;
           state.userToken = action.payload.userToken;
           state.isAuthenticated = true;
-          console.log(
-            'authSlice: what is auth.state after userlogin? ' +
-              JSON.stringify(state)
-          );
         }
       )
       .addCase(userLogin.rejected, (state, { payload }) => {

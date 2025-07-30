@@ -75,7 +75,7 @@ export const AddClosetitemPage: React.FC = () => {
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
-      dispatch(resetSlice());
+      //dispatch(resetSlice());
       const response = await dispatch(addClosetitem(data));
       //if (response) {
       // console.log(

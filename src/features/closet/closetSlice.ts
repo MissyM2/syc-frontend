@@ -12,6 +12,7 @@ import {
   //updateClosetitem,
   deleteClosetitem,
 } from './closetActions';
+import { StatementSync } from 'node:sqlite';
 
 const initialState: ClosetState = {
   closetitems: [] as Closetitem[],
@@ -25,9 +26,11 @@ const closetSlice = createSlice({
   initialState,
   reducers: {
     clearClosetitems: (state) => {
+      console.log('clearClosetitems called');
       state.closetitems = [];
     },
     resetSlice: (state) => {
+      console.log('resetClosetSlice called');
       Object.assign(state, initialState);
     },
   },
@@ -37,9 +40,13 @@ const closetSlice = createSlice({
         state.status = 'loading';
         state.error = null;
       })
-      .addCase(addClosetitem.fulfilled, (state) => {
-        state.status = 'idle';
-      })
+      .addCase(
+        addClosetitem.fulfilled,
+        (state, action: PayloadAction<Closetitem>) => {
+          state.status = 'succeeded';
+          state.closetitems.push(action.payload);
+        }
+      )
       .addCase(addClosetitem.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message || 'Unknown error';
@@ -52,7 +59,6 @@ const closetSlice = createSlice({
         fetchClosetitems.fulfilled,
         (state, action: PayloadAction<Closetitem[]>) => {
           state.status = 'succeeded';
-          Object.assign(state, initialState);
           state.closetitems = action.payload;
         }
       )

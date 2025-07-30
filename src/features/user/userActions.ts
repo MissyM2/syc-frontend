@@ -1,15 +1,12 @@
-import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '@/app/store';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '../../index.tsx';
-import axios from 'axios';
-import type { AxiosError, AxiosResponse } from 'axios';
+
 import type {
   User,
   UserClosetitemReferenceReturn,
   UserClosetitemReferenceArgs,
 } from '../../interfaces/userInterfaces.ts';
-import type { DeleteClosetitemArgs } from '../../interfaces/closetInterfaces.ts';
 
 const URL = 'http://localhost:3000';
 
@@ -21,8 +18,6 @@ export const removeUserClosetitemReference = createAsyncThunk<
   'users/removeUserItemReference',
   async (args: UserClosetitemReferenceArgs, { rejectWithValue }) => {
     try {
-      console.log('inside userActions:deleteUserClosetitemReference');
-
       const postAddUserClosetitemRefRes = await api.delete(
         `${URL}/api/users/${args.userId}/closetitems/${args.closetitemId}`
       );

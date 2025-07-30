@@ -25,9 +25,6 @@ export const userLogin = createAsyncThunk<
       });
 
       sessionStorage.setItem('userToken', response.data.userToken);
-      console.log(
-        'authActions: auth.state? ' + JSON.stringify(response.data.userInfo._id)
-      );
 
       dispatch(fetchClosetitems(response.data.userInfo._id));
       return response.data;
@@ -45,7 +42,6 @@ export const registerUser = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      console.log('what is userName? ' + userName);
       const response = await axios.post(`${URL}/api/user/register`, {
         userName,
         email,

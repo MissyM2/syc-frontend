@@ -55,10 +55,6 @@ const userSlice = createSlice({
               (id) => id !== deletedItemId
             );
           }
-          console.log(
-            'inside removeUserClosetitemReference.fulfilled state.userInfo?.closetitems.length: ' +
-              state.userInfo?.closetitems.length
-          );
         }
       )
 

@@ -13,7 +13,7 @@ import axios, { AxiosError } from 'axios';
 import type { AxiosResponse } from 'axios';
 import {
   removeUserClosetitemReference,
-  addUserClosetitemReference,
+  //addUserClosetitemReference,
 } from '../user/userActions.ts';
 
 import {
@@ -50,17 +50,27 @@ export const addClosetitem = createAsyncThunk<
         newClosetitem.image[0].type
       );
 
-      newClosetitem.imageUrl = presignedUrlForUploadRes;
+      //newClosetitem.imageUrl = presignedUrlForUploadRes;
 
       // 3. UPLOAD THE IMAGE
       await uploadImageToS3(presignedUrlForUploadRes, newClosetitem.image[0]);
+
+      // 4. GET PRESIGNED IMAGE FOR DOWNLOAD
+      const getPresignedUrlForDownloadRes = await getPresignedUrlForDownload(
+        newClosetitem.userId,
+        newFilename
+      );
+
+      if (getPresignedUrlForDownloadRes) {
+        newClosetitem.imageUrl = getPresignedUrlForDownloadRes;
+      }
 
       // 4. CREATE THE CLOSET ITEM IN ATLAS
       // Create a new object with all the same properties as the ClosetitemSubmitted but
       // change the image URL and the sanitized filename
       const closetitemToSend = {
         ...newClosetitem,
-        imageUrl: presignedUrlForUploadRes,
+        imageUrl: getPresignedUrlForDownloadRes,
         imageId: newFilename, // add this field if needed by backend
       };
 
@@ -69,17 +79,6 @@ export const addClosetitem = createAsyncThunk<
         closetitemToSend
       );
 
-      const currentUserId = postClosetitemToAtlasRes.data.userId;
-
-      const updatedClosetitem = {
-        userId: currentUserId,
-        closetitemId: postClosetitemToAtlasRes.data._id,
-      };
-
-      // 6. FETCH (REFRESH) CLOSETITEMS
-      const fetchRes = await dispatch(fetchClosetitems(currentUserId));
-
-      //You might want to extract the relevant data from the response before returning
       return postClosetitemToAtlasRes.data as Closetitem; // Assuming the successful response data structure is ClosetClosetitem
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -93,40 +92,37 @@ export const fetchClosetitems = createAsyncThunk<
   string,
   { rejectValue: AxiosError }
 >('closet/fetchClosetitems', async (args, { rejectWithValue }) => {
-  let tempNum = 0;
   try {
+    console.log('fetchClosetitems has been called.');
     // 1. GET ALL CLOSET ITEMS FROM ATLAS
-    const getAllClosetitemsFromAtlasRes: AxiosResponse<ClosetDataResponse> =
+    const allClosetitemsFromAtlasRes: AxiosResponse<ClosetDataResponse> =
       await api.get<ClosetDataResponse>(
         `${URL}/api/closet/user/${args}/closetitems`
       );
 
-    // 2. GET ALL PRESIGNED URLS FOR DOWNLOAD OF IMAGES
-    if (getAllClosetitemsFromAtlasRes.status === 200) {
-      for (const item of getAllClosetitemsFromAtlasRes.data.closetitems) {
+    // 2. GET PRESIGNED URLS FOR DOWNLOAD OF IMAGES AND UPDATE allClosetitemsFromAtlasRes
+    if (allClosetitemsFromAtlasRes.status === 200) {
+      for (const item of allClosetitemsFromAtlasRes.data.closetitems) {
         if (item.imageId) {
-          const getPresignedUrlResponse = await getPresignedUrlForDownload(
+          const presignedUrlRes = await getPresignedUrlForDownload(
             item.userId,
             item.imageId
           );
 
-          if (getPresignedUrlResponse) {
-            item.imageUrl = getPresignedUrlResponse;
-            tempNum += 1;
+          if (presignedUrlRes) {
+            item.imageUrl = presignedUrlRes;
           }
         } else {
-          // Handle the case where imageId is undefined
           console.warn('No imageId found for item:', item);
-          // Optionally set getPresignedUrlResponse = null or handle as needed
         }
       }
 
-      return getAllClosetitemsFromAtlasRes.data.closetitems;
+      return allClosetitemsFromAtlasRes.data.closetitems;
     } else {
       // Always use rejectWithValue for errors/unexpected cases
       return rejectWithValue(
         new AxiosError(
-          `Unexpected status: ${getAllClosetitemsFromAtlasRes.status}`
+          `Unexpected status: ${allClosetitemsFromAtlasRes.status}`
         )
       ) as any;
     }
@@ -137,7 +133,6 @@ export const fetchClosetitems = createAsyncThunk<
 });
 
 // DELETE SPECIFIC CLOSETITEM
-
 export const deleteClosetitem = createAsyncThunk<
   string,
   DeleteClosetitemArgs,
@@ -147,26 +142,18 @@ export const deleteClosetitem = createAsyncThunk<
   async (args: DeleteClosetitemArgs, { dispatch, rejectWithValue }) => {
     try {
       // 1. DELETE IMAGE FROM S3
-      const deleteSingleImageFromS3ByUserRes =
-        await deleteSingleImageFromS3ByUser(args.userId, args.imageId);
+      await deleteSingleImageFromS3ByUser(args.userId, args.imageId);
 
       // 2. DELETE THE CLOSETITEM FROM MongoDB
-
-      // const deleteClosetitemResponse = await api.delete(
-      const deleteClosetitemFromMongoDbRes = await api.delete(
-        `${URL}/api/closet/${args.closetitemId}`
-      );
+      await api.delete(`${URL}/api/closet/${args.closetitemId}`);
 
       // 3. REMOVE THE _ID OF CLOSETITEM IN CLOSETITEMS ARRAY OF USER OBJECT
-      const deleteClosetitemRefInUserRes = await dispatch(
+      await dispatch(
         removeUserClosetitemReference({
           userId: args.userId,
           closetitemId: args.closetitemId,
         })
       );
-
-      // 6. FETCH (REFRESH) CLOSETITEMS
-      //const fetchRes = await dispatch(fetchClosetitems(args.userId));
 
       return args.closetitemId;
     } catch (error) {
