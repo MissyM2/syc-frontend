@@ -7,12 +7,14 @@ export interface User {
   userName: string;
   email: string;
   password?: string;
+  role: 'user' | 'admin' | null;
   closetitems: Closetitem[];
 }
 
 export interface UserState {
   currentUser: User | null;
   allUsers: User[];
+  role: string;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
   success: boolean;
@@ -29,6 +31,7 @@ export interface UserState {
 export interface AuthState {
   status: string;
   currentUser: User | null;
+  role: string;
   error: string | null;
   success: boolean;
   userToken: string | null;

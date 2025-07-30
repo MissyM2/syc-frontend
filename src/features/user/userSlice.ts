@@ -21,6 +21,7 @@ import {
 const initialState: UserState = {
   currentUser: null,
   allUsers: [],
+  role: null,
   status: 'idle',
   error: null,
   success: false,
@@ -78,9 +79,14 @@ const userSlice = createSlice({
       })
       .addCase(
         userLogin.fulfilled,
-        (state, action: PayloadAction<AuthState>) => {
+        (state, action: PayloadAction<UserState>) => {
+          console.log(
+            'what is action payload after userLogin? ' +
+              JSON.stringify(action.payload)
+          );
           state.status = 'succeeded';
           state.currentUser = action.payload.currentUser;
+          state.role = action.payload.role;
           state.error = null;
           state.success = true;
           state.userToken = action.payload.userToken;

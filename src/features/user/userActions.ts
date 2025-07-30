@@ -7,6 +7,7 @@ import { fetchClosetitems } from '@/features/closet/closetActions';
 
 import type {
   User,
+  UserState,
   AuthState,
   AuthLoginArgs,
   AuthRegistrationArgs,
@@ -17,7 +18,7 @@ import type {
 const URL = 'http://localhost:3000';
 
 export const userLogin = createAsyncThunk<
-  AuthState,
+  UserState,
   AuthLoginArgs,
   { rejectValue: AxiosError }
 >(

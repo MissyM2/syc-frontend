@@ -19,6 +19,7 @@ const AdminUsersPage: React.FC = () => {
   const { allUsers, status, error } = useSelector(
     (state: RootState) => state.user
   );
+  const currentUser = useSelector((state: RootState) => state.user.currentUser);
   const dispatch = useDispatch<AppDispatch>();
 
   const navigate = useNavigate();
@@ -38,6 +39,9 @@ const AdminUsersPage: React.FC = () => {
   return (
     <div className="w-full">
       <div>User Administration</div>
+      <div>missy{currentUser?.email}</div>
+      <div>missy{status}</div>
+      <div>missy{currentUser?.role}</div>
       <div>
         <RoundButton onClick={handleClick}>
           <div>Users</div>
