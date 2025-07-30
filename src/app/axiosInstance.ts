@@ -16,17 +16,17 @@ const setupAxiosInterceptors = (store: Store<RootState>): AxiosInstance => {
   instance.interceptors.request.use(
     (config) => {
       const state = store.getState();
-      // to test upload without token
+      // to test upload without userToken
       //console.log('state is ' + JSON.stringify(state));
       // state.auth.userToken = '';
       // state.auth.isAuthenticated = false;
 
-      const token = state.auth.userToken;
+      const userToken = state.auth.userToken;
 
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+      if (userToken) {
+        config.headers.Authorization = `Bearer ${userToken}`;
       }
-      // console.log('inside axiosInstance: what is token? ' + token);
+      // console.log('inside axiosInstance: what is userToken? ' + userToken);
       // console.log(
       //   'inside axiosInstance: what is config? ' + JSON.stringify(config)
       // );
@@ -35,16 +35,16 @@ const setupAxiosInterceptors = (store: Store<RootState>): AxiosInstance => {
     (error) => Promise.reject(error)
   );
 
-  // Response Interceptor: Handle token expiry and refresh (optional)
+  // Response Interceptor: Handle userToken expiry and refresh (optional)
   instance.interceptors.response.use(
     (response) => response,
     async (error) => {
       const originalRequest = error.config;
       if (error.response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
-        // Implement token refresh logic here, e.g., dispatch a refresh token action
+        // Implement userToken refresh logic here, e.g., dispatch a refresh userToken action
         // await store.dispatch(refreshTokenAction());
-        // const newToken = store.getState().auth.token; // Get new token from state
+        // const newToken = store.getState().auth.userToken; // Get new userToken from state
         // originalRequest.headers.Authorization = `Bearer ${newToken}`;
         // return instance(originalRequest);
       }

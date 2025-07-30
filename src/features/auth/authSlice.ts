@@ -4,16 +4,17 @@ import type { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 import { registerUser, userLogin } from './authActions';
 import type { User } from '../../interfaces/userInterfaces.ts';
 import type { TClosetitemList } from '../../interfaces/closetTypes.ts';
+import type { AuthState } from '../../interfaces/authInterfaces.ts';
 
-export interface AuthState {
-  loading: boolean;
-  userInfo: User | null;
-  userToken: string | null;
-  error: string | null;
-  success: boolean;
-  token: string | null;
-  isAuthenticated: boolean;
-}
+// export interface AuthState {
+//   loading: boolean;
+//   userInfo: User | null;
+//   userToken: string | null;
+//   error: string | null;
+//   success: boolean;
+//   token: string | null;
+//   isAuthenticated: boolean;
+// }
 
 // initialize userToken from local storage
 const userToken = sessionStorage.getItem('userToken')
@@ -23,26 +24,30 @@ const userToken = sessionStorage.getItem('userToken')
 const initialState: AuthState = {
   loading: false,
   userInfo: null,
-  userToken,
   error: null,
   success: false,
-  token: sessionStorage.getItem('userToken'), // initial load from sessionStorage
+  userToken: sessionStorage.getItem('userToken'), // initial load from sessionStorage
   isAuthenticated: !!sessionStorage.getItem('userToken'),
 };
 
-export interface UserLoginReturnPayload {
-  _id: string;
-  userName: string;
-  email: string;
-  closetitems: TClosetitemList;
-}
+// export interface UserLoginReturnPayload {
+//   _id: string;
+//   userName: string;
+//   email: string;
+//   closetitems: TClosetitemList;
+// }
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
+    resetAuthSlice: (state) => {
+      Object.assign(state, initialState);
+      state.userToken = null;
+      state.isAuthenticated = false;
+    },
     setToken: (state, action: PayloadAction<string | null>) => {
-      state.token = action.payload;
+      state.userToken = action.payload;
       state.isAuthenticated = !!action.payload;
       if (action.payload) {
         sessionStorage.setItem('userToken', action.payload);
@@ -51,7 +56,7 @@ const authSlice = createSlice({
       }
     },
     logout: (state) => {
-      state.token = null;
+      state.userToken = null;
       state.isAuthenticated = false;
       sessionStorage.removeItem('userToken');
       //Object.assign(state, initialState);
@@ -74,25 +79,17 @@ const authSlice = createSlice({
       })
       .addCase(
         userLogin.fulfilled,
-        (
-          state,
-          action: PayloadAction<{
-            loggedInUserInfo: UserLoginReturnPayload;
-            token: string;
-          }>
-        ) => {
-          // console.log(
-          //   'inside userLogin.fulfilled case.  What is loggedInUserInfo? ' +
-          //     JSON.stringify(action.payload)
-          // );
+        (state, action: PayloadAction<AuthState>) => {
           state.loading = false;
-          state.userInfo = action.payload.loggedInUserInfo;
-          state.userToken = action.payload.token;
+          state.userInfo = action.payload.userInfo;
+          state.error = null;
+          state.success = true;
+          state.userToken = action.payload.userToken;
           state.isAuthenticated = true;
-          // console.log(
-          //   'inside userLogin.fulfilled case.  waht is state after update? ' +
-          //     JSON.stringify(state.userInfo)
-          // );
+          console.log(
+            'authSlice: what is auth.state after userlogin? ' +
+              JSON.stringify(state)
+          );
         }
       )
       .addCase(userLogin.rejected, (state, { payload }) => {
@@ -120,6 +117,7 @@ const authSlice = createSlice({
 });
 
 // export const { logout, setCredentials } = authSlice.actions;
-export const { setToken, logout, setCredentials } = authSlice.actions;
+export const { resetAuthSlice, setToken, logout, setCredentials } =
+  authSlice.actions;
 
 export default authSlice.reducer;

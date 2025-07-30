@@ -35,21 +35,15 @@ const closetSlice = createSlice({
     builder
       .addCase(addClosetitem.pending, (state) => {
         state.status = 'loading';
-
         state.error = null;
       })
-      .addCase(
-        addClosetitem.fulfilled,
-        (state, action: PayloadAction<Closetitem>) => {
-          //state.closetitems.push(action.payload);
-          state.status = 'idle';
-        }
-      )
+      .addCase(addClosetitem.fulfilled, (state) => {
+        state.status = 'idle';
+      })
       .addCase(addClosetitem.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message || 'Unknown error';
       })
-
       .addCase(fetchClosetitems.pending, (state) => {
         state.status = 'loading';
         state.error = null;
@@ -59,15 +53,7 @@ const closetSlice = createSlice({
         (state, action: PayloadAction<Closetitem[]>) => {
           state.status = 'succeeded';
           Object.assign(state, initialState);
-          // console.log(
-          //   'what is state.closetitems? ' + JSON.stringify(state.closetitems)
-          // );
-
           state.closetitems = action.payload;
-          // console.log(
-          //   'what is state.closetitems AFTER FETCH? ' +
-          //     JSON.stringify(state.closetitems)
-          // );
         }
       )
       .addCase(fetchClosetitems.rejected, (state, action) => {

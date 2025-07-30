@@ -30,17 +30,17 @@ const Dashboard: React.FC = () => {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  useEffect(() => {
-    //console.log('Dashboard: inside useEffect.');
-    // if (userId) {
-    if ((closetStatus === 'idle' || closetStatus === 'succeeded') && userId) {
-      const items = dispatch(fetchClosetitems(userId));
-      // console.log(
-      //   'what are the items that the dispatch has captured? ' +
-      //     JSON.stringify(items)
-      // );
-    }
-  }, [dispatch, userId]);
+  // useEffect(() => {
+  //   //console.log('Dashboard: inside useEffect.');
+  //   // if (userId) {
+  //   if ((closetStatus === 'idle' || closetStatus === 'succeeded') && userId) {
+  //     const items = dispatch(fetchClosetitems(userId));
+  //     // console.log(
+  //     //   'what are the items that the dispatch has captured? ' +
+  //     //     JSON.stringify(items)
+  //     // );
+  //   }
+  // }, [dispatch, userId]);
 
   const handleAddClosetitem = () => {
     navigate('/addclosetitem');

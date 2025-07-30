@@ -1,37 +1,23 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { AxiosError } from 'axios';
-import type { User } from '../../interfaces/userInterfaces.ts';
-import type { TClosetitemList } from '../../interfaces/closetTypes.ts';
-
-export interface UserLoginPayload {
-  email: string;
-  password: string;
-}
-
-export interface UserLoginReturnPayload {
-  _id: string;
-  userName: string;
-  email: string;
-  closetitems: TClosetitemList;
-}
-
-interface UserRegistrationCredentials {
-  userName: string;
-  email: string;
-  password: string;
-}
+import { fetchClosetitems } from '@/features/closet/closetActions';
+import type {
+  AuthState,
+  AuthLoginArgs,
+  AuthRegistrationArgs,
+} from '../../interfaces/authInterfaces.ts';
 
 const URL = 'http://localhost:3000';
 
 // #1 User Login
 export const userLogin = createAsyncThunk<
-  { loggedInUserInfo: UserLoginReturnPayload; token: string },
-  UserLoginPayload,
+  AuthState,
+  AuthLoginArgs,
   { rejectValue: AxiosError }
 >(
   'auth/login',
-  async ({ email, password }: UserLoginPayload, { rejectWithValue }) => {
+  async ({ email, password }: AuthLoginArgs, { dispatch, rejectWithValue }) => {
     try {
       const response = await axios.post(`${URL}/api/users/login`, {
         email,
@@ -39,6 +25,11 @@ export const userLogin = createAsyncThunk<
       });
 
       sessionStorage.setItem('userToken', response.data.userToken);
+      console.log(
+        'authActions: auth.state? ' + JSON.stringify(response.data.userInfo._id)
+      );
+
+      dispatch(fetchClosetitems(response.data.userInfo._id));
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -50,7 +41,7 @@ export const userLogin = createAsyncThunk<
 export const registerUser = createAsyncThunk(
   'auth/register',
   async (
-    { userName, email, password }: UserRegistrationCredentials,
+    { userName, email, password }: AuthRegistrationArgs,
     { rejectWithValue }
   ) => {
     try {

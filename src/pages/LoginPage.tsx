@@ -11,6 +11,10 @@ import Error from '../components/Error';
 import Spinner from '../components/Spinner';
 import { authApi } from '@/app/services/auth/authService';
 
+import { FaPlus } from 'react-icons/fa6';
+import RoundButton from '../features/closet/components/RoundButton.tsx';
+import { resetAuthSlice } from '../features/auth/authSlice.ts';
+
 interface UserAddPageProps {
   //onUpdate: (newValue: boolean) => void;
 }
@@ -21,53 +25,26 @@ interface LoginFormInputs {
 }
 
 const LoginPage: React.FC<UserAddPageProps> = () => {
-  const { loading, userInfo, error } = useSelector(
-    (state: RootState) => state.auth
-  );
+  const { loading, error } = useSelector((state: RootState) => state.auth);
 
-  const authSt = useSelector((state: RootState) => state.auth);
-
-  const userSt = useSelector((state: RootState) => state.user);
-  const dispatch = useDispatch<AppDispatch>();
+  const auth = useSelector((state: RootState) => state.auth);
 
   const { register, handleSubmit } = useForm<LoginFormInputs>();
 
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  // redirect authenticated user to profile screen
   useEffect(() => {
-    if (userInfo) {
+    if (auth.isAuthenticated) {
       navigate('/dashboard');
     }
-  }, [navigate, userInfo]);
+  }, [auth]);
 
   const submitForm = async (data: LoginFormInputs) => {
-    //console.log('auth: what are users BEFORE login? ' + JSON.stringify(authSt));
-
-    const resultAction = await dispatch(userLogin(data));
-    // console.log(
-    //   'after fulfillment.  waht is state after update? ' +
-    //     JSON.stringify(authSt.userInfo)
-    // );
-    // console.log('auth: what are users AFTER login? ' + JSON.stringify(authSt));
-    // console.log('users: what are users before login? ' + JSON.stringify(users));
-
-    const { loggedInUserInfo } = unwrapResult(resultAction);
-    //console.log('what is userInfo? ' + JSON.stringify(userInfo));
-
-    // console.log(
-    //   'Before User update: submit Form userSt' + JSON.stringify(userSt)
-    // );
-
-    dispatch(addUserAfterAuth(loggedInUserInfo));
-
-    // console.log(
-    //   'AFTER User update: submit Form userSt' + JSON.stringify(userSt)
-    // );
+    await dispatch(userLogin(data));
   };
 
   const handleClick = () => {
-    //onUpdate(true);
     navigate('/register');
   };
 

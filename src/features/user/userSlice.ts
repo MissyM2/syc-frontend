@@ -48,11 +48,6 @@ const userSlice = createSlice({
       .addCase(
         removeUserClosetitemReference.fulfilled,
         (state, action: PayloadAction<UserClosetitemReferencePayload>) => {
-          // console.log('deleteClosetitemIdFromUser');
-          // console.log(
-          //   'inside deleteClosetitemIdFromUser BEFORE FILTER' +
-          //     JSON.stringify(state.userInfo?.closetitems.length)
-          // );
           const deletedItemId = action.payload.closetitemId;
 
           if (state.userInfo) {
@@ -71,26 +66,6 @@ const userSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message || 'Unknown error';
       });
-    // .addCase(addUserClosetitemReference.pending, (state) => {
-    //   state.status = 'loading';
-    //   state.error = null;
-    // })
-    // .addCase(
-    //   addUserClosetitemReference.fulfilled,
-    //   (state, action: PayloadAction<UserClosetitemReferencePayload>) => {
-    //     // console.log('deleteClosetitemIdFromUser');
-    //     // console.log(
-    //     //   'inside deleteClosetitemIdFromUser BEFORE FILTER' +
-    //     //     JSON.stringify(state.userInfo?.closetitems.length)
-    //     // );
-
-    //     state.userInfo?.closetitems.push(action.payload.closetitemId);
-    //     console.log(
-    //       'inside deleteClosetitemIdFromUser.fulfilled. state.userInfo?.closetitems.length: ' +
-    //         state.userInfo?.closetitems.length
-    //     );
-    //    }
-    // );
   },
 });
 
