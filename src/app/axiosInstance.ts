@@ -2,7 +2,7 @@ import axios from 'axios';
 import type { AxiosInstance } from 'axios';
 import type { Store } from 'redux';
 import type { RootState } from './store';
-//import { logoutUser } from '../features/auth/authSlice';
+//import { logoutUser } from '../features/user/userSlice';
 
 const setupAxiosInterceptors = (store: Store<RootState>): AxiosInstance => {
   const instance: AxiosInstance = axios.create({
@@ -18,10 +18,10 @@ const setupAxiosInterceptors = (store: Store<RootState>): AxiosInstance => {
       const state = store.getState();
       // to test upload without userToken
       //console.log('state is ' + JSON.stringify(state));
-      // state.auth.userToken = '';
-      // state.auth.isAuthenticated = false;
+      // state.user.userToken = '';
+      // state.user.isAuthenticated = false;
 
-      const userToken = state.auth.userToken;
+      const userToken = state.user.userToken;
 
       if (userToken) {
         config.headers.Authorization = `Bearer ${userToken}`;

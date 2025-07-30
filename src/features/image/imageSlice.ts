@@ -5,13 +5,13 @@ import { api } from '../../index.tsx';
 
 export interface ImageUploadState {
   imageUrl: string | null;
-  loading: boolean;
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
 
 const initialState: ImageUploadState = {
   imageUrl: null,
-  loading: false,
+  status: 'idle',
   error: null,
 };
 
@@ -42,15 +42,15 @@ const imageUploadSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(uploadImage.pending, (state) => {
-        state.loading = true;
+        status = 'loading';
         state.error = null;
       })
       .addCase(uploadImage.fulfilled, (state, action) => {
-        state.loading = false;
+        status = 'succeeded';
         state.imageUrl = action.payload;
       })
       .addCase(uploadImage.rejected, (state, action) => {
-        state.loading = false;
+        status = 'failed';
         state.error = action.payload as string;
       });
   },

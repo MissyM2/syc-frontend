@@ -13,6 +13,8 @@ export interface UserState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
   success: boolean;
+  userToken: string | null;
+  isAuthenticated: boolean;
 }
 export interface UsersState {
   closetitems: User[];
@@ -20,6 +22,26 @@ export interface UsersState {
   error: string | null;
   success: boolean;
 }
+
+export interface AuthState {
+  status: string;
+  userInfo: User | null;
+  error: string | null;
+  success: boolean;
+  userToken: string | null;
+  isAuthenticated: boolean;
+}
+
+export type AuthLoginArgs = {
+  email: string;
+  password: string;
+};
+
+export type AuthRegistrationArgs = {
+  userName: string;
+  email: string;
+  password: string;
+};
 
 export interface UserSubmitted {
   userName: string;

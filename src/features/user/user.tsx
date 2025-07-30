@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-// import { fetchUsers } from './authSlice';
-// import type { User } from './authSlice';
+// import { fetchUsers } from './userSlice';
+// import type { User } from './userSlice';
 import './user.css';
 
 function UserPage() {

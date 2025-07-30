@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { userLogin } from '../features/auth/authActions';
+import { userLogin } from '../features/user/userActions';
 import { addUserAfterAuth } from '../features/user/userSlice';
 import { useEffect } from 'react';
 import type { RootState, AppDispatch } from '../app/store';
@@ -13,7 +13,7 @@ import { authApi } from '@/app/services/auth/authService';
 
 import { FaPlus } from 'react-icons/fa6';
 import RoundButton from '../features/closet/components/RoundButton.tsx';
-import { resetAuthSlice } from '../features/auth/authSlice.ts';
+import { resetAuthSlice } from '../features/user/userSlice.ts';
 
 interface UserAddPageProps {
   //onUpdate: (newValue: boolean) => void;
@@ -25,9 +25,9 @@ interface LoginFormInputs {
 }
 
 const LoginPage: React.FC<UserAddPageProps> = () => {
-  const { loading, error } = useSelector((state: RootState) => state.auth);
+  const { status, error } = useSelector((state: RootState) => state.user);
 
-  const auth = useSelector((state: RootState) => state.auth);
+  const auth = useSelector((state: RootState) => state.user);
 
   const { register, handleSubmit } = useForm<LoginFormInputs>();
 
@@ -98,9 +98,9 @@ const LoginPage: React.FC<UserAddPageProps> = () => {
           <button
             type="submit"
             className="relative text-sm p-2 bg-red-200 text-black-500 rounded-sm ease-in-out"
-            disabled={loading}
+            disabled={status == 'loading'}
           >
-            {loading ? <Spinner /> : 'Login'}
+            {status == 'loading' ? <Spinner /> : 'Login'}
           </button>
         </form>
         <p className="mt-8 text-zinc-500/80 text-center">

@@ -2,7 +2,7 @@
 
 export const ProfilePage: React.FC = () => {
   return <div>Profile Page</div>;
-  // const { userInfo } = useSelector((state) => state.auth);
+  // const { userInfo } = useSelector((state) => state.user);
   // return (
   //   <div>
   //     <figure>{userInfo?.firstName.charAt(0).toUpperCase()}</figure>

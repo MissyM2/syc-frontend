@@ -93,7 +93,6 @@ export const fetchClosetitems = createAsyncThunk<
   { rejectValue: AxiosError }
 >('closet/fetchClosetitems', async (args, { rejectWithValue }) => {
   try {
-    console.log('fetchClosetitems has been called.');
     // 1. GET ALL CLOSET ITEMS FROM ATLAS
     const allClosetitemsFromAtlasRes: AxiosResponse<ClosetDataResponse> =
       await api.get<ClosetDataResponse>(
@@ -143,9 +142,12 @@ export const deleteClosetitem = createAsyncThunk<
     try {
       // 1. DELETE IMAGE FROM S3
       await deleteSingleImageFromS3ByUser(args.userId, args.imageId);
+      console.log('deleteClosetitem, after delete image');
 
       // 2. DELETE THE CLOSETITEM FROM MongoDB
       await api.delete(`${URL}/api/closet/${args.closetitemId}`);
+
+      console.log('deleteClosetitem, after delete item from atlas');
 
       // 3. REMOVE THE _ID OF CLOSETITEM IN CLOSETITEMS ARRAY OF USER OBJECT
       await dispatch(
@@ -154,6 +156,8 @@ export const deleteClosetitem = createAsyncThunk<
           closetitemId: args.closetitemId,
         })
       );
+
+      console.log('deleteClosetitem, after remove closeitemreference');
 
       return args.closetitemId;
     } catch (error) {

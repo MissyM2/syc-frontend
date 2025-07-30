@@ -4,7 +4,6 @@ import { CollapsibleOptionGroup } from '../features/closet/components/Collapsibl
 //import { CheckboxGroup } from '../features/closet/components/CheckboxGroup.tsx';
 import { OutputList } from '../features/closet/components/OutputList.tsx';
 
-import { fetchClosetitems } from '../features/closet/closetActions.ts';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '../app/store';
 
@@ -20,27 +19,11 @@ import RoundButton from '../features/closet/components/RoundButton.tsx';
 const Dashboard: React.FC = () => {
   //const [closetitems, setClosetitems] = useState<Closetitem[]>([]);
   //const [searchTerm, setSearchTerm] = useState<string>('');
-  const userId = useSelector((state: RootState) => state.user.userInfo?._id);
   const closetitems = useSelector(
     (state: RootState) => state.closet.closetitems
   );
-  const closetStatus = useSelector((state: RootState) => state.closet.status);
 
   const navigate = useNavigate();
-
-  const dispatch = useDispatch<AppDispatch>();
-
-  // useEffect(() => {
-  //   //console.log('Dashboard: inside useEffect.');
-  //   // if (userId) {
-  //   if ((closetStatus === 'idle' || closetStatus === 'succeeded') && userId) {
-  //     const items = dispatch(fetchClosetitems(userId));
-  //     // console.log(
-  //     //   'what are the items that the dispatch has captured? ' +
-  //     //     JSON.stringify(items)
-  //     // );
-  //   }
-  // }, [dispatch, userId]);
 
   const handleAddClosetitem = () => {
     navigate('/addclosetitem');

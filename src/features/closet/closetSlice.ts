@@ -12,7 +12,6 @@ import {
   //updateClosetitem,
   deleteClosetitem,
 } from './closetActions';
-import { StatementSync } from 'node:sqlite';
 
 const initialState: ClosetState = {
   closetitems: [] as Closetitem[],
@@ -68,16 +67,17 @@ const closetSlice = createSlice({
       })
 
       .addCase(deleteClosetitem.pending, (state) => {
-        // Pending state when deletion starts
         state.status = 'loading';
       })
       .addCase(
         deleteClosetitem.fulfilled,
         (state, action: PayloadAction<string>) => {
+          console.log('inside deleteClosetitem.fulfilled');
           state.status = 'succeeded';
           state.closetitems = state.closetitems.filter(
             (item) => item._id !== action.payload
           );
+          console.log('inside deleteClosetitem.fulfilled, after filter');
         }
       )
       .addCase(deleteClosetitem.rejected, (state, action) => {

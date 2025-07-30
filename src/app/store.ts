@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from '../features/auth/authSlice';
+//import authReducer from '../features/user/userSlice';
 import { authApi } from './services/auth/authService';
 import userReducer from '../features/user/userSlice';
 import closetReducer from '../features/closet/closetSlice';
@@ -7,7 +7,7 @@ import closetReducer from '../features/closet/closetSlice';
 
 const store = configureStore({
   reducer: {
-    auth: authReducer,
+    //auth: authReducer,
     closet: closetReducer,
     user: userReducer,
     [authApi.reducerPath]: authApi.reducer,

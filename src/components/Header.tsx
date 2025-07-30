@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { useGetUserDetailsQuery } from '../app/services/auth/authService';
-import { logout, setCredentials } from '../features/auth/authSlice';
+import { logout, setCredentials } from '../features/user/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { navLinks, navAdminLinks } from '../lib/navbarData';
 import { cn } from '../lib/utils';
@@ -12,7 +12,7 @@ import type { RootState, AppDispatch } from '../app/store';
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(true);
-  const { userInfo } = useSelector((state: RootState) => state.auth);
+  const { userInfo } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 

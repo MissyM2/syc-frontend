@@ -1,14 +1,63 @@
 import type { AppDispatch, RootState } from '@/app/store';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '../../index.tsx';
+import axios from 'axios';
+import { AxiosError } from 'axios';
+import { fetchClosetitems } from '@/features/closet/closetActions';
 
 import type {
   User,
+  AuthState,
+  AuthLoginArgs,
+  AuthRegistrationArgs,
   UserClosetitemReferenceReturn,
   UserClosetitemReferenceArgs,
 } from '../../interfaces/userInterfaces.ts';
 
 const URL = 'http://localhost:3000';
+
+export const userLogin = createAsyncThunk<
+  AuthState,
+  AuthLoginArgs,
+  { rejectValue: AxiosError }
+>(
+  'auth/login',
+  async ({ email, password }: AuthLoginArgs, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${URL}/api/users/login`, {
+        email,
+        password,
+      });
+
+      sessionStorage.setItem('userToken', response.data.userToken);
+
+      dispatch(fetchClosetitems(response.data.userInfo._id));
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// #2 User Registration
+export const registerUser = createAsyncThunk(
+  'auth/register',
+  async (
+    { userName, email, password }: AuthRegistrationArgs,
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axios.post(`${URL}/api/user/register`, {
+        userName,
+        email,
+        password,
+      });
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 export const removeUserClosetitemReference = createAsyncThunk<
   UserClosetitemReferenceReturn, // return type
@@ -17,12 +66,15 @@ export const removeUserClosetitemReference = createAsyncThunk<
 >(
   'users/removeUserItemReference',
   async (args: UserClosetitemReferenceArgs, { rejectWithValue }) => {
+    console.log('removeUserClosetitemReference');
     try {
-      const postAddUserClosetitemRefRes = await api.delete(
+      const deleteUserClosetitemRefRes = await api.delete(
         `${URL}/api/users/${args.userId}/closetitems/${args.closetitemId}`
       );
 
-      return postAddUserClosetitemRefRes.data as UserClosetitemReferenceReturn;
+      console.log('removeUserClosetitemReference: after delete');
+
+      return deleteUserClosetitemRefRes.data as UserClosetitemReferenceReturn;
     } catch (error) {
       console.error('Error removing item reference from user:', error);
       if (typeof error === 'object' && error !== null && 'response' in error) {

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Error from '../components/Error';
 import Spinner from '../components/Spinner';
-import { registerUser } from '../features/auth/authActions';
+import { registerUser } from '../features/user/userActions';
 import type { RootState, AppDispatch } from '../app/store';
 
 interface RegistrationPageProps {
@@ -21,8 +21,8 @@ interface RegistrationFormInputs {
 const RegisterPage: React.FC<RegistrationPageProps> = () => {
   const [customError, setCustomError] = useState<string>('');
 
-  const { loading, userInfo, error, success } = useSelector(
-    (state: RootState) => state.auth
+  const { status, userInfo, error, success } = useSelector(
+    (state: RootState) => state.user
   );
   const dispatch = useDispatch<AppDispatch>();
 
@@ -111,9 +111,9 @@ const RegisterPage: React.FC<RegistrationPageProps> = () => {
           <button
             type="submit"
             className="relative text-sm p-2 bg-red-200 text-black-500 rounded-sm ease-in-out"
-            disabled={loading}
+            disabled={status == 'loading'}
           >
-            {loading ? <Spinner /> : 'Register'}
+            {status == 'loading' ? <Spinner /> : 'Register'}
           </button>
         </form>
         <p className="mt-8 text-zinc-500/80 text-center">

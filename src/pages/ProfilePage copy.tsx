@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import type { RootState } from '../app/store';
 
 const ProfilePage: React.FC = () => {
-  const { userInfo } = useSelector((state: RootState) => state.auth);
+  const { userInfo } = useSelector((state: RootState) => state.user);
 
   return (
     <div>
