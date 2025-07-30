@@ -31,7 +31,7 @@ export const userLogin = createAsyncThunk<
 
       sessionStorage.setItem('userToken', response.data.userToken);
 
-      dispatch(fetchClosetitems(response.data.userInfo._id));
+      dispatch(fetchClosetitems(response.data.currentUser._id));
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -47,7 +47,7 @@ export const registerUser = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.post(`${URL}/api/user/register`, {
+      const response = await axios.post(`${URL}/api/users/register`, {
         userName,
         email,
         password,
@@ -83,6 +83,30 @@ export const removeUserClosetitemReference = createAsyncThunk<
         );
       }
       return rejectWithValue('Unknown error');
+    }
+  }
+);
+
+// GET ALL USERS
+export const fetchUsers = createAsyncThunk(
+  'users/fetchusers',
+  async (_, { rejectWithValue }) => {
+    console.log('inside userActions, fetchUsers');
+    try {
+      const allUsersFromAtlasRes = await api.get<User[]>(
+        `${URL}/api/users/allusers`
+      );
+
+      console.log('after fetch ' + JSON.stringify(allUsersFromAtlasRes));
+
+      return allUsersFromAtlasRes.data;
+    } catch (error: any) {
+      if (axios.isAxiosError(error) && error.response) {
+        return rejectWithValue(
+          error.response.data.message || 'Failed to fetch users'
+        );
+      }
+      return rejectWithValue('An unknown error occurred');
     }
   }
 );

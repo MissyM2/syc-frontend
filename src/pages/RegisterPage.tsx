@@ -21,7 +21,7 @@ interface RegistrationFormInputs {
 const RegisterPage: React.FC<RegistrationPageProps> = () => {
   const [customError, setCustomError] = useState<string>('');
 
-  const { status, userInfo, error, success } = useSelector(
+  const { status, currentUser, error, success } = useSelector(
     (state: RootState) => state.user
   );
   const dispatch = useDispatch<AppDispatch>();
@@ -31,10 +31,10 @@ const RegisterPage: React.FC<RegistrationPageProps> = () => {
 
   useEffect(() => {
     // redirect authenticated user to profile screen
-    if (userInfo) navigate('/user-profile');
+    if (currentUser) navigate('/user-profile');
     // redirect user to login page if registration was successful
     if (success) navigate('/');
-  }, [navigate, userInfo, success]);
+  }, [navigate, currentUser, success]);
 
   const handleClick = () => {
     //onUpdate(false);

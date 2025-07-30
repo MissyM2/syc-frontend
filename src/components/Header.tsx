@@ -12,7 +12,7 @@ import type { RootState, AppDispatch } from '../app/store';
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(true);
-  const { userInfo } = useSelector((state: RootState) => state.user);
+  const { currentUser } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
@@ -25,7 +25,9 @@ const Header: React.FC = () => {
     if (data) {
       //console.log('inside useEffect, what is data? ' + JSON.stringify(data));
       dispatch(setCredentials(data));
-      console.log('Header, what is userInfo? ' + JSON.stringify(userInfo));
+      console.log(
+        'Header, what is CurrentUser? ' + JSON.stringify(currentUser)
+      );
     }
   }, [data, dispatch]);
 
@@ -44,8 +46,8 @@ const Header: React.FC = () => {
         <span>
           {isFetching
             ? `Fetching your profile...`
-            : userInfo !== null
-            ? `Logged in as ${userInfo.userName}`
+            : currentUser !== null
+            ? `Logged in as ${currentUser.userName}`
             : "You're not logged in"}
         </span>
         <ul className="hidden md:flex flex-row justify-center items-center first:mt-2 md:flex-row md:w-auto md:space-x-10 md:flex`">

@@ -8,6 +8,8 @@ import {
 import Dashboard from './pages/Dashboard';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import AdminUsersPage from './pages/AdminUsersPage';
+import AdminClosetPage from './pages/AdminClosetPage';
 import ProtectedRoute from './routing/ProtectedRoute';
 import RootLayout from './components/RootLayout';
 // import { AboutPage } from './pages/AboutPage';
@@ -41,6 +43,14 @@ const router = createBrowserRouter([
           {
             path: '/addclosetitem',
             element: <AddClosetitemPage />,
+          },
+          {
+            path: '/admin-users',
+            element: <AdminUsersPage />,
+          },
+          {
+            path: '/admin-closet',
+            element: <AdminClosetPage />,
           },
           {
             path: '*', // Catch-all route for any path not matched above

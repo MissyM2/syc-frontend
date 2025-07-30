@@ -40,10 +40,10 @@ interface FormData {
 
 export const AddClosetitemPage: React.FC = () => {
   const { status, error } = useSelector((state: RootState) => state.user);
-  const { userInfo } = useSelector((state: RootState) => state.user);
+  const { currentUser } = useSelector((state: RootState) => state.user);
   const closetState = useSelector((state: RootState) => state.closet);
   const userState = useSelector((state: RootState) => state.user);
-  const userId = useSelector((state: RootState) => state.user.userInfo?._id);
+  const userId = useSelector((state: RootState) => state.user.currentUser?._id);
   //const [uploadProgress, setUploadProgress] = useState(0);
   const [message, setMessage] = useState('');
 
@@ -61,7 +61,7 @@ export const AddClosetitemPage: React.FC = () => {
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
-      userId: userInfo?._id,
+      userId: currentUser?._id,
       category: '',
       itemName: '',
       seasons: [],
@@ -88,7 +88,7 @@ export const AddClosetitemPage: React.FC = () => {
       // );
       // console.log(
       //   'show user state after adding item. ' +
-      //     JSON.stringify(userState.userInfo?.closetitems.length)
+      //     JSON.stringify(userState.currentUser?.closetitems.length)
       // );
       // }
       if (response) {

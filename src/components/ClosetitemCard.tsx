@@ -1,15 +1,15 @@
 import { useDispatch, useSelector } from 'react-redux';
-import type { RootState, AppDispatch } from '../../../app/store.ts';
-import { deleteClosetitem } from '../closetActions.ts';
+import type { RootState, AppDispatch } from '../app/store.ts';
+import { deleteClosetitem } from '../features/closet/closetActions.ts';
 
-import ownerImg from '../../../assets/ownerImg.jpg';
+import ownerImg from '../assets/ownerImg.jpg';
 import { Link } from 'react-router-dom';
-import type { Closetitem } from '../../../interfaces/closetInterfaces.ts';
+import type { Closetitem } from '../interfaces/closetInterfaces.ts';
 //import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { FaMinus } from 'react-icons/fa6';
 import { FaEdit } from 'react-icons/fa';
-import RoundButtonSmall from './RoundButtonSmall.tsx';
+import RoundButtonSmall from '../features/closet/components/RoundButtonSmall.tsx';
 
 import {
   Card,

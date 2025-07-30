@@ -1,3 +1,5 @@
+import type { Closetitem } from './closetInterfaces.ts';
+
 export type TUserList = User[];
 
 export interface User {
@@ -5,27 +7,28 @@ export interface User {
   userName: string;
   email: string;
   password?: string;
-  closetitems: string[];
+  closetitems: Closetitem[];
 }
 
 export interface UserState {
-  userInfo: User | null;
+  currentUser: User | null;
+  allUsers: User[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
   success: boolean;
   userToken: string | null;
   isAuthenticated: boolean;
 }
-export interface UsersState {
-  closetitems: User[];
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
-  error: string | null;
-  success: boolean;
-}
+// export interface UsersState {
+//   closetitems: User[];
+//   status: 'idle' | 'loading' | 'succeeded' | 'failed';
+//   error: string | null;
+//   success: boolean;
+// }
 
 export interface AuthState {
   status: string;
-  userInfo: User | null;
+  currentUser: User | null;
   error: string | null;
   success: boolean;
   userToken: string | null;

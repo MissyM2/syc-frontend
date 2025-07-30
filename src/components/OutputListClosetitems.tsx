@@ -1,11 +1,13 @@
 import { ClosetitemCard } from './ClosetitemCard.tsx';
-import type { Closetitem } from '../../../interfaces/closetInterfaces.ts';
+import type { Closetitem } from '../interfaces/closetInterfaces.ts';
 
-interface OutputListProps {
+interface OutputListClosetitemsProps {
   data: Closetitem[];
 }
 
-export const OutputList: React.FC<OutputListProps> = ({ data }) => {
+export const OutputListClosetitems: React.FC<OutputListClosetitemsProps> = ({
+  data,
+}) => {
   // console.log('FE: outputList: ' + JSON.stringify(data));
   // for (const i of data) {
   //   console.log(i._id);

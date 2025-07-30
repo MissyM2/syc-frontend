@@ -4,7 +4,7 @@ import type {
   User,
   AuthState,
   UserState,
-  UserClosetitemReferencePayload,
+  //UserClosetitemReferencePayload,
 } from '../../interfaces/userInterfaces';
 //import type { TUserList } from './userTypes';
 
@@ -13,13 +13,14 @@ import {
   userLogin,
   // updateUser,
   // deleteUser,
-  // getAllUsers,
+  fetchUsers,
   removeUserClosetitemReference,
   //addUserClosetitemReference,
 } from './userActions';
 
 const initialState: UserState = {
-  userInfo: null,
+  currentUser: null,
+  allUsers: [],
   status: 'idle',
   error: null,
   success: false,
@@ -35,6 +36,12 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    setCurrentUser: (state, action: PayloadAction<User | null>) => {
+      state.currentUser = action.payload;
+    },
+    setAllUsers: (state, action: PayloadAction<User[]>) => {
+      state.allUsers = action.payload;
+    },
     resetAuthSlice: (state) => {
       Object.assign(state, initialState);
       state.userToken = null;
@@ -56,10 +63,10 @@ const userSlice = createSlice({
       //Object.assign(state, initialState);
     },
     setCredentials: (state, { payload }) => {
-      state.userInfo = payload;
+      state.currentUser = payload;
     },
     addUserAfterAuth: (state, action: PayloadAction<User>) => {
-      state.userInfo = action.payload;
+      state.currentUser = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -73,7 +80,7 @@ const userSlice = createSlice({
         userLogin.fulfilled,
         (state, action: PayloadAction<AuthState>) => {
           state.status = 'succeeded';
-          state.userInfo = action.payload.userInfo;
+          state.currentUser = action.payload.currentUser;
           state.error = null;
           state.success = true;
           state.userToken = action.payload.userToken;
@@ -112,10 +119,11 @@ const userSlice = createSlice({
           state.status = 'succeeded';
           const deletedItemId = action.payload.closetitemId;
 
-          if (state.userInfo) {
-            state.userInfo.closetitems = state.userInfo.closetitems.filter(
-              (id) => id !== deletedItemId
-            );
+          if (state.currentUser) {
+            state.currentUser.closetitems =
+              state.currentUser.closetitems.filter(
+                (id) => id !== deletedItemId
+              );
           }
           console.log(
             'removeUserClosetitemReference.fulfilled after state update'
@@ -125,11 +133,28 @@ const userSlice = createSlice({
       .addCase(removeUserClosetitemReference.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message || 'Unknown error';
+      })
+      .addCase(fetchUsers.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(fetchUsers.fulfilled, (state, action: PayloadAction<User[]>) => {
+        console.log(
+          'what is payload after fetchUsers? ' + JSON.stringify(action.payload)
+        );
+        state.status = 'succeeded';
+        state.allUsers = action.payload;
+      })
+      .addCase(fetchUsers.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Unknown error';
       });
   },
 });
 
 export const {
+  setCurrentUser,
+  setAllUsers,
   resetAuthSlice,
   setToken,
   logout,
