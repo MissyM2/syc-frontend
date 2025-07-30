@@ -2,6 +2,7 @@ import {
   Navigate,
   RouterProvider,
   createBrowserRouter,
+  redirect,
 } from 'react-router-dom';
 
 //import ProfilePage from './pages/ProfilePage';
@@ -10,8 +11,11 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import AdminUsersPage from './pages/AdminUsersPage';
 import AdminClosetPage from './pages/AdminClosetPage';
-import ProtectedRoute from './routing/ProtectedRoute';
+import ProtectedRoute from './routing/ProtectedRoute.tsx';
 import RootLayout from './components/RootLayout';
+import { ErrorPage } from './pages/ErrorPage.tsx';
+import { useSelector } from 'react-redux';
+import store from './app/store';
 // import { AboutPage } from './pages/AboutPage';
 // import { ContactUsPage } from './pages/ContactUsPage.tsx';
 
@@ -20,6 +24,15 @@ import RootLayout from './components/RootLayout';
 import { AddClosetitemPage } from './pages/AddClosetitemPage.tsx';
 // import { ViewClosetitemDetailPage } from './features/closet/view-closetitem-detail.tsx';
 // import { NotFoundPage } from './pages/NotFoundPage';
+
+export const checkAdminRole = ({params, store}: LoaderArgs => {
+  const state = store.getState();
+  const userRole = state.user.currentUser?.role; // Assuming 'auth' slice and 'user' object with 'role'
+  if (userRole !== 'admin') {
+    throw redirect('/unauthorized'); // Redirect to an unauthorized page
+  }
+  return null; // Allow navigation if role is correct
+};
 
 const router = createBrowserRouter([
   {
@@ -31,7 +44,7 @@ const router = createBrowserRouter([
     element: <RegisterPage />,
   },
   {
-    element: <ProtectedRoute />,
+    element: <ProtectedRoute allowedRoles={['admin', 'user']} />,
     children: [
       {
         element: <RootLayout />,
@@ -47,6 +60,8 @@ const router = createBrowserRouter([
           {
             path: '/admin-users',
             element: <AdminUsersPage />,
+            loader: ({ params }) => checkAdminRole(params, store),
+            errorElement: <ErrorPage />, // Optional: A component to render on loader errors
           },
           {
             path: '/admin-closet',
