@@ -23,7 +23,14 @@ const initialState: ClosetState = {
 const closetSlice = createSlice({
   name: 'closet',
   initialState,
-  reducers: {},
+  reducers: {
+    clearClosetitems: (state) => {
+      state.closetitems = [];
+    },
+    resetSlice: (state) => {
+      Object.assign(state, initialState);
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(addClosetitem.pending, (state) => {
@@ -34,8 +41,8 @@ const closetSlice = createSlice({
       .addCase(
         addClosetitem.fulfilled,
         (state, action: PayloadAction<Closetitem>) => {
-          state.closetitems.push(action.payload);
-          state.status = 'loading';
+          //state.closetitems.push(action.payload);
+          state.status = 'idle';
         }
       )
       .addCase(addClosetitem.rejected, (state, action) => {
@@ -51,8 +58,16 @@ const closetSlice = createSlice({
         fetchClosetitems.fulfilled,
         (state, action: PayloadAction<Closetitem[]>) => {
           state.status = 'succeeded';
+          Object.assign(state, initialState);
+          // console.log(
+          //   'what is state.closetitems? ' + JSON.stringify(state.closetitems)
+          // );
 
           state.closetitems = action.payload;
+          // console.log(
+          //   'what is state.closetitems AFTER FETCH? ' +
+          //     JSON.stringify(state.closetitems)
+          // );
         }
       )
       .addCase(fetchClosetitems.rejected, (state, action) => {
@@ -93,4 +108,5 @@ const closetSlice = createSlice({
   },
 });
 
+export const { clearClosetitems, resetSlice } = closetSlice.actions;
 export default closetSlice.reducer;

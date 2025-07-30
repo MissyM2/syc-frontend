@@ -7,6 +7,9 @@ interface OutputListProps {
 
 export const OutputList: React.FC<OutputListProps> = ({ data }) => {
   // console.log('FE: outputList: ' + JSON.stringify(data));
+  // for (const i of data) {
+  //   console.log(i._id);
+  // }
   if (data.length == 0) {
     return <h1>There are no items to show.</h1>;
   }

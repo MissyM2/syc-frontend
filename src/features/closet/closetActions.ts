@@ -94,9 +94,9 @@ export const addClosetitem = createAsyncThunk<
       };
 
       // 5. ADD CLOSET ITEM ID TO USER
-      const addUserClosetitemRefRes = await dispatch(
-        addUserClosetitemReference(updatedClosetitem)
-      );
+      // const addUserClosetitemRefRes = await dispatch(
+      //   addUserClosetitemReference(updatedClosetitem)
+      // );
 
       // if (addUserClosetitemRefRes) {
       //   console.log(
@@ -136,10 +136,10 @@ export const fetchClosetitems = createAsyncThunk<
     // }
 
     // 2. GET ALL PRESIGNED URLS FOR DOWNLOAD OF IMAGES
-    console.log('fetch: getting presignedurls');
+    //console.log('fetch: getting presignedurls');
     if (getAllClosetitemsFromAtlasRes.status === 200) {
       for (const item of getAllClosetitemsFromAtlasRes.data.closetitems) {
-        console.log('after for');
+        //console.log('after for');
 
         if (item.imageId) {
           const getPresignedUrlResponse = await getPresignedUrlForDownload(
@@ -150,7 +150,7 @@ export const fetchClosetitems = createAsyncThunk<
           if (getPresignedUrlResponse) {
             item.imageUrl = getPresignedUrlResponse;
             tempNum += 1;
-            console.log('image number gotten ' + tempNum);
+            //console.log('image number gotten ' + tempNum);
 
             // console.log(
             //   'fetchClosetitems: 2. PRESIGNED URL FOR DOWNLOAD OF IMAGE has been completed. ' +
@@ -163,10 +163,10 @@ export const fetchClosetitems = createAsyncThunk<
           // Optionally set getPresignedUrlResponse = null or handle as needed
         }
       }
-      console.log(
-        'what is the data? ' +
-          JSON.stringify(getAllClosetitemsFromAtlasRes.data.closetitems)
-      );
+      // console.log(
+      //   'what is the data? ' +
+      //     JSON.stringify(getAllClosetitemsFromAtlasRes.data.closetitems)
+      // );
 
       return getAllClosetitemsFromAtlasRes.data.closetitems;
     } else {

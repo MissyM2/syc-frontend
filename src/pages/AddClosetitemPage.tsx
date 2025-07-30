@@ -18,6 +18,8 @@ import {
 
 import { addClosetitem } from '../features/closet/closetActions.ts';
 
+import { resetSlice } from '../features/closet/closetSlice.ts';
+
 interface Option {
   value: string;
   label: string;
@@ -73,6 +75,7 @@ export const AddClosetitemPage: React.FC = () => {
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
+      dispatch(resetSlice());
       const response = await dispatch(addClosetitem(data));
       //if (response) {
       // console.log(

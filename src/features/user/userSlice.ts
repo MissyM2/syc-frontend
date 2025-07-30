@@ -3,7 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import type {
   User,
   UserState,
-  UserClosetitemReferencePayload,
+  //UserClosetitemReferencePayload,
 } from '../../interfaces/userInterfaces';
 //import type { TUserList } from './userTypes';
 
@@ -12,7 +12,7 @@ import {
   // deleteUser,
   // getAllUsers,
   removeUserClosetitemReference,
-  addUserClosetitemReference,
+  //addUserClosetitemReference,
 } from './userActions';
 
 const initialState: UserState = {
@@ -70,27 +70,27 @@ const userSlice = createSlice({
       .addCase(removeUserClosetitemReference.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message || 'Unknown error';
-      })
-      .addCase(addUserClosetitemReference.pending, (state) => {
-        state.status = 'loading';
-        state.error = null;
-      })
-      .addCase(
-        addUserClosetitemReference.fulfilled,
-        (state, action: PayloadAction<UserClosetitemReferencePayload>) => {
-          // console.log('deleteClosetitemIdFromUser');
-          // console.log(
-          //   'inside deleteClosetitemIdFromUser BEFORE FILTER' +
-          //     JSON.stringify(state.userInfo?.closetitems.length)
-          // );
+      });
+    // .addCase(addUserClosetitemReference.pending, (state) => {
+    //   state.status = 'loading';
+    //   state.error = null;
+    // })
+    // .addCase(
+    //   addUserClosetitemReference.fulfilled,
+    //   (state, action: PayloadAction<UserClosetitemReferencePayload>) => {
+    //     // console.log('deleteClosetitemIdFromUser');
+    //     // console.log(
+    //     //   'inside deleteClosetitemIdFromUser BEFORE FILTER' +
+    //     //     JSON.stringify(state.userInfo?.closetitems.length)
+    //     // );
 
-          state.userInfo?.closetitems.push(action.payload.closetitemId);
-          console.log(
-            'inside deleteClosetitemIdFromUser.fulfilled. state.userInfo?.closetitems.length: ' +
-              state.userInfo?.closetitems.length
-          );
-        }
-      );
+    //     state.userInfo?.closetitems.push(action.payload.closetitemId);
+    //     console.log(
+    //       'inside deleteClosetitemIdFromUser.fulfilled. state.userInfo?.closetitems.length: ' +
+    //         state.userInfo?.closetitems.length
+    //     );
+    //    }
+    // );
   },
 });
 
