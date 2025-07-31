@@ -80,10 +80,6 @@ const userSlice = createSlice({
       .addCase(
         userLogin.fulfilled,
         (state, action: PayloadAction<UserState>) => {
-          console.log(
-            'what is action payload after userLogin? ' +
-              JSON.stringify(action.payload)
-          );
           state.status = 'succeeded';
           state.currentUser = action.payload.currentUser;
           state.userRole = action.payload.userRole;
@@ -91,6 +87,7 @@ const userSlice = createSlice({
           state.success = true;
           state.userToken = action.payload.userToken;
           state.isAuthenticated = true;
+          console.log('completed login.  now, how do we go to dashboard?');
         }
       )
       .addCase(userLogin.rejected, (state, { payload }) => {
@@ -106,9 +103,6 @@ const userSlice = createSlice({
         state.error = null;
       })
       .addCase(registerUser.fulfilled, (state, { payload }) => {
-        console.log(
-          'userSlice: registerUser, what is payload? ' + JSON.stringify(payload)
-        );
         state.status = 'succeeded';
         state.success = true; // registration successful
       })

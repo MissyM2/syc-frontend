@@ -17,14 +17,19 @@ const setupAxiosInterceptors = (store: Store<RootState>): AxiosInstance => {
     (config) => {
       const state = store.getState();
       // to test upload without userToken
-      //console.log('state is ' + JSON.stringify(state));
+      // console.log(
+      //   'axiosInstance, request.use: state is ' + JSON.stringify(state)
+      // );
       // state.user.userToken = '';
       // state.user.isAuthenticated = false;
 
-      const userToken = state.user.userToken;
+      //const userToken = state.user.userToken;
+      const userToken = sessionStorage.getItem('userToken');
+      // console.log('what is userToken? ' + userToken);
 
       if (userToken) {
         config.headers.Authorization = `Bearer ${userToken}`;
+        //config.headers['x-auth-token'] = token;
       }
       // console.log('inside axiosInstance: what is userToken? ' + userToken);
       // console.log(

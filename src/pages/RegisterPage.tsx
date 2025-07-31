@@ -47,9 +47,6 @@ const RegisterPage: React.FC<RegistrationPageProps> = () => {
   };
 
   const submitForm = (data: RegistrationFormInputs) => {
-    console.log(
-      'RegisterPage, submitForm: what is data? ' + JSON.stringify(data)
-    );
     try {
       if (data.password !== data.confirmPassword) {
         setCustomError('Password mismatch');

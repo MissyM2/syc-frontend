@@ -39,9 +39,9 @@ const AdminDashboardPage: React.FC = () => {
   return (
     <div className="w-full">
       <div>User Administration</div>
-      <div>missy{currentUser?.email}</div>
-      <div>missy{status}</div>
-      <div>missy{currentUser?.role}</div>
+      <div>Current User: {currentUser?.email}</div>
+      <div>Status: {status}</div>
+      <div>User Role: {currentUser?.userRole}</div>
       <div>
         <RoundButton onClick={handleClick}>
           <div>Users</div>

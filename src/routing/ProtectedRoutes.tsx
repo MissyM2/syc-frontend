@@ -11,10 +11,10 @@ const ProtectedRoutes: React.FC<ProtectedRoutesProps> = ({ allowedRoles }) => {
 
   if (
     !currentUser ||
-    !currentUser.role ||
-    !allowedRoles.includes(currentUser.role)
+    !currentUser.userRole ||
+    !allowedRoles.includes(currentUser.userRole)
   ) {
-    return <Navigate to="/login" replace />; // or a "not authorized" page
+    return <Navigate to="/unauthorized" replace />; // or a "not authorized" page
   }
 
   return <Outlet />;

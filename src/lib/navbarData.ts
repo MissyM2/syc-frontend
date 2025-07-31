@@ -24,14 +24,8 @@ export const navAdminLinks: NavLinkType[] = [
   //     'bg-gray-200 border-t border-white font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
   // },
   {
-    name: 'Admin-Users',
-    path: '/admin-users',
-    cname:
-      'bg-gray-200 border-t border-white font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
-  },
-  {
-    name: 'Admin-Closet',
-    path: '/admin-closet',
+    name: 'Admin Dash',
+    path: '/admin-dashboard',
     cname:
       'bg-gray-200 border-t border-white font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
   },

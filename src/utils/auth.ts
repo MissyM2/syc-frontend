@@ -5,20 +5,34 @@ import type { UserRole } from '../interfaces/types.ts';
 interface DecodedToken {
   id: string;
   email: string;
-  role: UserRole;
+  userName: string;
+  userRole: UserRole;
   exp: number; // Expiration time
 }
 
 export const getUserRole = (): UserRole | null => {
-  const token = localStorage.getItem('token');
+  console.log('inside getUserRole');
+  const token = sessionStorage.getItem('userToken');
   if (token) {
     try {
-      const decodedToken: DecodedToken = jwtDecode(token);
+      const decodedToken = jwtDecode<DecodedToken>(token);
       if (decodedToken.exp * 1000 > Date.now()) {
+        console.log('auth, getUserRole: decodedToken.id ' + decodedToken.id);
+        console.log(
+          'auth, getUserRole: decodedToken.email ' + decodedToken.email
+        );
+        console.log(
+          'auth, getUserRole: decodedToken.userName ' + decodedToken.userName
+        );
+        console.log('auth, getUserRole: decodedToken.exp ' + decodedToken.exp);
+
+        console.log(
+          'auth, getUserRole: decodedToken.userRole ' + decodedToken.userRole
+        );
         // Check for token expiration
-        return decodedToken.role;
+        return decodedToken.userRole;
       } else {
-        localStorage.removeItem('token'); // Remove expired token
+        sessionStorage.removeItem('token'); // Remove expired token
       }
     } catch (error) {
       console.error('Error decoding token:', error);

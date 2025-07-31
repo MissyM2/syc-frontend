@@ -8,7 +8,7 @@ import { fetchClosetitems } from '@/features/closet/closetActions';
 import type {
   User,
   UserState,
-  AuthState,
+  //AuthState,
   AuthLoginArgs,
   AuthRegistrationArgs,
   UserClosetitemReferenceReturn,
@@ -25,15 +25,13 @@ export const userLogin = createAsyncThunk<
   'auth/login',
   async ({ email, password }: AuthLoginArgs, { dispatch, rejectWithValue }) => {
     try {
-      const response = await axios.post(`${URL}/api/users/login`, {
+      const res = await axios.post(`${URL}/api/users/login`, {
         email,
         password,
       });
-
-      sessionStorage.setItem('userToken', response.data.userToken);
-
-      dispatch(fetchClosetitems(response.data.currentUser._id));
-      return response.data;
+      sessionStorage.setItem('userToken', res.data.userToken);
+      dispatch(fetchClosetitems(res.data.currentUser._id));
+      return res.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
     }
@@ -48,7 +46,6 @@ export const registerUser = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      console.log('userActions,registerUser:inside try');
       const response = await axios.post(`${URL}/api/users/register`, {
         userName,
         email,

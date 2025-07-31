@@ -30,6 +30,8 @@ export const router = createBrowserRouter([
           {
             path: '/dashboard',
             element: <Dashboard />,
+            // loader: protectedLoader([UserRole.Admin, UserRole.User]),
+            // errorElement: <UnauthorizedPage />,
           },
           {
             path: '/addclosetitem',
@@ -38,8 +40,8 @@ export const router = createBrowserRouter([
           {
             path: '/admin-dashboard',
             element: <AdminDashboardPage />,
-            // loader: protectedLoader([UserRole.Admin]),
-            // errorElement: <UnauthorizedPage />, // Optional: A component to render on loader errors
+            loader: protectedLoader([UserRole.Admin]),
+            errorElement: <UnauthorizedPage />, // Optional: A component to render on loader errors
           },
           {
             path: '/user-profile',
