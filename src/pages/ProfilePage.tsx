@@ -1,6 +1,6 @@
 //import { useSelector } from 'react-redux';
 
-export const ProfilePage: React.FC = () => {
+const ProfilePage: React.FC = () => {
   return <div>Profile Page</div>;
   // const { currentUser } = useSelector((state) => state.user);
   // return (
@@ -13,3 +13,5 @@ export const ProfilePage: React.FC = () => {
   //   </div>
   // );
 };
+
+export default ProfilePage;

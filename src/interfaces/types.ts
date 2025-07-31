@@ -1,3 +1,11 @@
+export const UserRole = {
+  Admin: 'admin',
+  User: 'user',
+  Guest: 'guest',
+} as const;
+
+export type UserRole = (typeof UserRole)[keyof typeof UserRole];
+
 // import type { FieldError, UseFormRegister } from 'react-hook-form';
 
 // import { z } from 'zod';

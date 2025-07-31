@@ -4,7 +4,7 @@ import { OutputListUsers } from '../components/OutputListUsers.tsx';
 import { fetchUsers } from '@/features/user/userActions';
 
 import { useDispatch, useSelector } from 'react-redux';
-import type { RootState, AppDispatch } from '../app/store';
+import type { RootState, AppDispatch } from '../app/store.ts';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -15,7 +15,7 @@ import RoundButton from '../features/closet/components/RoundButton.tsx';
 //   searchTerm: string;
 // }
 
-const AdminUsersPage: React.FC = () => {
+const AdminDashboardPage: React.FC = () => {
   const { allUsers, status, error } = useSelector(
     (state: RootState) => state.user
   );
@@ -65,4 +65,4 @@ const AdminUsersPage: React.FC = () => {
   );
 };
 
-export default AdminUsersPage;
+export default AdminDashboardPage;

@@ -21,7 +21,7 @@ import {
 const initialState: UserState = {
   currentUser: null,
   allUsers: [],
-  role: null,
+  userRole: '',
   status: 'idle',
   error: null,
   success: false,
@@ -86,7 +86,7 @@ const userSlice = createSlice({
           );
           state.status = 'succeeded';
           state.currentUser = action.payload.currentUser;
-          state.role = action.payload.role;
+          state.userRole = action.payload.userRole;
           state.error = null;
           state.success = true;
           state.userToken = action.payload.userToken;
@@ -106,6 +106,9 @@ const userSlice = createSlice({
         state.error = null;
       })
       .addCase(registerUser.fulfilled, (state, { payload }) => {
+        console.log(
+          'userSlice: registerUser, what is payload? ' + JSON.stringify(payload)
+        );
         state.status = 'succeeded';
         state.success = true; // registration successful
       })

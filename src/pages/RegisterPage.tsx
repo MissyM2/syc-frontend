@@ -16,6 +16,7 @@ interface RegistrationFormInputs {
   email: string;
   password: string;
   confirmPassword: string;
+  userRole: string;
 }
 
 const RegisterPage: React.FC<RegistrationPageProps> = () => {
@@ -26,7 +27,11 @@ const RegisterPage: React.FC<RegistrationPageProps> = () => {
   );
   const dispatch = useDispatch<AppDispatch>();
 
-  const { register, handleSubmit } = useForm<RegistrationFormInputs>();
+  const { register, handleSubmit } = useForm<RegistrationFormInputs>({
+    defaultValues: {
+      userRole: 'user',
+    },
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,15 +47,21 @@ const RegisterPage: React.FC<RegistrationPageProps> = () => {
   };
 
   const submitForm = (data: RegistrationFormInputs) => {
-    // check if passwords match
-    if (data.password !== data.confirmPassword) {
-      setCustomError('Password mismatch');
-      return;
-    }
-    // transform email string to lowercase to avoid case sensitivity issues in login
-    data.email = data.email.toLowerCase();
+    console.log(
+      'RegisterPage, submitForm: what is data? ' + JSON.stringify(data)
+    );
+    try {
+      if (data.password !== data.confirmPassword) {
+        setCustomError('Password mismatch');
+        return;
+      }
+      // transform email string to lowercase to avoid case sensitivity issues in login
+      data.email = data.email.toLowerCase();
 
-    dispatch(registerUser(data));
+      dispatch(registerUser(data));
+    } catch (error) {
+      console.log('what is error? ' + error);
+    }
   };
 
   return (
@@ -107,6 +118,17 @@ const RegisterPage: React.FC<RegistrationPageProps> = () => {
               {...register('confirmPassword')}
               required
             />
+          </div>
+          <div key="admin">
+            <input
+              type="radio"
+              value="admin"
+              id="admin"
+              {...register('userRole')}
+            />
+            <label htmlFor="admin" className="ml-2">
+              Admin?
+            </label>
           </div>
           <button
             type="submit"

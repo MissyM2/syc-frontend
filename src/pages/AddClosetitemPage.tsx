@@ -38,7 +38,7 @@ interface FormData {
   imageUrl: string;
 }
 
-export const AddClosetitemPage: React.FC = () => {
+const AddClosetitemPage: React.FC = () => {
   const { status, error } = useSelector((state: RootState) => state.user);
   const { currentUser } = useSelector((state: RootState) => state.user);
   const closetState = useSelector((state: RootState) => state.closet);
@@ -288,3 +288,5 @@ export const AddClosetitemPage: React.FC = () => {
     </div>
   );
 };
+
+export default AddClosetitemPage;

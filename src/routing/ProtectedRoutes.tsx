@@ -2,11 +2,11 @@ import { useSelector } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
 import type { RootState } from '../app/store';
 
-interface ProtectedRouteProps {
+interface ProtectedRoutesProps {
   allowedRoles: string[];
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
+const ProtectedRoutes: React.FC<ProtectedRoutesProps> = ({ allowedRoles }) => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
 
   if (
@@ -20,4 +20,4 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
   return <Outlet />;
 };
 
-export default ProtectedRoute;
+export default ProtectedRoutes;

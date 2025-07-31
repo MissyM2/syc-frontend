@@ -44,14 +44,16 @@ export const userLogin = createAsyncThunk<
 export const registerUser = createAsyncThunk(
   'auth/register',
   async (
-    { userName, email, password }: AuthRegistrationArgs,
+    { userName, email, password, userRole }: AuthRegistrationArgs,
     { rejectWithValue }
   ) => {
     try {
+      console.log('userActions,registerUser:inside try');
       const response = await axios.post(`${URL}/api/users/register`, {
         userName,
         email,
         password,
+        userRole,
       });
       return response.data;
     } catch (error: any) {

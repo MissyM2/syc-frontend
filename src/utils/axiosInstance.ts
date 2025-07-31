@@ -1,12 +1,12 @@
 import axios from 'axios';
 import type { AxiosInstance } from 'axios';
 import type { Store } from 'redux';
-import type { RootState } from './store';
+import type { RootState } from '../app/store';
 //import { logoutUser } from '../features/user/userSlice';
 
 const setupAxiosInterceptors = (store: Store<RootState>): AxiosInstance => {
   const instance: AxiosInstance = axios.create({
-    baseURL: 'http://localhost:3000',
+    baseURL: 'http://localhost:3000', // Replace with your backend URL
     headers: {
       'Content-Type': 'application/json',
     },
