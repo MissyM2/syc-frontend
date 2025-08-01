@@ -1,10 +1,10 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 
-import ProfilePage from '../pages/ProfilePage';
-import Dashboard from '../pages/Dashboard';
-import LoginPage from '../pages/LoginPage';
-import RegisterPage from '../pages/RegisterPage';
-import AdminDashboardPage from '../pages/AdminDashboardPage.tsx';
+import ProfilePage from '../pages/ProfilePage.tsx';
+import DashboardPage from '../pages/DashboardPage.tsx';
+import LoginPage from '../pages/LoginPage.tsx';
+import RegisterPage from '../pages/RegisterPage.tsx';
+import ManageUsersPage from '../pages/ManageUsersPage.tsx';
 import AddClosetitemPage from '../pages/AddClosetitemPage.tsx';
 import ProtectedRoute from '../routing/ProtectedRoutes.tsx';
 import RootLayout from '../components/RootLayout';
@@ -29,7 +29,7 @@ export const router = createBrowserRouter([
         children: [
           {
             path: '/dashboard',
-            element: <Dashboard />,
+            element: <DashboardPage />,
             // loader: protectedLoader([UserRole.Admin, UserRole.User]),
             // errorElement: <UnauthorizedPage />,
           },
@@ -38,8 +38,8 @@ export const router = createBrowserRouter([
             element: <AddClosetitemPage />,
           },
           {
-            path: '/admin-dashboard',
-            element: <AdminDashboardPage />,
+            path: '/manage-users',
+            element: <ManageUsersPage />,
             loader: protectedLoader([UserRole.Admin]),
             errorElement: <UnauthorizedPage />, // Optional: A component to render on loader errors
           },

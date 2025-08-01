@@ -1,31 +1,38 @@
+import type { User } from '../interfaces/userInterfaces.ts';
+
 interface NavLinkType {
-  name: string;
+  label: string;
   path: string;
+  requiredRoles?: Array<User['userRole']>;
   cname: string;
 }
 
-export const navAdminLinks: NavLinkType[] = [
+export const hamburgerLinks: NavLinkType[] = [
   {
-    name: 'About Us',
+    label: 'About Us',
     path: '/about',
+    requiredRoles: ['user'],
     cname:
       'flex md:hidden bg-gray-200 border-t border-white font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
   },
   {
-    name: 'Contact',
+    label: 'Contact',
     path: '/contact',
+    requiredRoles: ['user'],
     cname:
       'flex md:hidden bg-gray-200 border-t border-white font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
   },
-  // {
-  //   name: 'Profile',
-  //   path: '/profile',
-  //   cname:
-  //     'bg-gray-200 border-t border-white font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
-  // },
   {
-    name: 'Admin Dash',
-    path: '/admin-dashboard',
+    label: 'Profile',
+    path: '/user-profile',
+    requiredRoles: ['user'],
+    cname:
+      'bg-gray-200 border-t border-white font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
+  },
+  {
+    label: 'Manage Users',
+    path: '/manage-users',
+    requiredRoles: ['admin'],
     cname:
       'bg-gray-200 border-t border-white font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
   },
@@ -33,14 +40,16 @@ export const navAdminLinks: NavLinkType[] = [
 
 export const navLinks: NavLinkType[] = [
   {
-    name: 'About Us',
+    label: 'About Us',
     path: '/about',
+    requiredRoles: ['user'],
     cname:
       'hidden md:flex bg-gray-200 border-t border-white font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
   },
   {
-    name: 'Contact',
+    label: 'Contact',
     path: '/contact',
+    requiredRoles: ['user'],
     cname:
       'hidden md:flex bg-gray-200 border-t border-white border-b font-medium w-full flex justify-center p-2.5 md:border-none md:p-0 md:w-auto',
   },

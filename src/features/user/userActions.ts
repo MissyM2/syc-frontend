@@ -91,13 +91,14 @@ export const removeUserClosetitemReference = createAsyncThunk<
 export const fetchUsers = createAsyncThunk(
   'users/fetchusers',
   async (_, { rejectWithValue }) => {
-    console.log('inside userActions, fetchUsers');
     try {
+      console.log('before get call');
       const allUsersFromAtlasRes = await api.get<User[]>(
         `${URL}/api/users/allusers`
       );
-
-      console.log('after fetch ' + JSON.stringify(allUsersFromAtlasRes));
+      console.log(
+        'after get call ' + JSON.stringify(allUsersFromAtlasRes.data)
+      );
 
       return allUsersFromAtlasRes.data;
     } catch (error: any) {

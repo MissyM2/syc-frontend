@@ -5,18 +5,18 @@ import { CollapsibleOptionGroup } from '../features/closet/components/Collapsibl
 import { OutputListClosetitems } from '../components/OutputListClosetitems.tsx';
 
 import { useDispatch, useSelector } from 'react-redux';
-import type { RootState, AppDispatch } from '../app/store';
+import type { RootState, AppDispatch } from '../app/store.ts';
 
 import { useNavigate } from 'react-router-dom';
 
 import { FaPlus } from 'react-icons/fa6';
-import RoundButton from '../features/closet/components/RoundButton.tsx';
+import RoundButton from '../components/RoundButton.tsx';
 
 // interface FilterObject {
 //   searchTerm: string;
 // }
 
-const Dashboard: React.FC = () => {
+const DashboardPage: React.FC = () => {
   //const [closetitems, setClosetitems] = useState<Closetitem[]>([]);
   //const [searchTerm, setSearchTerm] = useState<string>('');
   const closetitems = useSelector(
@@ -43,4 +43,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardPage;

@@ -9,13 +9,13 @@ import type { RootState, AppDispatch } from '../app/store.ts';
 import { useNavigate } from 'react-router-dom';
 
 import { FaPlus } from 'react-icons/fa6';
-import RoundButton from '../features/closet/components/RoundButton.tsx';
+import RoundButton from '../components/RoundButton.tsx';
 
 // interface FilterObject {
 //   searchTerm: string;
 // }
 
-const AdminDashboardPage: React.FC = () => {
+const ManageUsersPage: React.FC = () => {
   const { allUsers, status, error } = useSelector(
     (state: RootState) => state.user
   );
@@ -65,4 +65,4 @@ const AdminDashboardPage: React.FC = () => {
   );
 };
 
-export default AdminDashboardPage;
+export default ManageUsersPage;

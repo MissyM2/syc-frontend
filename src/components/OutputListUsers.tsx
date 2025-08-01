@@ -6,7 +6,6 @@ interface OutputListUsersProps {
 }
 
 export const OutputListUsers: React.FC<OutputListUsersProps> = ({ data }) => {
-  console.log('FE: outputListUsers: ' + JSON.stringify(data));
   // for (const i of data) {
   //   console.log(i._id);
   // }

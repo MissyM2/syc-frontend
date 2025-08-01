@@ -63,9 +63,9 @@ const userSlice = createSlice({
       sessionStorage.removeItem('userToken');
       //Object.assign(state, initialState);
     },
-    setCredentials: (state, { payload }) => {
-      state.currentUser = payload;
-    },
+    // setCredentials: (state, { payload }) => {
+    //   state.currentUser = payload;
+    // },
     addUserAfterAuth: (state, action: PayloadAction<User>) => {
       state.currentUser = action.payload;
     },
@@ -87,7 +87,6 @@ const userSlice = createSlice({
           state.success = true;
           state.userToken = action.payload.userToken;
           state.isAuthenticated = true;
-          console.log('completed login.  now, how do we go to dashboard?');
         }
       )
       .addCase(userLogin.rejected, (state, { payload }) => {
