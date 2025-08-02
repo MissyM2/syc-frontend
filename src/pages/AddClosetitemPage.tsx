@@ -27,8 +27,7 @@ interface Option {
   label: string;
 }
 
-interface FormData {
-  userId: string;
+interface LoginFormInputs {
   category: string;
   itemName: string;
   seasons: string[];
@@ -38,6 +37,7 @@ interface FormData {
   imageId: string;
   image: FileList;
   imageUrl: string;
+  userId: string;
 }
 
 const AddClosetitemPage: React.FC = () => {
@@ -61,7 +61,7 @@ const AddClosetitemPage: React.FC = () => {
     // control,
     // watch,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<LoginFormInputs>({
     defaultValues: {
       userId: currentUser?._id,
       category: '',
@@ -75,7 +75,7 @@ const AddClosetitemPage: React.FC = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
+  const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
     try {
       //dispatch(resetSlice());
       const response = await dispatch(addClosetitem(data));

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { AxiosResponse } from 'axios';
-import { api } from '../../index.tsx';
+import { api } from '../index.tsx';
 
 // interface UploadImageBody {
 //   fileName: string;

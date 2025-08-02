@@ -6,20 +6,9 @@ import Error from '@/components/Error';
 import Spinner from '@/components/Spinner';
 import { registerUser } from '@/features/user/userActions';
 import type { RootState, AppDispatch } from '@/app/store';
+import type { RegistrationFormArgs } from '@/interfaces/userInterfaces';
 
-interface RegistrationPageProps {
-  //onUpdate: (newValue: boolean) => void;
-}
-
-interface RegistrationFormInputs {
-  userName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  userRole: string;
-}
-
-const RegisterPage: React.FC<RegistrationPageProps> = () => {
+const RegisterPage: React.FC = () => {
   const [customError, setCustomError] = useState<string>('');
 
   const { status, currentUser, error, success } = useSelector(
@@ -27,8 +16,16 @@ const RegisterPage: React.FC<RegistrationPageProps> = () => {
   );
   const dispatch = useDispatch<AppDispatch>();
 
-  const { register, handleSubmit } = useForm<RegistrationFormInputs>({
+  const { register, handleSubmit, setValue } = useForm<RegistrationFormArgs>({
     defaultValues: {
+      homeAddress: {
+        street1: '7 Hitching Post Court',
+        street2: '',
+        city: 'Rockville',
+        state: 'MD',
+        zipCode: '20850',
+        country: 'USA',
+      },
       userRole: 'user',
     },
   });
@@ -42,11 +39,10 @@ const RegisterPage: React.FC<RegistrationPageProps> = () => {
   }, [navigate, currentUser, success]);
 
   const handleClick = () => {
-    //onUpdate(false);
     navigate('/');
   };
 
-  const submitForm = (data: RegistrationFormInputs) => {
+  const submitForm = (data: RegistrationFormArgs) => {
     try {
       if (data.password !== data.confirmPassword) {
         setCustomError('Password mismatch');
@@ -58,6 +54,16 @@ const RegisterPage: React.FC<RegistrationPageProps> = () => {
       dispatch(registerUser(data));
     } catch (error) {
       console.log('what is error? ' + error);
+    }
+  };
+
+  const handleImageChange = (e: any) => {
+    const profileImageFile = e.target.files[0];
+    if (profileImageFile) {
+      // Assuming you want to store the file name
+      setValue('profileImageId', profileImageFile.name);
+      // You might also want to store the file object itself for later use
+      // setValue('imageFile', file);
     }
   };
 
@@ -126,6 +132,24 @@ const RegisterPage: React.FC<RegistrationPageProps> = () => {
             <label htmlFor="admin" className="ml-2">
               Admin?
             </label>
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="imageFile"
+            >
+              Your Profile Image
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              required
+              id="imageFile"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              {...register('profileImage', { required: true })}
+              onChange={handleProfileImageChange}
+            />
+            {/* {errors.desc && <span>This field is required</span>} */}
           </div>
           <button
             type="submit"

@@ -21,7 +21,7 @@ import {
   uploadImageToS3,
   getPresignedUrlForDownload,
   deleteSingleImageFromS3ByUser,
-} from '../../lib/images/S3Utils.ts';
+} from '@/utils/S3Utils.ts';
 
 const URL = 'http://localhost:3000';
 

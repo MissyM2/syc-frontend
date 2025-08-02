@@ -17,6 +17,9 @@ export interface User {
   homeAddress: Address;
   password?: string;
   userRole: 'user' | 'admin' | null;
+  profileImageId: string;
+  profileImage: FileList;
+  profileImageUrl: string;
   closetitems: Closetitem[];
   createdAt: string;
   updatedAt: string;
@@ -53,13 +56,27 @@ export type AuthLoginArgs = {
   email: string;
   password: string;
 };
+export interface HomeAddress {
+  [key: string]: string;
+}
 
-export type AuthRegistrationArgs = {
+export type RegistrationSubmissionArgs = {
   userName: string;
   email: string;
-  password: string;
-  userRole: string;
+  homeAddress: Address;
+  password?: string;
+  userRole: 'user' | 'admin' | null;
+  profileImageId: string;
+  profileImage: FileList;
+  profileImageUrl: string;
 };
+
+// export type AddUserArgs = {
+//   userName: string;
+//   email: string;
+//   password: string;
+//   userRole: string;
+// };
 
 export interface UserSubmitted {
   userName: string;
@@ -78,7 +95,5 @@ export interface UserClosetitemReferenceReturn {
   userId: string;
   closetitemId: string;
 }
-
-export type AddUserArgs = Omit<User, '_id'>;
 
 export type DeleteUserArgs = Omit<User, '_id'>;
