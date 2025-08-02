@@ -4,6 +4,7 @@ import RoundButton from './RoundButton.tsx';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import type { RootState } from '@/app/store';
+import sycLogo from '@/assets/syc-logo.png'; // Adjust the path as necessary
 
 const MainTopbar: React.FC = () => {
   const navigate = useNavigate();
@@ -17,7 +18,9 @@ const MainTopbar: React.FC = () => {
       <nav className="container flex items-center justify-between py-1 lg:py-5">
         <span className="text-lg flex flex-row items-center text-white py-1 text-md">
           <div className="ps-3 pe-2">
-            <RoundButton onClick={handleGoHome}>SYC</RoundButton>
+            <RoundButton onClick={handleGoHome}>
+              <img src={sycLogo} alt="SYC Logo" className="h-10 w-10" />
+            </RoundButton>
           </div>
           <div>{currentUser && `Hi, ${currentUser.userName}`}</div>
         </span>
