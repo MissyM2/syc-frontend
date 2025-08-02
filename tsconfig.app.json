@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "react": ["./node_modules/@types/react"]
+    },
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -39,11 +44,12 @@
     // go to js file when using IDE functions like
     // "Go to Definition" in VSCode
     "declarationMap": true,
-    "paths": {
-      "react": ["./node_modules/@types/react"],
-      "@/*": ["./src/*"]
-    },
-    "baseUrl": "."
+    // "paths": {
+    //   "react": ["./node_modules/@types/react"],
+    //   "@/*": ["./src/*"]
+    // },
+    // "baseUrl": "src"
+    "rootDir": "./"
   },
-  "include": ["src", "../temp/state"]
+  "include": ["src"]
 }

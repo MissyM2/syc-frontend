@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { cn } from '../../lib/utils.ts';
+import { cn } from '@/utils/tailwindUtils.ts';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;

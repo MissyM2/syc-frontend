@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { SearchBox } from '../features/closet/components/SearchBox.tsx';
-import { CollapsibleOptionGroup } from '../features/closet/components/CollapsibleOptionGroup.tsx';
-//import { CheckboxGroup } from '../features/closet/components/CheckboxGroup.tsx';
-import { OutputListClosetitems } from '../components/OutputListClosetitems.tsx';
+import { SearchBox } from '@/features/closet/components/SearchBox.tsx';
+import { CollapsibleOptionGroup } from '@/features/closet/components/CollapsibleOptionGroup.tsx';
+//import { CheckboxGroup } from '@/features/closet/components/CheckboxGroup.tsx';
+import { OutputListClosetitems } from '@/components/OutputListClosetitems.tsx';
 
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '../app/store.ts';
@@ -10,7 +10,7 @@ import type { RootState, AppDispatch } from '../app/store.ts';
 import { useNavigate } from 'react-router-dom';
 
 import { FaPlus } from 'react-icons/fa6';
-import RoundButton from '../components/RoundButton.tsx';
+import RoundButton from '@/components/RoundButton.tsx';
 
 // interface FilterObject {
 //   searchTerm: string;

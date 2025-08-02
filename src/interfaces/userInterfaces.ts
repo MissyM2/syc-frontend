@@ -1,14 +1,25 @@
 import type { Closetitem } from './closetInterfaces.ts';
 
 export type TUserList = User[];
+export interface Address {
+  street1: string;
+  street2: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+}
 
 export interface User {
   _id: string;
   userName: string;
   email: string;
+  homeAddress: Address;
   password?: string;
   userRole: 'user' | 'admin' | null;
   closetitems: Closetitem[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface UserState {

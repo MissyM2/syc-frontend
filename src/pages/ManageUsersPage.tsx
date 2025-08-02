@@ -1,15 +1,15 @@
 //import { CheckboxGroup } from '../features/closet/components/CheckboxGroup.tsx';
 import { useEffect } from 'react';
-import { OutputListUsers } from '../components/OutputListUsers.tsx';
+import { OutputListUsers } from '@/components/OutputListUsers.tsx';
 import { fetchUsers } from '@/features/user/userActions';
 
 import { useDispatch, useSelector } from 'react-redux';
-import type { RootState, AppDispatch } from '../app/store.ts';
+import type { RootState, AppDispatch } from '@/app/store.ts';
 
 import { useNavigate } from 'react-router-dom';
 
 import { FaPlus } from 'react-icons/fa6';
-import RoundButton from '../components/RoundButton.tsx';
+import RoundButton from '@/components/RoundButton.tsx';
 
 // interface FilterObject {
 //   searchTerm: string;

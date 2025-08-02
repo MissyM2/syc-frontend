@@ -33,18 +33,18 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
   //   (state: RootState) => state.closetitems
   // );
 
-  const date = new Date(closetitem.dateCreated);
+  // const date = new Date(closetitem.dateCreated);
 
-  const formattedDate = date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+  // const formattedDate = date.toLocaleDateString('en-US', {
+  //   year: 'numeric',
+  //   month: 'long',
+  //   day: 'numeric',
+  // });
 
-  const formattedTime = date.toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-  });
+  // const formattedTime = date.toLocaleTimeString('en-US', {
+  //   hour: 'numeric',
+  //   minute: '2-digit',
+  // });
 
   const handleDelete = () => {
     //console.log('inside handleDelete');
@@ -115,7 +115,12 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
             <div className="flex flex-col md:flex-row items-left">
               <div className="text-xs pr-2">Added:</div>
               <div className="text-xs">
-                {formattedDate} / {formattedTime}
+                <p>
+                  Created At: {new Date(closetitem.createdAt).toLocaleString()}
+                </p>
+                <p>
+                  Updated At: {new Date(closetitem.updatedAt).toLocaleString()}
+                </p>
               </div>
             </div>
             <div className="flex flex-row items-center">

@@ -6,19 +6,21 @@ import type { SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
-import type { RootState, AppDispatch } from '../app/store';
+
+import type { RootState, AppDispatch } from '@/app/store.ts';
+
 import {
   seasonItems,
   sizeItems,
   categoryItems,
-} from '../features/closet/Closetitem-datas.ts';
+} from '@/features/closet/Closetitem-datas.ts';
 
-// import Error from '../components/Error';
-// import Spinner from '../components/Spinner';
+// import Error from '@/components/Error';
+// import Spinner from '@/components/Spinner';
 
-import { addClosetitem } from '../features/closet/closetActions.ts';
+import { addClosetitem } from '@/features/closet/closetActions.ts';
 
-import { resetSlice } from '../features/closet/closetSlice.ts';
+//import { resetSlice } from '@/features/closet/closetSlice.ts';
 
 interface Option {
   value: string;

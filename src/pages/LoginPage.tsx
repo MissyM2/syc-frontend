@@ -2,18 +2,18 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 //import { unwrapResult } from '@reduxjs/toolkit';
-import { userLogin } from '../features/user/userActions';
-//import { addUserAfterAuth } from '../features/user/userSlice';
+import { userLogin } from '@/features/user/userActions';
+//import { addUserAfterAuth } from '@/features/user/userSlice';
 import { useEffect } from 'react';
-import type { RootState, AppDispatch } from '../app/store';
+import type { RootState, AppDispatch } from '@/app/store';
 
-import Error from '../components/Error';
-import Spinner from '../components/Spinner';
+import Error from '@/components/Error';
+import Spinner from '@/components/Spinner';
 //import { authApi } from '@/app/services/auth/authService';
 
 // import { FaPlus } from 'react-icons/fa6';
-// import RoundButton from '../features/closet/components/RoundButton.tsx';
-// import { resetAuthSlice } from '../features/user/userSlice.ts';
+// import RoundButton from '@/features/closet/components/RoundButton.tsx';
+// import { resetAuthSlice } from '@/features/user/userSlice.ts';
 
 interface UserAddPageProps {
   //onUpdate: (newValue: boolean) => void;

@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 //import axios from 'axios';
-import type { User } from '../interfaces/Interfaces.tsx';
+import type { User } from '@/interfaces/userInterfaces.tsx';
 
-import { OutputList } from '../features/user/components/OutputList.tsx';
-//import { getAllUsers } from '../features/users/user-api.ts';
-import { fetchUsers } from '../features/user/userSlice.ts';
+import { OutputList } from '@/features/user/components/OutputList.tsx';
+//import { getAllUsers } from '@/features/users/user-api.ts';
+import { fetchUsers } from '@/features/user/userActions.ts';
 import { useDispatch } from 'react-redux';
-import type { AppDispatch } from '../app/store';
+import type { AppDispatch } from '@/app/store';
 
 //const URL = 'http://localhost:3000';
 

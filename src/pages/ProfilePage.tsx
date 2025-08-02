@@ -1,19 +1,69 @@
 import { useSelector } from 'react-redux';
-import type { RootState } from '../app/store';
+import type { RootState } from '@/app/store';
+import type { User } from '@/interfaces/userInterfaces';
 
-const ProfilePage: React.FC = () => {
+import { Label } from '@/components/ui/label';
+import {
+  Card,
+  //CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+
+interface UserProfileProps {
+  user: User;
+}
+
+const ProfilePage: React.FC<UserProfileProps> = ({
+  user,
+}): React.JSX.Element => {
   const { currentUser } = useSelector((state: RootState) => state.user);
 
   return (
-    <div>
-      <figure className="flex items-center justify-center w-36 h-36 text-white text-5xl bg-gradient-to-br from-[#16b8f3] to-[#6ce7b9] rounded-full mx-auto my-8">
-        {currentUser?.userName.charAt(0).toUpperCase()}
-      </figure>
-      <span className="text-center">
-        Welcome <strong>{currentUser?.userName}!</strong> You can view this page
-        because you're logged in
-      </span>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>{currentUser?.userName.charAt(0).toUpperCase()}</CardTitle>
+        {/* <CardDescription>{user.desc}</CardDescription> */}
+        {/* <CardAction>
+          <Button variant="link">Sign Up</Button>
+        </CardAction> */}
+      </CardHeader>
+      <CardContent>
+        <div>
+          <Label>{currentUser?.email}</Label>
+        </div>
+        <div>
+          <Label>
+            {currentUser?.homeAddress
+              ? `${currentUser?.homeAddress.street1}, 
+                      ${currentUser?.homeAddress.street1}, 
+                      ${currentUser?.homeAddress.city}, 
+                      ${currentUser?.homeAddress.state} ${currentUser?.homeAddress.zipCode}`
+              : 'No address'}
+          </Label>
+        </div>
+        <div>
+          <Label>{currentUser?.userRole}</Label>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <p>
+          Created At:{' '}
+          {currentUser?.createdAt
+            ? new Date(currentUser.createdAt).toLocaleString()
+            : 'N/A'}
+        </p>
+        <p>
+          Updated At:{' '}
+          {currentUser?.updatedAt
+            ? new Date(currentUser.updatedAt).toLocaleString()
+            : 'N/A'}
+        </p>
+      </CardFooter>
+    </Card>
   );
 };
 

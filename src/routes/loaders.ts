@@ -1,6 +1,6 @@
 // src/routes/loaders.ts
 import { redirect } from 'react-router-dom';
-import { getUserRole } from '../utils/auth';
+import { getUserRole } from '../utils/authUtils.ts';
 import type { UserRole } from '../interfaces/types.ts';
 
 export const protectedLoader = (requiredRoles: UserRole[]) => async () => {

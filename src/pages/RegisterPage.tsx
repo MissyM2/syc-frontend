@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import Error from '../components/Error';
-import Spinner from '../components/Spinner';
-import { registerUser } from '../features/user/userActions';
-import type { RootState, AppDispatch } from '../app/store';
+import Error from '@/components/Error';
+import Spinner from '@/components/Spinner';
+import { registerUser } from '@/features/user/userActions';
+import type { RootState, AppDispatch } from '@/app/store';
 
 interface RegistrationPageProps {
   //onUpdate: (newValue: boolean) => void;
