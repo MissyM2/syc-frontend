@@ -3,7 +3,7 @@ import { NavDesktop } from './navDesktop';
 import RoundButton from './RoundButton.tsx';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import type { RootState } from '../app/store';
+import type { RootState } from '@/app/store';
 
 const MainTopbar: React.FC = () => {
   const navigate = useNavigate();

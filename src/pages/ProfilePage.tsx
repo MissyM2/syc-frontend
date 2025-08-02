@@ -25,7 +25,9 @@ const ProfilePage: React.FC<UserProfileProps> = ({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{currentUser?.userName.charAt(0).toUpperCase()}</CardTitle>
+        <CardTitle className="text-green-600 text-5xl font-bold">
+          {currentUser?.userName.charAt(0).toUpperCase()}
+        </CardTitle>
         {/* <CardDescription>{user.desc}</CardDescription> */}
         {/* <CardAction>
           <Button variant="link">Sign Up</Button>
@@ -35,19 +37,15 @@ const ProfilePage: React.FC<UserProfileProps> = ({
         <div>
           <Label>{currentUser?.email}</Label>
         </div>
-        <div>
-          <Label>
-            {currentUser?.homeAddress
-              ? `${currentUser?.homeAddress.street1}, 
+        <div className="text-gray-700 text-base">
+          {currentUser?.homeAddress
+            ? `${currentUser?.homeAddress.street1}, 
                       ${currentUser?.homeAddress.street1}, 
                       ${currentUser?.homeAddress.city}, 
                       ${currentUser?.homeAddress.state} ${currentUser?.homeAddress.zipCode}`
-              : 'No address'}
-          </Label>
+            : 'No address'}
         </div>
-        <div>
-          <Label>{currentUser?.userRole}</Label>
-        </div>
+        <div className="text-gray-700 text-base">{currentUser?.userRole}</div>
       </CardContent>
       <CardFooter>
         <p>
