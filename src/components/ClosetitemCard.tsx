@@ -20,6 +20,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { current } from '@reduxjs/toolkit';
 
 interface ClosetitemProps {
   closetitem: Closetitem;
@@ -29,6 +30,7 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
   closetitem,
 }): React.JSX.Element => {
   const dispatch = useDispatch<AppDispatch>();
+  const { currentUser } = useSelector((state: RootState) => state.user);
   // const { status, error } = useSelector(
   //   (state: RootState) => state.closetitems
   // );
@@ -76,7 +78,7 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
             </RoundButtonSmall>
           </div>
         </div>
-        <div className="grid w-full place-items-center overflow-x-scroll aspect-square  bg-gray-200">
+        <div className="grid w-full place-items-center overflow-x-scroll aspect-square bg-gray-200">
           {closetitem.imageUrl && (
             <img
               className=""
@@ -126,11 +128,13 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
             <div className="flex flex-row items-center">
               <img
                 className="w-10 h-10 rounded-full mr-4"
-                src={ownerImg}
-                alt="Avatar of Jonathan Reinink"
+                src={currentUser?.profileImageUrl}
+                alt={`Avatar of ${currentUser?.userName}`}
               />
               <div className="text-xs  bg-blue-50">
-                <p className="text-gray-900 leading-none">Jonathan Reinink</p>
+                <p className="text-gray-900 leading-none">
+                  {currentUser?.userName}
+                </p>
               </div>
             </div>
           </div>
