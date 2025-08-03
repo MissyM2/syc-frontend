@@ -80,6 +80,7 @@ const userSlice = createSlice({
       .addCase(
         userLogin.fulfilled,
         (state, action: PayloadAction<UserState>) => {
+          console.log('userLogin.fulfilled: ' + JSON.stringify(action.payload));
           state.status = 'succeeded';
           state.currentUser = action.payload.currentUser;
           state.userRole = action.payload.userRole;

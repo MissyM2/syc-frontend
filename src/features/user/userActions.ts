@@ -39,7 +39,18 @@ export const userLogin = createAsyncThunk<
         password,
       });
       sessionStorage.setItem('userToken', res.data.userToken);
-      dispatch(fetchClosetitems(res.data.currentUser._id));
+
+      // get updated presigned URL for user's avatar image
+      if (res.data.currentUser.profileImageId) {
+        const presignedUrlForDownloadRes = await getPresignedUrlForDownload(
+          res.data.currentUser._id,
+          res.data.currentUser.profileImageId
+        );
+        res.data.currentUser.profileImageUrl = presignedUrlForDownloadRes;
+
+        dispatch(fetchClosetitems(res.data.currentUser._id));
+      }
+
       return res.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -61,7 +72,8 @@ export const registerUser = createAsyncThunk<
     try {
       // 1. CREATE USER IN ATLAS
       let newUserId = '';
-      const userToSend = {
+      let profileImageUrl;
+      const userToRegister = {
         userName: newUser.userName,
         email: newUser.email,
         homeAddress: newUser.homeAddress,
@@ -74,42 +86,63 @@ export const registerUser = createAsyncThunk<
       };
 
       const postUserToAtlasRes = await axios.post(`${URL}/api/users/register`, {
-        userToSend,
+        userToRegister,
       });
 
       if (postUserToAtlasRes) {
         newUserId = postUserToAtlasRes.data._id;
       }
 
-      // // 2.  PREP THE IMAGE
-      // // sanitize image file name
-      // const originalFilename = newUser.profileImage[0].name;
-      // const sanitizedFilename = originalFilename.replace(/\s/g, '_');
+      // 2.  PREP THE IMAGE
+      // sanitize image file name
+      const originalFilename = newUser.profileImage[0].name;
+      const sanitizedFilename = originalFilename.replace(/\s/g, '_');
 
-      // // add a unique identifier to the beginning of the filename
-      // const uniqueId = uuidv4();
-      // const newFilename = `${uniqueId}_profileImage_${sanitizedFilename}`;
-      // // 2.  GET THE PRESIGNED URL FOR UPLOAD
-      // const presignedUrlForUploadRes = await getPresignedUrlForUpload(
-      //   newUserId,
-      //   newFilename,
-      //   newUser.profileImage[0].type
-      // );
+      // add a unique identifier to the beginning of the filename
+      const uniqueId = uuidv4();
+      const newFilename = `${uniqueId}_profileImage_${sanitizedFilename}`;
 
-      // // 3. UPLOAD THE IMAGE
-      // await uploadImageToS3(presignedUrlForUploadRes, newUser.profileImage[0]);
+      // 2.  GET THE PRESIGNED URL FOR UPLOAD
+      const presignedUrlForUploadRes = await getPresignedUrlForUpload(
+        newUserId,
+        newFilename,
+        newUser.profileImage[0].type
+      );
 
-      // // 4. GET PRESIGNED IMAGE FOR DOWNLOAD
-      // const getPresignedUrlForDownloadRes = await getPresignedUrlForDownload(
-      //   newUserId,
-      //   newFilename
-      // );
+      // 3. UPLOAD THE IMAGE
+      await uploadImageToS3(presignedUrlForUploadRes, newUser.profileImage[0]);
 
-      // if (getPresignedUrlForDownloadRes) {
-      //   newUser.profileImageUrl = getPresignedUrlForDownloadRes;
-      // }
-      // // 5. UPDATE USER IN ATLAS WITH IMAGE URL
-      // const response = await axios.put(`/api/users/${newUserId}`, newUser);
+      // 4. GET PRESIGNED IMAGE FOR DOWNLOAD
+      const getPresignedUrlForDownloadRes = await getPresignedUrlForDownload(
+        newUserId,
+        newFilename
+      );
+
+      if (getPresignedUrlForDownloadRes) {
+        profileImageUrl = getPresignedUrlForDownloadRes;
+      }
+      // 5. UPDATE USER IN ATLAS WITH IMAGE URL
+
+      const updatedData = {
+        profileImageId: newFilename,
+        profileImageUrl: profileImageUrl,
+      };
+      console.log('what is newUserId: ' + newUserId);
+      console.log('updatedData: ' + JSON.stringify(updatedData));
+
+      const updateUserWithImageDetailsRes = await axios.put(
+        `${URL}/api/users/update-user/${newUserId}`,
+        updatedData
+      ); // Replace with your backend endpoint and ID handling
+      console.log('User updated:', updateUserWithImageDetailsRes.data);
+
+      console.log(
+        'updateUserWithImageDetailsRes: ' +
+          JSON.stringify(updateUserWithImageDetailsRes)
+      );
+      if (updateUserWithImageDetailsRes) {
+        return postUserToAtlasRes.data as User;
+      }
       return postUserToAtlasRes.data as User;
     } catch (error: any) {
       return rejectWithValue(error.response.data);

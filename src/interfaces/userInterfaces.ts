@@ -18,7 +18,6 @@ export interface User {
   password?: string;
   userRole: 'user' | 'admin' | null;
   profileImageId: string;
-  profileImage: FileList;
   profileImageUrl: string;
   closetitems: Closetitem[];
   createdAt: string;

@@ -21,10 +21,25 @@ const ProfilePage: React.FC<UserProfileProps> = ({
   user,
 }): React.JSX.Element => {
   const { currentUser } = useSelector((state: RootState) => state.user);
+  console.log('currentUser: ' + JSON.stringify(currentUser));
 
   return (
     <Card>
       <CardHeader>
+        <div className="w-24 h-24 aspect-square ring-offset-purple-300 bg-gray-200">
+          {currentUser?.profileImageUrl && (
+            <img
+              className="rounded-full max-w-full h-auto"
+              src={currentUser.profileImageUrl}
+              alt={currentUser.userName}
+            />
+          )}
+          {/* <img
+            className="object-cover object-center w-full h-full"
+            src={closetitem?.imageFile?.data}
+            alt={closetitem.name}
+          /> */}
+        </div>
         <CardTitle className="text-green-600 text-5xl font-bold">
           {currentUser?.userName.charAt(0).toUpperCase()}
         </CardTitle>
