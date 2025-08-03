@@ -57,7 +57,7 @@ const RegisterPage: React.FC = () => {
     }
   };
 
-  const handleImageChange = (e: any) => {
+  const handleProfileImageChange = (e: any) => {
     const profileImageFile = e.target.files[0];
     if (profileImageFile) {
       // Assuming you want to store the file name

@@ -22,6 +22,7 @@ import {
   getPresignedUrlForDownload,
   //deleteSingleImageFromS3ByUser,
 } from '@/utils/S3Utils.ts';
+import { ClosetitemCard } from '@/components/ClosetitemCard.tsx';
 
 const URL = 'http://localhost:3000';
 
@@ -67,53 +68,48 @@ export const registerUser = createAsyncThunk<
         password: newUser.password,
         userRole: newUser.userRole,
         profileImageId: '',
-        profileImage: null,
+        //profileImage: null,
         profileImageUrl: '',
+        closetitems: [],
       };
 
-      console.log('userToSend: ' + JSON.stringify(userToSend));
       const postUserToAtlasRes = await axios.post(`${URL}/api/users/register`, {
         userToSend,
       });
-
-      console.log(
-        'postUserToAtlasRes: ' + JSON.stringify(postUserToAtlasRes.data)
-      );
 
       if (postUserToAtlasRes) {
         newUserId = postUserToAtlasRes.data._id;
       }
 
-      // 2.  PREP THE IMAGE
-      // sanitize image file name
-      const originalFilename = newUser.profileImage[0].name;
-      const sanitizedFilename = originalFilename.replace(/\s/g, '_');
+      // // 2.  PREP THE IMAGE
+      // // sanitize image file name
+      // const originalFilename = newUser.profileImage[0].name;
+      // const sanitizedFilename = originalFilename.replace(/\s/g, '_');
 
-      // add a unique identifier to the beginning of the filename
-      const uniqueId = uuidv4();
-      const newFilename = `${uniqueId}_profileImage_${sanitizedFilename}`;
-      // 2.  GET THE PRESIGNED URL FOR UPLOAD
-      const presignedUrlForUploadRes = await getPresignedUrlForUpload(
-        newUserId,
-        newFilename,
-        newUser.profileImage[0].type
-      );
+      // // add a unique identifier to the beginning of the filename
+      // const uniqueId = uuidv4();
+      // const newFilename = `${uniqueId}_profileImage_${sanitizedFilename}`;
+      // // 2.  GET THE PRESIGNED URL FOR UPLOAD
+      // const presignedUrlForUploadRes = await getPresignedUrlForUpload(
+      //   newUserId,
+      //   newFilename,
+      //   newUser.profileImage[0].type
+      // );
 
-      // 3. UPLOAD THE IMAGE
-      await uploadImageToS3(presignedUrlForUploadRes, newUser.profileImage[0]);
+      // // 3. UPLOAD THE IMAGE
+      // await uploadImageToS3(presignedUrlForUploadRes, newUser.profileImage[0]);
 
-      // 4. GET PRESIGNED IMAGE FOR DOWNLOAD
-      const getPresignedUrlForDownloadRes = await getPresignedUrlForDownload(
-        newUserId,
-        newFilename
-      );
+      // // 4. GET PRESIGNED IMAGE FOR DOWNLOAD
+      // const getPresignedUrlForDownloadRes = await getPresignedUrlForDownload(
+      //   newUserId,
+      //   newFilename
+      // );
 
-      if (getPresignedUrlForDownloadRes) {
-        newUser.profileImageUrl = getPresignedUrlForDownloadRes;
-      }
-      // 5. UPDATE USER IN ATLAS WITH IMAGE URL
-      const response = await axios.put(`/api/users/${newUserId}`, newUser);
-
+      // if (getPresignedUrlForDownloadRes) {
+      //   newUser.profileImageUrl = getPresignedUrlForDownloadRes;
+      // }
+      // // 5. UPDATE USER IN ATLAS WITH IMAGE URL
+      // const response = await axios.put(`/api/users/${newUserId}`, newUser);
       return postUserToAtlasRes.data as User;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
