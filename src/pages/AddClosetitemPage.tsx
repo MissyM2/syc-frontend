@@ -13,38 +13,23 @@ import {
   seasonItems,
   sizeItems,
   categoryItems,
+  colorItems,
+  occasionItems,
 } from '@/features/closet/Closetitem-datas.ts';
 
 // import Error from '@/components/Error';
 // import Spinner from '@/components/Spinner';
 
 import { addClosetitem } from '@/features/closet/closetActions.ts';
+import type { AddClosetitemArgs } from '@/interfaces/closetInterfaces';
 
 //import { resetSlice } from '@/features/closet/closetSlice.ts';
 
-interface Option {
-  value: string;
-  label: string;
-}
-
-interface LoginFormInputs {
-  category: string;
-  itemName: string;
-  seasons: string[];
-  size: string;
-  desc: string;
-  rating: string;
-  imageId: string;
-  image: FileList;
-  imageUrl: string;
-  userId: string;
-}
-
 const AddClosetitemPage: React.FC = () => {
   const { status, error } = useSelector((state: RootState) => state.user);
-  const { currentUser } = useSelector((state: RootState) => state.user);
-  const closetState = useSelector((state: RootState) => state.closet);
-  const userState = useSelector((state: RootState) => state.user);
+  //const { currentUser } = useSelector((state: RootState) => state.user);
+  //const closetState = useSelector((state: RootState) => state.closet);
+  //const userState = useSelector((state: RootState) => state.user);
   const userId = useSelector((state: RootState) => state.user.currentUser?._id);
   //const [uploadProgress, setUploadProgress] = useState(0);
   const [message, setMessage] = useState('');
@@ -61,29 +46,37 @@ const AddClosetitemPage: React.FC = () => {
     // control,
     // watch,
     formState: { errors },
-  } = useForm<LoginFormInputs>({
+  } = useForm<AddClosetitemArgs>({
     defaultValues: {
-      userId: currentUser?._id,
-      category: '',
+      userId: userId,
+      closetType: 'personal',
       itemName: '',
-      seasons: [],
-      size: '',
-      desc: '',
+      itemDetails: {
+        category: 'tops',
+        seasons: ['summer'],
+        size: 'M ',
+        color: 'black',
+        occasion: 'c',
+      },
+      desc: 'Add three of four descriptive terms here',
       rating: '',
       imageId: '',
       imageUrl: '',
     },
   });
 
-  const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
+  const onSubmit: SubmitHandler<AddClosetitemArgs> = async (data) => {
     try {
+      console.log(
+        'show closetitem state after before item. ' + JSON.stringify(data)
+      );
       //dispatch(resetSlice());
       const response = await dispatch(addClosetitem(data));
-      //if (response) {
-      // console.log(
-      //   'show closetitem state after adding item. ' +
-      //     JSON.stringify(closetState)
-      // );
+      if (response) {
+        console.log(
+          'show closetitem state after adding item. ' + JSON.stringify(response)
+        );
+      }
       // console.log(
       //   'show closetitem state after adding item. ' +
       //     JSON.stringify(userState)
@@ -135,6 +128,22 @@ const AddClosetitemPage: React.FC = () => {
             </label>
             <input
               type="text"
+              id="closetType"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="Closet Type"
+              {...register('closetType', { required: true })}
+            />
+            {errors.closetType && <span>This field is required</span>}
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="itemName"
+            >
+              Name:
+            </label>
+            <input
+              type="text"
               id="nameitemName"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               placeholder="Name"
@@ -142,15 +151,15 @@ const AddClosetitemPage: React.FC = () => {
             />
             {errors.itemName && <span>This field is required</span>}
           </div>
+          <div>ITEM DETAILS GOES HERE</div>
 
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="category"
+              htmlFor="itemDetails.category"
             >
               Category:
             </label>
-
             <div className="grid grid-cols-5 gap-x-4 gap-y-2">
               {categoryItems.map((option) => (
                 <div key={option.value}>
@@ -158,7 +167,7 @@ const AddClosetitemPage: React.FC = () => {
                     type="radio"
                     value={option.value}
                     id={option.value}
-                    {...register('category')}
+                    {...register('itemDetails.category')}
                   />
                   <label htmlFor={option.value} className="ml-2">
                     {option.label}
@@ -170,18 +179,18 @@ const AddClosetitemPage: React.FC = () => {
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="category"
+              htmlFor="itemDetails.seasons"
             >
               Seasons:
             </label>
-            <div className="grid grid-cols-5 gap-x-4 gap-y-2">
+            <div className="grid grid-cols-5 gap-x-4 gap--2">
               {seasonItems.map((option) => (
                 <div key={option.value}>
                   <input
                     type="checkbox"
                     value={option.value}
                     id={option.value}
-                    {...register('seasons')}
+                    {...register('itemDetails.seasons')}
                   />
                   <label htmlFor={option.value} className="ml-2">
                     {option.label}
@@ -193,7 +202,7 @@ const AddClosetitemPage: React.FC = () => {
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="category"
+              htmlFor="itemDetails.size"
             >
               Size
             </label>
@@ -204,7 +213,55 @@ const AddClosetitemPage: React.FC = () => {
                     type="radio"
                     value={option.value}
                     id={option.value}
-                    {...register('size')}
+                    {...register('itemDetails.size')}
+                  />
+                  <label htmlFor={option.value} className="ml-2">
+                    {option.label}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="itemDetails.color"
+            >
+              Color
+            </label>
+            <div className="grid grid-cols-4 gap-x-4 gap-y-2">
+              {colorItems.map((option) => (
+                <div key={option.value}>
+                  <input
+                    type="radio"
+                    value={option.value}
+                    id={option.value}
+                    {...register('itemDetails.color')}
+                  />
+                  <label htmlFor={option.value} className="ml-2">
+                    {option.label}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="itemDetails.occasion"
+            >
+              Occasion
+            </label>
+            <div className="grid grid-cols-4 gap-x-4 gap-y-2">
+              {occasionItems.map((option) => (
+                <div key={option.value}>
+                  <input
+                    type="radio"
+                    value={option.value}
+                    id={option.value}
+                    {...register('itemDetails.occasion')}
                   />
                   <label htmlFor={option.value} className="ml-2">
                     {option.label}
@@ -219,7 +276,7 @@ const AddClosetitemPage: React.FC = () => {
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="desc"
             >
-              Desc:
+              Description:
             </label>
             <input
               type="text"
@@ -273,20 +330,7 @@ const AddClosetitemPage: React.FC = () => {
             </button>
           </div>
         </div>
-
-        {/* <div>
-          <p>Selected category: {watchCategoryOption || 'None'}</p>
-          <p>Selected Size: {watchSizeOption || 'None'}</p>
-          <p>Selected Seasons: {watchSeasonOptions?.join(', ') || 'None'}</p>
-          <p>Selected Name: {watchNameOption || 'None'}</p>
-          <p>Selected Desc: {watchDescOption || 'None'}</p>
-          <p>Selected Rating: {watchRatingOption || 'None'}</p>
-        </div> */}
       </form>
-      {/* <div>
-        {uploadProgress > 0 && <p>Upload Progress: {uploadProgress}%</p>}
-        <p>{message}</p>
-      </div> */}
     </div>
   );
 };

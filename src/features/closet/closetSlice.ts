@@ -65,7 +65,6 @@ const closetSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message || 'Unknown error';
       })
-
       .addCase(deleteClosetitem.pending, (state) => {
         state.status = 'loading';
       })

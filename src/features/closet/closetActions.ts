@@ -29,10 +29,10 @@ const URL = 'http://localhost:3000';
 export const addClosetitem = createAsyncThunk<
   Closetitem, // ReturnType: value returned by the fulfilled action's payload
   AddClosetitemArgs, // PayloadCreatorArgumentType: argument passed to the payload creator function when dispatching the thunk.
-  { state: RootState; dispatch: AppDispatch; rejectValue: AxiosError } // ThunkApiConfig: an object for configuring types related to rejectWithValue, state and dispatch
+  { state: RootState; rejectValue: AxiosError } // ThunkApiConfig: an object for configuring types related to rejectWithValue, state and dispatch
 >(
   'closet/addclosetitem',
-  async (newClosetitem: AddClosetitemArgs, { dispatch, rejectWithValue }) => {
+  async (newClosetitem: AddClosetitemArgs, { rejectWithValue }) => {
     try {
       // 1.  PREP THE IMAGE
       // sanitize image file name
@@ -49,8 +49,6 @@ export const addClosetitem = createAsyncThunk<
         newFilename,
         newClosetitem.image[0].type
       );
-
-      //newClosetitem.imageUrl = presignedUrlForUploadRes;
 
       // 3. UPLOAD THE IMAGE
       await uploadImageToS3(presignedUrlForUploadRes, newClosetitem.image[0]);
@@ -73,10 +71,16 @@ export const addClosetitem = createAsyncThunk<
         imageUrl: getPresignedUrlForDownloadRes,
         imageId: newFilename, // add this field if needed by backend
       };
+      console.log('Closet item to send:', closetitemToSend);
 
       const postClosetitemToAtlasRes = await api.post(
         `${URL}/api/closet/addclosetitem`,
         closetitemToSend
+      );
+
+      console.log(
+        'Closet item created:',
+        JSON.stringify(postClosetitemToAtlasRes.data)
       );
 
       return postClosetitemToAtlasRes.data as Closetitem; // Assuming the successful response data structure is ClosetClosetitem

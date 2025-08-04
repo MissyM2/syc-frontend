@@ -4,6 +4,11 @@ export const UserRole = {
   Guest: 'guest',
 } as const;
 
+export interface Option {
+  value: string;
+  label: string;
+}
+
 export type UserRole = (typeof UserRole)[keyof typeof UserRole];
 
 // import type { FieldError, UseFormRegister } from 'react-hook-form';

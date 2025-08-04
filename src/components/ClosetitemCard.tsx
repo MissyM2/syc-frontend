@@ -64,82 +64,85 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
   };
 
   return (
-    <Link to={`/closet-detail-page/${closetitem._id}`} className="w-full">
-      <Card className="w-full max-w-sm">
-        <div className="flex justify-end bg-green-200">
-          <div className="ps-1 pe-1">
-            <RoundButtonSmall onClick={handleDelete}>
-              <FaMinus className="h-4 w-4" />
-            </RoundButtonSmall>
-          </div>
-          <div className="ps-1 pe-1">
-            <RoundButtonSmall onClick={handleClickEdit}>
-              <FaEdit className="h-4 w-4" />
-            </RoundButtonSmall>
-          </div>
+    <Card className="w-full max-w-sm">
+      <div className="flex justify-end bg-green-200">
+        <div className="ps-1 pe-1">
+          <RoundButtonSmall onClick={handleDelete}>
+            <FaMinus className="h-4 w-4" />
+          </RoundButtonSmall>
         </div>
-        <div className="grid w-full place-items-center overflow-x-scroll aspect-square bg-gray-200">
-          {closetitem.imageUrl && (
-            <img
-              className=""
-              src={closetitem.imageUrl}
-              alt={closetitem.itemName}
-            />
-          )}
-          {/* <img
+        <div className="ps-1 pe-1">
+          <RoundButtonSmall onClick={handleClickEdit}>
+            <FaEdit className="h-4 w-4" />
+          </RoundButtonSmall>
+        </div>
+      </div>
+      <div className="grid w-full place-items-center overflow-x-scroll aspect-square bg-gray-200">
+        {closetitem.imageUrl && (
+          <img
+            className=""
+            src={closetitem.imageUrl}
+            alt={closetitem.itemName}
+          />
+        )}
+        {/* <img
             className="object-cover object-center w-full h-full"
             src={closetitem?.imageFile?.data}
             alt={closetitem.name}
           /> */}
-        </div>
-        <CardHeader>
-          <CardTitle>{closetitem.itemName}</CardTitle>
-          <CardDescription>{closetitem.desc}</CardDescription>
-          {/* <CardAction>
+      </div>
+      <CardHeader>
+        <CardTitle>{closetitem.itemName}</CardTitle>
+        <CardDescription>{closetitem.desc}</CardDescription>
+        {/* <CardAction>
           <Button variant="link">Sign Up</Button>
         </CardAction> */}
-        </CardHeader>
-        <CardContent className="flex-col gap-2 bg-green-50">
-          <div className="flex flex-row gap-2">
-            <div className="">
-              <Label>{closetitem.category}</Label>
-            </div>
-            <div className="">
-              <Label>{closetitem.seasons}</Label>
-            </div>
-            <div className="">
-              <Label>{closetitem.rating}</Label>
+      </CardHeader>
+      <CardContent className="flex-col gap-2 bg-green-50">
+        <div className="flex flex-row gap-2">
+          <div className="">
+            <Label>{closetitem.itemDetails.category}</Label>
+          </div>
+          <div className="">
+            <Label>{closetitem.itemDetails.seasons.join(', ')}</Label>
+          </div>
+        </div>
+        <div className="flex flex-row gap-2">
+          <Label>{closetitem.itemDetails.size}</Label>
+          <Label>{closetitem.itemDetails.color}</Label>
+          <Label>{closetitem.itemDetails.occasion}</Label>
+        </div>
+        <div className="">
+          <Label>{closetitem.rating}</Label>
+        </div>
+      </CardContent>
+      <CardFooter className="flex-row bg-red-50">
+        <div className="flex flex-col gap-2">
+          <div className="flex flex-col md:flex-row items-left">
+            <div className="text-xs pr-2">Added:</div>
+            <div className="text-xs">
+              <p>
+                Created At: {new Date(closetitem.createdAt).toLocaleString()}
+              </p>
+              <p>
+                Updated At: {new Date(closetitem.updatedAt).toLocaleString()}
+              </p>
             </div>
           </div>
-        </CardContent>
-        <CardFooter className="flex-row bg-red-50">
-          <div className="flex flex-col gap-2">
-            <div className="flex flex-col md:flex-row items-left">
-              <div className="text-xs pr-2">Added:</div>
-              <div className="text-xs">
-                <p>
-                  Created At: {new Date(closetitem.createdAt).toLocaleString()}
-                </p>
-                <p>
-                  Updated At: {new Date(closetitem.updatedAt).toLocaleString()}
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-row items-center">
-              <img
-                className="w-10 h-10 rounded-full mr-4"
-                src={currentUser?.profileImageUrl}
-                alt={`Avatar of ${currentUser?.userName}`}
-              />
-              <div className="text-xs  bg-blue-50">
-                <p className="text-gray-900 leading-none">
-                  {currentUser?.userName}
-                </p>
-              </div>
+          <div className="flex flex-row items-center">
+            <img
+              className="w-10 h-10 rounded-full mr-4"
+              src={currentUser?.profileImageUrl}
+              alt={`Avatar of ${currentUser?.userName}`}
+            />
+            <div className="text-xs  bg-blue-50">
+              <p className="text-gray-900 leading-none">
+                {currentUser?.userName}
+              </p>
             </div>
           </div>
-        </CardFooter>
-      </Card>
-    </Link>
+        </div>
+      </CardFooter>
+    </Card>
   );
 };

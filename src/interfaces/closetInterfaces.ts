@@ -14,12 +14,19 @@ export interface ClosetState {
   success: boolean;
 }
 
-export interface Closetitem {
-  _id: string;
+export interface ClosetitemDetails {
   category: string;
-  itemName: string;
   seasons: string[];
   size: string;
+  color: string;
+  occasion: string;
+}
+
+export interface Closetitem {
+  _id: string;
+  closetType: string;
+  itemName: string;
+  itemDetails: ClosetitemDetails;
   desc: string;
   rating: string;
   imageId: string;
