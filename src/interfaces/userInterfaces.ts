@@ -96,3 +96,10 @@ export interface UserClosetitemReferenceReturn {
 }
 
 export type DeleteUserArgs = Omit<User, '_id'>;
+
+export interface UpdateSubmissionArgs {
+  _id: string;
+  userName: string;
+  email: string;
+  homeAddress: Address;
+}

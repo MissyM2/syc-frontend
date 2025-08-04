@@ -11,7 +11,7 @@ import type {
 import {
   registerUser,
   userLogin,
-  // updateUser,
+  updateUser,
   // deleteUser,
   fetchUsers,
   removeUserClosetitemReference,
@@ -80,7 +80,6 @@ const userSlice = createSlice({
       .addCase(
         userLogin.fulfilled,
         (state, action: PayloadAction<UserState>) => {
-          console.log('userLogin.fulfilled: ' + JSON.stringify(action.payload));
           state.status = 'succeeded';
           state.currentUser = action.payload.currentUser;
           state.userRole = action.payload.userRole;
@@ -149,6 +148,19 @@ const userSlice = createSlice({
         state.allUsers = action.payload;
       })
       .addCase(fetchUsers.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Unknown error';
+      })
+      .addCase(updateUser.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(updateUser.fulfilled, (state, action: PayloadAction<User>) => {
+        state.status = 'succeeded';
+        console.log('updateUser.fulfilled: ' + JSON.stringify(action.payload));
+        state.currentUser = action.payload;
+      })
+      .addCase(updateUser.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message || 'Unknown error';
       });

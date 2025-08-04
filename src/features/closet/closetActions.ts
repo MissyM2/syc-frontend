@@ -126,8 +126,7 @@ export const fetchClosetitems = createAsyncThunk<
       ) as any;
     }
   } catch (error: any) {
-    console.log('what is error? ' + error.message);
-    return rejectWithValue(error);
+    return rejectWithValue(error.response.data);
   }
 });
 
@@ -135,7 +134,7 @@ export const fetchClosetitems = createAsyncThunk<
 export const deleteClosetitem = createAsyncThunk<
   string,
   DeleteClosetitemArgs,
-  { state: RootState; dispatch: AppDispatch }
+  { state: RootState; dispatch: AppDispatch; rejectValue: AxiosError }
 >(
   'closet/deleteclosetitem',
   async (args: DeleteClosetitemArgs, { dispatch, rejectWithValue }) => {
@@ -160,14 +159,8 @@ export const deleteClosetitem = createAsyncThunk<
       console.log('deleteClosetitem, after remove closeitemreference');
 
       return args.closetitemId;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        // Handle Axios specific errors
-        return rejectWithValue(
-          error.response?.data?.message || 'Failed to delete item'
-        );
-      }
-      return rejectWithValue('An unknown error occurred'); //
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
     }
   }
 );

@@ -1,10 +1,13 @@
-import { useSelector } from 'react-redux';
-import { useState } from 'react';
-import type { RootState } from '@/app/store';
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import type { RootState, AppDispatch } from '@/app/store';
 import type { User } from '@/interfaces/userInterfaces';
+import { updateUser } from '@/features/user/userActions';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { UpdateSubmissionArgs } from '@/interfaces/userInterfaces';
 
 import {
   Card,
@@ -20,188 +23,87 @@ interface UserProfileProps {
   user: User;
 }
 
-const ProfilePage: React.FC<UserProfileProps> = ({
-  user,
-}): React.JSX.Element => {
+const ProfilePage: React.FC<UserProfileProps> = ({}): React.JSX.Element => {
   const { currentUser } = useSelector((state: RootState) => state.user);
-  const [isEditing, setIsEditing] = useState(false);
 
-  const [userName, setUserName] = useState(currentUser?.userName || '');
-  const [homeAddressStreet1, setHomeAddressStreet1] = useState(
-    currentUser?.homeAddress.street1 || ''
-  );
-  const [homeAddressStreet2, setHomeAddressStreet2] = useState(
-    currentUser?.homeAddress.street2 || ''
-  );
-  const [homeAddressCity, setHomeAddressCity] = useState(
-    currentUser?.homeAddress.city || ''
-  );
-  const [homeAddressState, setHomeAddressState] = useState(
-    currentUser?.homeAddress.state || ''
-  );
-  const [homeAddressZipCode, setHomeAddressZipCode] = useState(
-    currentUser?.homeAddress.zipCode || ''
-  );
-  console.log('currentUser: ' + JSON.stringify(currentUser));
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    defaultValues: currentUser || undefined, // Populate form with existing user data
+  });
 
-  const handleUserNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUserName(event.target.value);
-  };
-  const handleHomeAddressStreet1Change = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setHomeAddressStreet1(event.target.value);
-  };
-
-  const handleHomeAddressStreet2Change = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setHomeAddressStreet2(event.target.value);
-  };
-
-  const handleHomeAddressCityChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setHomeAddressCity(event.target.value);
-  };
-
-  const handleHomeAddressStateChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setHomeAddressState(event.target.value);
-  };
-
-  const handleHomeAddressZipCodeChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setHomeAddressZipCode(event.target.value);
-  };
-
-  const handleEditClick = () => {
-    setIsEditing(true);
-  };
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleUpdateProfilePictureClick = () => {
     alert('Update profile picture clicked!');
   };
 
-  const handleSaveClick = () => {
-    setIsEditing(false);
-    // You would typically send the updated data to your backend here
-    const updatedUser = {
-      ...currentUser,
-      userName,
-      homeAddress: {
-        street1: homeAddressStreet1,
-        street2: homeAddressStreet2,
-        city: homeAddressCity,
-        state: homeAddressState,
-        zipCode: homeAddressZipCode,
-      },
-    };
-    console.log('Saving updated user:', updatedUser);
+  useEffect(() => {
+    if (currentUser) {
+      // Check if user data is available
+      reset(currentUser);
+    }
+  }, [currentUser, reset]);
+
+  const onSubmit = (data: UpdateSubmissionArgs) => {
+    console.log('Form submitted with data:', JSON.stringify(data));
+    dispatch(updateUser(data)); // Dispatch Redux action to update user
   };
 
   return (
-    <Card className="p-4">
-      <div className="flex flex-col justify-center items-center h-screenmb-4">
-        {currentUser?.profileImageUrl && (
-          <img
-            className="object-cover object-center
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Card className="p-4">
+        <div className="flex flex-col justify-center items-center h-screenmb-4">
+          {currentUser?.profileImageUrl && (
+            <img
+              className="object-cover object-center
             w-48 h-48 rounded-full max-w-full border-4 border-indigo-500 mb-4"
-            src={currentUser.profileImageUrl}
-            alt={currentUser.userName}
-          />
-        )}
-        <Button onClick={handleUpdateProfilePictureClick} variant="link">
-          Update Profile Picture
-        </Button>
-      </div>
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold text-gray-900">
-          <Label>User Name</Label>
-          {isEditing ? (
-            <Input
-              value={currentUser?.userName}
-              onChange={handleUserNameChange}
+              src={currentUser.profileImageUrl}
+              alt={currentUser.userName}
             />
-          ) : (
-            <CardTitle>{currentUser?.userName}</CardTitle>
           )}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-col gap-6">
-          <div className="grid gap-2">
-            <Label>Name</Label>
-            <span>{currentUser?.email}</span>
-          </div>
-          <div className="grid gap-2">
-            <Label>Address</Label>
-            <div className="flex flex-row gap-2 mb-4">
-              {isEditing ? (
-                <Input
-                  className="w-64"
-                  value={currentUser?.homeAddress.street1}
-                  onChange={handleHomeAddressStreet1Change}
-                />
-              ) : (
-                <CardTitle>{currentUser?.homeAddress.street1}</CardTitle>
-              )}
-              <Label>Street 2</Label>
-              {isEditing ? (
-                <Input
-                  className="w-24"
-                  value={currentUser?.homeAddress.street2}
-                  onChange={handleHomeAddressStreet2Change}
-                />
-              ) : (
-                <CardTitle>{currentUser?.homeAddress.street2}</CardTitle>
-              )}
-            </div>
-            <div className="flex flex-row gap-2 mb-4">
-              {isEditing ? (
-                <Input
-                  className="w-48"
-                  value={currentUser?.homeAddress.city}
-                  onChange={handleHomeAddressCityChange}
-                />
-              ) : (
-                <CardTitle>{currentUser?.homeAddress.city}</CardTitle>
-              )}
-              {isEditing ? (
-                <Input
-                  className="w-15"
-                  value={currentUser?.homeAddress.state}
-                  onChange={handleHomeAddressStateChange}
-                />
-              ) : (
-                <CardTitle>{currentUser?.homeAddress.state}</CardTitle>
-              )}
-              <Label>Zipcode</Label>
-              {isEditing ? (
-                <Input
-                  className="w-24"
-                  value={currentUser?.homeAddress.zipCode}
-                  onChange={handleHomeAddressZipCodeChange}
-                />
-              ) : (
-                <CardTitle>{currentUser?.homeAddress.zipCode}</CardTitle>
-              )}
-            </div>
-          </div>
+          <Button onClick={handleUpdateProfilePictureClick} variant="link">
+            Update Profile Picture
+          </Button>
         </div>
-      </CardContent>
-      <CardFooter className="flex flex-col gap-2 bg-blue-50">
-        <CardFooter>
-          {isEditing ? (
-            <button onClick={handleSaveClick}>Save</button>
-          ) : (
-            <button onClick={handleEditClick}>Edit</button>
-          )}
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold text-gray-900">
+            <Label>User Name</Label>
+            <input {...register('userName')} />
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col gap-6">
+            <div className="grid gap-2">
+              <Label>Name</Label>
+              <input {...register('email')} />
+            </div>
+            <div className="grid gap-2">
+              <Label>Address</Label>
+              <div className="flex flex-row gap-2 mb-4">
+                <input {...register('homeAddress.street1')} />
+
+                <input {...register('homeAddress.street2')} />
+              </div>
+              <div className="flex flex-row gap-2 mb-4">
+                <input {...register('homeAddress.city')} />
+                <input {...register('homeAddress.state')} />
+                <input {...register('homeAddress.zipCode')} />
+              </div>
+            </div>
+          </div>
+        </CardContent>
+        <CardFooter className="flex flex-col gap-2 bg-blue-50">
+          <CardFooter>
+            <button type="submit">Update User</button>
+          </CardFooter>
         </CardFooter>
-      </CardFooter>
-    </Card>
+      </Card>
+    </form>
   );
 };
 

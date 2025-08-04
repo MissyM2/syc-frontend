@@ -14,6 +14,7 @@ import type {
   UserClosetitemReferenceReturn,
   UserClosetitemReferenceArgs,
   RegistrationSubmissionArgs,
+  UpdateSubmissionArgs,
 } from '../../interfaces/userInterfaces.ts';
 
 import {
@@ -65,10 +66,7 @@ export const registerUser = createAsyncThunk<
   { state: RootState; dispatch: AppDispatch; rejectValue: AxiosError }
 >(
   'auth/register',
-  async (
-    newUser: RegistrationSubmissionArgs,
-    { dispatch, rejectWithValue }
-  ) => {
+  async (newUser: RegistrationSubmissionArgs, { rejectWithValue }) => {
     try {
       // 1. CREATE USER IN ATLAS
       let newUserId = '';
@@ -153,7 +151,7 @@ export const registerUser = createAsyncThunk<
 export const removeUserClosetitemReference = createAsyncThunk<
   UserClosetitemReferenceReturn, // return type
   UserClosetitemReferenceArgs, // argument type
-  { state: RootState; dispatch: AppDispatch } // thunk API config
+  { state: RootState; dispatch: AppDispatch; rejectValue: AxiosError }
 >(
   'users/removeUserItemReference',
   async (args: UserClosetitemReferenceArgs, { rejectWithValue }) => {
@@ -166,14 +164,8 @@ export const removeUserClosetitemReference = createAsyncThunk<
       console.log('removeUserClosetitemReference: after delete');
 
       return deleteUserClosetitemRefRes.data as UserClosetitemReferenceReturn;
-    } catch (error) {
-      console.error('Error removing item reference from user:', error);
-      if (typeof error === 'object' && error !== null && 'response' in error) {
-        return rejectWithValue(
-          (error as any).response?.data || 'Unknown error'
-        );
-      }
-      return rejectWithValue('Unknown error');
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -193,12 +185,28 @@ export const fetchUsers = createAsyncThunk(
 
       return allUsersFromAtlasRes.data;
     } catch (error: any) {
-      if (axios.isAxiosError(error) && error.response) {
-        return rejectWithValue(
-          error.response.data.message || 'Failed to fetch users'
-        );
-      }
-      return rejectWithValue('An unknown error occurred');
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// UPDATE USER PROFILE
+// #2 User Registration
+export const updateUser = createAsyncThunk<
+  User,
+  UpdateSubmissionArgs,
+  { state: RootState; dispatch: AppDispatch; rejectValue: AxiosError }
+>(
+  'auth/update',
+  async (updatedUser: UpdateSubmissionArgs, { rejectWithValue }) => {
+    try {
+      const response = await api.put<User>(
+        `${URL}/api/users/update-user/${updatedUser._id}`,
+        updatedUser
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
     }
   }
 );
