@@ -93,7 +93,7 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
       </div>
       <CardHeader>
         <CardTitle>{closetitem.itemName}</CardTitle>
-        <CardDescription>{closetitem.desc}</CardDescription>
+        <CardDescription>{closetitem.additionalDesc}</CardDescription>
         {/* <CardAction>
           <Button variant="link">Sign Up</Button>
         </CardAction> */}
@@ -111,9 +111,7 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
           <Label>{closetitem.itemDetails.size}</Label>
           <Label>{closetitem.itemDetails.color}</Label>
           <Label>{closetitem.itemDetails.occasion}</Label>
-        </div>
-        <div className="">
-          <Label>{closetitem.rating}</Label>
+          <Label>{closetitem.itemDetails.rating}</Label>
         </div>
       </CardContent>
       <CardFooter className="flex-row bg-red-50">

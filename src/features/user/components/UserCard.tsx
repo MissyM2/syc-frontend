@@ -45,7 +45,7 @@ export const UserCard: React.FC<UserProps> = ({ user }): React.JSX.Element => {
         </div> */}
           <CardHeader>
             <CardTitle>{user.name}</CardTitle>
-            {/* <CardDescription>{user.desc}</CardDescription> */}
+            {/* <CardDescription>{user.additionalDesc}</CardDescription> */}
             {/* <CardAction>
           <Button variant="link">Sign Up</Button>
         </CardAction> */}

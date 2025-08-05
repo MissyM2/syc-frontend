@@ -20,6 +20,7 @@ export interface ClosetitemDetails {
   size: string;
   color: string;
   occasion: string;
+  rating: string;
 }
 
 export interface Closetitem {
@@ -27,14 +28,13 @@ export interface Closetitem {
   closetType: string;
   itemName: string;
   itemDetails: ClosetitemDetails;
-  desc: string;
-  rating: string;
+  additionalDesc: string;
   imageId: string;
-  image: FileList;
+  imageFile: FileList;
   imageUrl: string;
   userId: string;
-  createdAt: string;
-  updatedAt: string;
+  // createdAt: string;
+  // updatedAt: string;
 }
 
 export type AddClosetitemArgs = Omit<Closetitem, '_id'>;

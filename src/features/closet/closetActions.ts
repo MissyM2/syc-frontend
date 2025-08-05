@@ -36,7 +36,7 @@ export const addClosetitem = createAsyncThunk<
     try {
       // 1.  PREP THE IMAGE
       // sanitize image file name
-      const originalFilename = newClosetitem.image[0].name;
+      const originalFilename = newClosetitem.imageFile[0].name;
       const sanitizedFilename = originalFilename.replace(/\s/g, '_');
 
       // add a unique identifier to the beginning of the filename
@@ -47,11 +47,14 @@ export const addClosetitem = createAsyncThunk<
       const presignedUrlForUploadRes = await getPresignedUrlForUpload(
         newClosetitem.userId,
         newFilename,
-        newClosetitem.image[0].type
+        newClosetitem.imageFile[0].type
       );
 
       // 3. UPLOAD THE IMAGE
-      await uploadImageToS3(presignedUrlForUploadRes, newClosetitem.image[0]);
+      await uploadImageToS3(
+        presignedUrlForUploadRes,
+        newClosetitem.imageFile[0]
+      );
 
       // 4. GET PRESIGNED IMAGE FOR DOWNLOAD
       const getPresignedUrlForDownloadRes = await getPresignedUrlForDownload(
@@ -71,7 +74,6 @@ export const addClosetitem = createAsyncThunk<
         imageUrl: getPresignedUrlForDownloadRes,
         imageId: newFilename, // add this field if needed by backend
       };
-      console.log('Closet item to send:', closetitemToSend);
 
       const postClosetitemToAtlasRes = await api.post(
         `${URL}/api/closet/addclosetitem`,

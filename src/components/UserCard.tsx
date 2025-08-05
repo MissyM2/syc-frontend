@@ -62,7 +62,7 @@ export const UserCard: React.FC<UserProps> = ({ user }): React.JSX.Element => {
     { key: 'itemName', label: 'itemName' },
     { key: 'seasons', label: 'seasons' },
     { key: 'size', label: 'size' },
-    { key: 'desc', label: 'desc' },
+    { key: 'addDesc', label: 'Additional Desc' },
     { key: 'rating', label: 'rating' },
     { key: 'ImageId', label: 'ImageId' },
     { key: 'ImageUrl', label: 'ImageUrl' },
@@ -113,10 +113,11 @@ export const UserCard: React.FC<UserProps> = ({ user }): React.JSX.Element => {
                     className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
                   >
                     {column.key === 'itemName' && row.itemName}
-                    {column.key === 'Seasons' && row.seasons}
-                    {column.key === 'Desc' && row.desc}
-                    {column.key === 'Size' && row.size}
-                    {column.key === 'Rating' && row.rating}
+                    {column.key === 'Seasons' &&
+                      row.itemDetails.seasons.join(', ')}
+                    {column.key === 'AddDesc' && row.additionalDesc}
+                    {column.key === 'Size' && row.itemDetails.size}
+                    {column.key === 'Rating' && row.itemDetails.rating}
                     {column.key === 'ImageId' && row.imageId}
                     {column.key === 'ImageUrl' && row.imageUrl}
                   </td>

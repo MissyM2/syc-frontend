@@ -36,7 +36,7 @@ export const colorItems: Option[] = [
   { id: 'white', value: 'white', label: 'White' },
 ];
 
-export const occasionItems: Option[] = [
+export const occasionTypes: Option[] = [
   { id: 'casual', value: 'casual', label: 'Casual' },
   { id: 'business', value: 'business', label: 'Business' },
   { id: 'party', value: 'party', label: 'Party' },
@@ -55,4 +55,16 @@ export const closetTypes: Option[] = [
   { id: 'personalOnly', value: 'personalOnly', label: 'Personal Only' },
   { id: 'donation', value: 'donation', label: 'For Donation' },
   { id: 'sharing', value: 'sharing', label: 'For Sharing' },
+];
+
+export const ratingItems: Option[] = [
+  { id: 'one-star', value: 'one-star', label: '\u2605' },
+  { id: 'two-stars', value: 'two-stars', label: '\u2605\u2605' },
+  { id: 'three-stars', value: 'three-stars', label: '\u2605\u2605\u2605' },
+  { id: 'four-stars', value: 'four-stars', label: '\u2605\u2605\u2605\u2605' },
+  {
+    id: 'five-stars',
+    value: 'five-stars',
+    label: '\u2605\u2605\u2605\u2605\u2605',
+  },
 ];

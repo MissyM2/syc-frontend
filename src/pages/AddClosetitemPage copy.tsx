@@ -58,9 +58,9 @@ const AddClosetitemPage: React.FC = () => {
         size: 'M ',
         color: 'black',
         occasion: 'c',
+        rating: '',
       },
-      desc: 'Add three of four descriptive terms here',
-      rating: '',
+      additionalDesc: 'Add three of four descriptive terms here',
       imageId: '',
       imageUrl: '',
     },
@@ -224,69 +224,6 @@ const AddClosetitemPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="itemDetails.color"
-            >
-              Color
-            </label>
-            <div className="grid grid-cols-4 gap-x-4 gap-y-2">
-              {colorItems.map((option) => (
-                <div key={option.value}>
-                  <input
-                    type="radio"
-                    value={option.value}
-                    id={option.value}
-                    {...register('itemDetails.color')}
-                  />
-                  <label htmlFor={option.value} className="ml-2">
-                    {option.label}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="itemDetails.occasion"
-            >
-              Occasion
-            </label>
-            <div className="grid grid-cols-4 gap-x-4 gap-y-2">
-              {occasionItems.map((option) => (
-                <div key={option.value}>
-                  <input
-                    type="radio"
-                    value={option.value}
-                    id={option.value}
-                    {...register('itemDetails.occasion')}
-                  />
-                  <label htmlFor={option.value} className="ml-2">
-                    {option.label}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="desc"
-            >
-              Description:
-            </label>
-            <input
-              type="text"
-              id="desc"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              {...register('desc', { required: true })}
-            />
-            {errors.desc && <span>This field is required</span>}
-          </div>
           <div>
             <label
               className="block text-gray-700 text-sm font-bold mb-2"

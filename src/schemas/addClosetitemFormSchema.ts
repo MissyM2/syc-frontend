@@ -14,9 +14,19 @@ export const addClosetitemFormSchema = z.object({
     size: z.string().min(1, { message: 'Size is required' }),
     color: z.string().min(1, { message: 'Color is required' }),
     occasion: z.string().min(1, { message: 'Occasion is required' }),
+    rating: z.string().min(1, { message: 'Rating is required' }),
   }),
-  desc: z.string().min(1, { message: 'Description is required' }),
-  rating: z.string().min(1, { message: 'Rating is required' }),
+  additionalDesc: z
+    .string()
+    .min(1, { message: 'Additional Description is required' }),
+  imageFile: z
+    .instanceof(FileList, { message: 'Image is required.' })
+    .refine((fileList) => fileList.length > 0, {
+      message: 'Please select an image.',
+    })
+    .refine((fileList) => fileList[0].type.startsWith('image/'), {
+      message: 'Only image files are allowed.',
+    }),
   imageId: z.string().min(1, { message: 'Image ID is required' }),
   imageUrl: z.string().min(1, { message: 'Image URL is required' }),
 });
