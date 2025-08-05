@@ -80,11 +80,6 @@ export const addClosetitem = createAsyncThunk<
         closetitemToSend
       );
 
-      console.log(
-        'Closet item created:',
-        JSON.stringify(postClosetitemToAtlasRes.data)
-      );
-
       return postClosetitemToAtlasRes.data as Closetitem; // Assuming the successful response data structure is ClosetClosetitem
     } catch (error: any) {
       return rejectWithValue(error.response.data);

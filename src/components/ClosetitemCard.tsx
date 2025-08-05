@@ -31,22 +31,6 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
 }): React.JSX.Element => {
   const dispatch = useDispatch<AppDispatch>();
   const { currentUser } = useSelector((state: RootState) => state.user);
-  // const { status, error } = useSelector(
-  //   (state: RootState) => state.closetitems
-  // );
-
-  // const date = new Date(closetitem.dateCreated);
-
-  // const formattedDate = date.toLocaleDateString('en-US', {
-  //   year: 'numeric',
-  //   month: 'long',
-  //   day: 'numeric',
-  // });
-
-  // const formattedTime = date.toLocaleTimeString('en-US', {
-  //   hour: 'numeric',
-  //   minute: '2-digit',
-  // });
 
   const handleDelete = () => {
     //console.log('inside handleDelete');
@@ -77,6 +61,22 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
           </RoundButtonSmall>
         </div>
       </div>
+      <CardContent className="flex-col gap-2">
+        <div className="flex flex-col gap-1">
+          <div className="flex justify-between">
+            <Label
+              className="text-gray-700 text-xs"
+              htmlFor="{closetitem.closetType}"
+            >
+              Item is located in this closet:
+            </Label>
+            <span className="text-xs md:text-sm text-muted-foreground">
+              {closetitem.closetType}
+            </span>
+          </div>
+        </div>
+      </CardContent>
+
       <div className="grid w-full place-items-center overflow-x-scroll aspect-square bg-gray-200">
         {closetitem.imageUrl && (
           <img
@@ -85,39 +85,64 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
             alt={closetitem.itemName}
           />
         )}
-        {/* <img
-            className="object-cover object-center w-full h-full"
-            src={closetitem?.imageFile?.data}
-            alt={closetitem.name}
-          /> */}
       </div>
       <CardHeader>
         <CardTitle>{closetitem.itemName}</CardTitle>
-        <CardDescription>{closetitem.additionalDesc}</CardDescription>
-        {/* <CardAction>
-          <Button variant="link">Sign Up</Button>
-        </CardAction> */}
       </CardHeader>
-      <CardContent className="flex-col gap-2 bg-green-50">
-        <div className="flex flex-row gap-2">
-          <div className="">
-            <Label>{closetitem.itemDetails.category}</Label>
+      <CardContent className="flex-col gap-2">
+        <div className="flex flex-col gap-1">
+          <div className="flex justify-between">
+            <Label
+              className="text-gray-700 text-xs"
+              htmlFor="{closetitem.itemDetails.category}"
+            >
+              Category
+            </Label>
+            <span className="text-xs md:text-sm text-muted-foreground">
+              {closetitem.itemDetails.category}
+            </span>
           </div>
-          <div className="">
-            <Label>{closetitem.itemDetails.seasons.join(', ')}</Label>
+          <div className="flex justify-between">
+            <Label htmlFor="{closetitem.itemDetails.seasons.join(', ')}">
+              Seasons
+            </Label>
+            <span className="text-xs md:text-sm text-muted-foreground">
+              {closetitem.itemDetails.seasons.join(', ')}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <Label htmlFor="{closetitem.itemDetails.size}">Size</Label>
+            <span className="text-xs md:text-sm text-muted-foreground">
+              {closetitem.itemDetails.size}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <Label htmlFor="{closetitem.itemDetails.color}">Color</Label>
+            <span className="text-xs md:text-sm text-muted-foreground">
+              {closetitem.itemDetails.color}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <Label htmlFor="{closetitem.itemDetails.occasion}">Occasion</Label>
+            <span className="text-xs md:text-sm text-muted-foreground">
+              {closetitem.itemDetails.occasion}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <Label htmlFor="{closetitem.itemDetails.rating}">Rating</Label>
+            <span className="text-xs md:text-sm text-muted-foreground">
+              {closetitem.itemDetails.rating}
+            </span>
           </div>
         </div>
-        <div className="flex flex-row gap-2">
-          <Label>{closetitem.itemDetails.size}</Label>
-          <Label>{closetitem.itemDetails.color}</Label>
-          <Label>{closetitem.itemDetails.occasion}</Label>
-          <Label>{closetitem.itemDetails.rating}</Label>
-        </div>
+        <Label htmlFor="{closetitem.additionalDesc}">
+          Additional Description
+        </Label>
+        <CardDescription>{closetitem.additionalDesc}</CardDescription>
       </CardContent>
       <CardFooter className="flex-row bg-red-50">
         <div className="flex flex-col gap-2">
           <div className="flex flex-col md:flex-row items-left">
-            <div className="text-xs pr-2">Added:</div>
             <div className="text-xs">
               <p>
                 Created At: {new Date(closetitem.createdAt).toLocaleString()}
