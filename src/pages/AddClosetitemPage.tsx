@@ -1,337 +1,215 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
-//import { Button, Form } from 'react-bootstrap';
-
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { addClosetitemFormSchema } from '@/schemas/addClosetitemFormSchema.ts';
+import type { AddClosetitemFormSchemaType } from '@/schemas/addClosetitemFormSchema.ts';
 import { useNavigate } from 'react-router-dom';
-
 import { useSelector, useDispatch } from 'react-redux';
-
 import type { RootState, AppDispatch } from '@/app/store.ts';
-
-import {
-  seasonItems,
-  sizeItems,
-  categoryItems,
-  colorItems,
-  occasionItems,
-} from '@/features/closet/Closetitem-datas.ts';
-
-// import Error from '@/components/Error';
-// import Spinner from '@/components/Spinner';
-
 import { addClosetitem } from '@/features/closet/closetActions.ts';
 import type { AddClosetitemArgs } from '@/interfaces/closetInterfaces';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
-//import { resetSlice } from '@/features/closet/closetSlice.ts';
+import {
+  closetTypes,
+  categoryItems,
+  seasonItems,
+} from '@/features/closet/Closetitem-datas';
 
 const AddClosetitemPage: React.FC = () => {
-  const { status, error } = useSelector((state: RootState) => state.user);
-  //const { currentUser } = useSelector((state: RootState) => state.user);
-  //const closetState = useSelector((state: RootState) => state.closet);
-  //const userState = useSelector((state: RootState) => state.user);
   const userId = useSelector((state: RootState) => state.user.currentUser?._id);
-  //const [uploadProgress, setUploadProgress] = useState(0);
-  const [message, setMessage] = useState('');
 
-  const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
-
-  // const [loading, setLoading] = useState<boolean>(true);
-  // const [error, setError] = useState<string | null>(null);
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    // control,
-    // watch,
-    formState: { errors },
-  } = useForm<AddClosetitemArgs>({
+  // 2. Initialize React Hook Form with Zod resolver
+  const form = useForm<z.infer<typeof addClosetitemFormSchema>>({
+    resolver: zodResolver(addClosetitemFormSchema),
     defaultValues: {
       userId: userId,
       closetType: 'personal',
       itemName: '',
       itemDetails: {
-        category: 'tops',
-        seasons: ['summer'],
-        size: 'M ',
-        color: 'black',
-        occasion: 'c',
+        category: '',
+        seasons: ['spring'],
+        size: '',
+        color: '',
+        occasion: '',
       },
-      desc: 'Add three of four descriptive terms here',
+      desc: '',
       rating: '',
       imageId: '',
       imageUrl: '',
     },
   });
 
-  const onSubmit: SubmitHandler<AddClosetitemArgs> = async (data) => {
+  // 3. Define the submit handler
+
+  const onSubmit = async (data: AddClosetitemFormSchemaType) => {
     try {
-      console.log(
-        'show closetitem state after before item. ' + JSON.stringify(data)
-      );
-      //dispatch(resetSlice());
-      const response = await dispatch(addClosetitem(data));
-      if (response) {
-        console.log(
-          'show closetitem state after adding item. ' + JSON.stringify(response)
-        );
-      }
-      // console.log(
-      //   'show closetitem state after adding item. ' +
-      //     JSON.stringify(userState)
-      // );
-      // console.log(
-      //   'show user state after adding item. ' +
-      //     JSON.stringify(userState.currentUser?.closetitems.length)
-      // );
-      // }
-      if (response) {
-        navigate('/home');
-      }
+      console.log('Form submitted:', data);
     } catch (error) {
       alert('Submitting form failed!');
     }
   };
 
-  // if (loading) {
-  //   return <p>Loading Closet Items...</p>;
-  // }
-
-  // if (error) {
-  //   return <p>Error: {error}</p>;
-  // }
-
-  const handleImageChange = (e: any) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Assuming you want to store the file name
-      setValue('imageId', file.name);
-      // You might also want to store the file object itself for later use
-      // setValue('imageFile', file);
-    }
-  };
-
   return (
-    <div className="w-full max-w-lg">
+    <Form {...form}>
       <form
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-        onSubmit={handleSubmit(onSubmit)}
+        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 space-y-3"
+        onSubmit={form.handleSubmit(onSubmit)}
       >
-        <div className="">
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="itemName"
-            >
-              Name:
-            </label>
-            <input
-              type="text"
-              id="closetType"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="Closet Type"
-              {...register('closetType', { required: true })}
-            />
-            {errors.closetType && <span>This field is required</span>}
-          </div>
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="itemName"
-            >
-              Name:
-            </label>
-            <input
-              type="text"
-              id="nameitemName"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="Name"
-              {...register('itemName', { required: true })}
-            />
-            {errors.itemName && <span>This field is required</span>}
-          </div>
-          <div>ITEM DETAILS GOES HERE</div>
+        {/* Closet Type Input Field */}
+        <FormField
+          control={form.control}
+          name="closetType"
+          render={({ field }) => (
+            <FormItem className="space-y-2">
+              <FormLabel>Select your closet type</FormLabel>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  className="flex flex-col md:flex-row space-y-1"
+                >
+                  {closetTypes.map((type) => (
+                    <FormItem
+                      key={type.value}
+                      className="flex items-center gap-3"
+                    >
+                      <FormControl>
+                        <RadioGroupItem value={type.value} />
+                      </FormControl>
+                      <FormLabel className="font-normal">
+                        {type.label}
+                      </FormLabel>
+                    </FormItem>
+                  ))}
+                </RadioGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="itemDetails.category"
-            >
-              Category:
-            </label>
-            <div className="grid grid-cols-5 gap-x-4 gap-y-2">
-              {categoryItems.map((option) => (
-                <div key={option.value}>
-                  <input
-                    type="radio"
-                    value={option.value}
-                    id={option.value}
-                    {...register('itemDetails.category')}
-                  />
-                  <label htmlFor={option.value} className="ml-2">
-                    {option.label}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="itemDetails.seasons"
-            >
-              Seasons:
-            </label>
-            <div className="grid grid-cols-5 gap-x-4 gap--2">
-              {seasonItems.map((option) => (
-                <div key={option.value}>
-                  <input
-                    type="checkbox"
-                    value={option.value}
-                    id={option.value}
-                    {...register('itemDetails.seasons')}
-                  />
-                  <label htmlFor={option.value} className="ml-2">
-                    {option.label}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="itemDetails.size"
-            >
-              Size
-            </label>
-            <div className="grid grid-cols-4 gap-x-4 gap-y-2">
-              {sizeItems.map((option) => (
-                <div key={option.value}>
-                  <input
-                    type="radio"
-                    value={option.value}
-                    id={option.value}
-                    {...register('itemDetails.size')}
-                  />
-                  <label htmlFor={option.value} className="ml-2">
-                    {option.label}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
+        {/* Item Name Input Field */}
+        <FormField
+          control={form.control}
+          name="itemName"
+          render={({ field }) => (
+            <FormItem className="space-y-2">
+              <FormLabel>Item Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Item Name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="itemDetails.color"
-            >
-              Color
-            </label>
-            <div className="grid grid-cols-4 gap-x-4 gap-y-2">
-              {colorItems.map((option) => (
-                <div key={option.value}>
-                  <input
-                    type="radio"
-                    value={option.value}
-                    id={option.value}
-                    {...register('itemDetails.color')}
+        <FormField
+          control={form.control}
+          name="itemDetails.category"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Category</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {categoryItems.map((item) => (
+                    <SelectItem key={item.value} value={item.value}>
+                      {item.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="itemDetails.seasons"
+          render={() => (
+            <FormItem>
+              <div className="">
+                <FormLabel className="text-base">Seasons</FormLabel>
+              </div>
+              <div className="flex flex-col md:flex-row gap-2">
+                {seasonItems.map((item) => (
+                  <FormField
+                    key={item.id}
+                    control={form.control}
+                    name="itemDetails.seasons"
+                    render={({ field }) => {
+                      return (
+                        <FormItem
+                          key={item.id}
+                          className="flex flex-row items-center gap-2"
+                        >
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value?.includes(item.id)}
+                              onCheckedChange={(checked) => {
+                                return checked
+                                  ? field.onChange([...field.value, item.id])
+                                  : field.onChange(
+                                      field.value?.filter(
+                                        (value) => value !== item.id
+                                      )
+                                    );
+                              }}
+                            />
+                          </FormControl>
+                          <FormLabel className="text-sm font-normal">
+                            {item.label}
+                          </FormLabel>
+                        </FormItem>
+                      );
+                    }}
                   />
-                  <label htmlFor={option.value} className="ml-2">
-                    {option.label}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="itemDetails.occasion"
-            >
-              Occasion
-            </label>
-            <div className="grid grid-cols-4 gap-x-4 gap-y-2">
-              {occasionItems.map((option) => (
-                <div key={option.value}>
-                  <input
-                    type="radio"
-                    value={option.value}
-                    id={option.value}
-                    {...register('itemDetails.occasion')}
-                  />
-                  <label htmlFor={option.value} className="ml-2">
-                    {option.label}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="desc"
-            >
-              Description:
-            </label>
-            <input
-              type="text"
-              id="desc"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              {...register('desc', { required: true })}
-            />
-            {errors.desc && <span>This field is required</span>}
-          </div>
-          <div>
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="rating"
-            >
-              Rating:
-            </label>
-            <input
-              type="text"
-              id="rating"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              {...register('rating', { required: true })}
-            />
-            {errors.desc && <span>This field is required</span>}
-          </div>
-
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="imageFile"
-            >
-              ImageFile
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              required
-              id="imageFile"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              {...register('image', { required: true })}
-              onChange={handleImageChange}
-            />
-            {/* {errors.desc && <span>This field is required</span>} */}
-          </div>
-          <div className="mb-6">
-            <button
-              type="submit"
-              className="relative text-sm p-2 bg-red-200 text-black-500 rounded-sm ease-in-out"
-              //disabled={loading}
-            >
-              Add Closet Item
-            </button>
-          </div>
+                ))}
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className="mb-6">
+          <Button
+            type="submit"
+            className="relative text-sm p-2 bg-red-200 text-black-500 rounded-sm ease-in-out"
+            //disabled={loading}
+          >
+            Add Closet Item
+          </Button>
         </div>
       </form>
-    </div>
+    </Form>
   );
 };
 

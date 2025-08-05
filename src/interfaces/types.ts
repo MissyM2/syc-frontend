@@ -5,6 +5,7 @@ export const UserRole = {
 } as const;
 
 export interface Option {
+  id: string;
   value: string;
   label: string;
 }
