@@ -1,27 +1,19 @@
-import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '../../../app/store.ts';
-import { useForm, FormProvider, useFormContext } from 'react-hook-form';
+import { useForm, FormProvider } from 'react-hook-form';
 import { deleteClosetitem } from '../closetActions.ts';
-import {
-  closetitemFormSchema,
-  closetitemFullFormSchema,
-} from '@/schemas/closetitemFormSchema.ts';
+import { closetitemFullFormSchema } from '@/schemas/closetitemFormSchema.ts';
 import type { closetitemFormValues } from '@/schemas/closetitemFormSchema.ts';
 import { updateClosetitem } from '@/features/closet/closetActions.ts';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Link } from 'react-router-dom';
 import type { Closetitem } from '../../../interfaces/closetInterfaces.ts';
-import { ClosetitemInput } from '@/components/ui/closetitem-input';
-import { Label } from '@/components/ui/label';
 import { FaMinus } from 'react-icons/fa6';
 //import { FaEdit } from 'react-icons/fa';
 import { Button } from '@/components/ui/button';
 //import { FaRegSave } from 'react-icons/fa';
 import RoundButtonSmall from './RoundButtonSmall.tsx';
 import { ItemDetailsForm } from '@/features/closet/components/ItemDetailsForm.tsx';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import ClosetitemFormField from '@/features/closet/components/closetitem-form-field.tsx';
 import ClosetitemDropdownBox from '@/features/closet/components/closetitem-dropdown-box.tsx';
 
@@ -53,7 +45,8 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
   const form = useForm<z.infer<typeof closetitemFullFormSchema>>({
     resolver: zodResolver(closetitemFullFormSchema),
     defaultValues: {
-      // userId: closetitem.userId,
+      itemId: closetitem._id,
+      userId: closetitem.userId,
       closetType: closetitem.closetType as
         | 'personal'
         | 'personalOnly'

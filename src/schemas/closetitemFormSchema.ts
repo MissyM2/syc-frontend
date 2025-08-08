@@ -31,7 +31,7 @@ export const closetitemFormSchema = z.object({
   imageUrl: z.string().min(1, { message: 'Image URL is required' }),
 });
 
-export type closetitemFormValues = z.infer<typeof closetitemFormSchema>;
+export type closetitemFormValues = z.infer<typeof closetitemFullFormSchema>;
 
 export const itemDetailsSchema = z.object({
   category: z.string().min(1, { message: 'Category is required' }),
@@ -45,7 +45,8 @@ export const itemDetailsSchema = z.object({
 });
 
 export const closetitemFullFormSchema = z.object({
-  // userId: z.string().min(1, { message: 'User ID is required' }),
+  itemId: z.string().min(1, { message: 'Item ID is required' }),
+  userId: z.string().min(1, { message: 'User ID is required' }),
   closetType: z.enum(['personal', 'personalOnly', 'donation', 'sharing'], {
     required_error: 'You need to select a closet type.',
   }),
