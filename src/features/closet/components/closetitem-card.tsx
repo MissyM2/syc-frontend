@@ -7,7 +7,10 @@ import type { closetitemFormValues } from '@/schemas/closetitemFormSchema.ts';
 import { updateClosetitem } from '@/features/closet/closetActions.ts';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import type { Closetitem } from '../../../interfaces/closetInterfaces.ts';
+import type {
+  Closetitem,
+  UpdateClosetitemArgs,
+} from '../../../interfaces/closetInterfaces.ts';
 import { FaMinus } from 'react-icons/fa6';
 //import { FaEdit } from 'react-icons/fa';
 import { Button } from '@/components/ui/button';
@@ -45,8 +48,8 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
   const form = useForm<z.infer<typeof closetitemFullFormSchema>>({
     resolver: zodResolver(closetitemFullFormSchema),
     defaultValues: {
-      itemId: closetitem._id,
-      userId: closetitem.userId,
+      closetitemId: closetitem._id,
+      //userId: closetitem.userId,
       closetType: closetitem.closetType as
         | 'personal'
         | 'personalOnly'
@@ -83,7 +86,13 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
   const onSubmit = async (data: closetitemFormValues) => {
     try {
       console.log('Submitting form with data:', data);
-      const response = await dispatch(updateClosetitem(data));
+      const updatePayload: UpdateClosetitemArgs = {
+        ...data,
+        updatedAt: new Date().toISOString(), // Add the missing updatedAt property
+        // Add any other missing required properties
+        closetitemId: closetitem._id, // If this is required and not in your form
+      };
+      const response = await dispatch(updateClosetitem(updatePayload));
       if (response) {
         console.log(
           'show closetitem state after adding item. ' + JSON.stringify(response)

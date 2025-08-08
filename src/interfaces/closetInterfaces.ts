@@ -16,7 +16,7 @@ export interface ClosetState {
 
 export interface ClosetitemDetails {
   category: string;
-  seasons: string[];
+  //seasons: string[];
   size: string;
   color: string;
   occasion: string;
@@ -53,8 +53,10 @@ export interface DeleteClosetitemArgs {
 //   userId: string;
 // }
 export interface UpdateClosetitemArgs {
-  //closetitemId: string;
-  itemDetails: {
-    category: string;
-  };
+  closetitemId: string;
+  closetType: string;
+  itemName: string;
+  itemDetails: ClosetitemDetails;
+  additionalDesc: string;
+  updatedAt: string;
 }

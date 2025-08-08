@@ -96,7 +96,21 @@ export const updateClosetitem = createAsyncThunk<
 >(
   'closet/updateclosetitem',
   async (updatedClosetitem: UpdateClosetitemArgs, { rejectWithValue }) => {
-    console.log('updateClosetitem called with:', updatedClosetitem);
+    console.log(
+      'closetactions:updateClosetitem: ' + JSON.stringify(updatedClosetitem)
+    );
+    console.log(
+      'updatedClosetitem.closetitemId: ' + updatedClosetitem.closetitemId
+    );
+    try {
+      const response = await api.put<Closetitem>(
+        `${URL}/api/closet/update-closetitem/${updatedClosetitem.closetitemId}`,
+        updatedClosetitem
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
     //   try {
     //     // 1.  PREP THE IMAGE
     //     // sanitize image file name

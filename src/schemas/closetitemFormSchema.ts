@@ -45,8 +45,8 @@ export const itemDetailsSchema = z.object({
 });
 
 export const closetitemFullFormSchema = z.object({
-  itemId: z.string().min(1, { message: 'Item ID is required' }),
-  userId: z.string().min(1, { message: 'User ID is required' }),
+  closetitemId: z.string().min(1, { message: 'Item ID is required' }),
+  //userId: z.string().min(1, { message: 'User ID is required' }),
   closetType: z.enum(['personal', 'personalOnly', 'donation', 'sharing'], {
     required_error: 'You need to select a closet type.',
   }),
