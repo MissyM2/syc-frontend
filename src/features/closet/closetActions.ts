@@ -6,6 +6,7 @@ import type {
   AddClosetitemArgs,
   ClosetDataResponse,
   DeleteClosetitemArgs,
+  UpdateClosetitemArgs,
 } from '../../interfaces/closetInterfaces.ts';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '../../index.tsx';
@@ -84,6 +85,69 @@ export const addClosetitem = createAsyncThunk<
     } catch (error: any) {
       return rejectWithValue(error.response.data);
     }
+  }
+);
+
+// CREATE A CLOSETITEM WITH IMAGE FOR A SPECIFIC USER
+export const updateClosetitem = createAsyncThunk<
+  Closetitem,
+  UpdateClosetitemArgs,
+  { state: RootState; rejectValue: AxiosError } // ThunkApiConfig: an object for configuring types related to rejectWithValue, state and dispatch
+>(
+  'closet/updateclosetitem',
+  async (updatedClosetitem: UpdateClosetitemArgs, { rejectWithValue }) => {
+    console.log('updateClosetitem called with:', updatedClosetitem);
+    //   try {
+    //     // 1.  PREP THE IMAGE
+    //     // sanitize image file name
+    //     const originalFilename = updatedClosetitem.imageFile[0].name;
+    //     const sanitizedFilename = originalFilename.replace(/\s/g, '_');
+
+    //     // add a unique identifier to the beginning of the filename
+    //     const uniqueId = uuidv4();
+    //     const newFilename = `${uniqueId}_${sanitizedFilename}`;
+
+    //     // 2.  GET THE PRESIGNED URL FOR UPLOAD
+    //     const presignedUrlForUploadRes = await getPresignedUrlForUpload(
+    //       newClosetitem.userId,
+    //       newFilename,
+    //       newClosetitem.imageFile[0].type
+    //     );
+
+    //     // 3. UPLOAD THE IMAGE
+    //     await uploadImageToS3(
+    //       presignedUrlForUploadRes,
+    //       newClosetitem.imageFile[0]
+    //     );
+
+    //     // 4. GET PRESIGNED IMAGE FOR DOWNLOAD
+    //     const getPresignedUrlForDownloadRes = await getPresignedUrlForDownload(
+    //       newClosetitem.userId,
+    //       newFilename
+    //     );
+
+    //     if (getPresignedUrlForDownloadRes) {
+    //       newClosetitem.imageUrl = getPresignedUrlForDownloadRes;
+    //     }
+
+    //     // 4. CREATE THE CLOSET ITEM IN ATLAS
+    //     // Create a new object with all the same properties as the ClosetitemSubmitted but
+    //     // change the image URL and the sanitized filename
+    //     const closetitemToSend = {
+    //       ...newClosetitem,
+    //       imageUrl: getPresignedUrlForDownloadRes,
+    //       imageId: newFilename, // add this field if needed by backend
+    //     };
+
+    //     const postClosetitemToAtlasRes = await api.post(
+    //       `${URL}/api/closet/addclosetitem`,
+    //       closetitemToSend
+    //     );
+
+    //     return postClosetitemToAtlasRes.data as Closetitem; // Assuming the successful response data structure is ClosetClosetitem
+    //   } catch (error: any) {
+    //     return rejectWithValue(error.response.data);
+    //   }
   }
 );
 

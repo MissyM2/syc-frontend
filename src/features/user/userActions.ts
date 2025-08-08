@@ -23,7 +23,7 @@ import {
   getPresignedUrlForDownload,
   //deleteSingleImageFromS3ByUser,
 } from '@/utils/S3Utils.ts';
-import { ClosetitemCard } from '@/components/ClosetitemCard.tsx';
+import { ClosetitemCard } from '@/features/closet/components/closetitem-card.tsx';
 
 const URL = 'http://localhost:3000';
 

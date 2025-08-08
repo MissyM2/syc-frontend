@@ -48,3 +48,13 @@ export interface DeleteClosetitemArgs {
   closetitemId: string;
   imageId: string;
 }
+
+// export interface UpdateClosetitemArgs extends Partial<Closetitem> {
+//   userId: string;
+// }
+export interface UpdateClosetitemArgs {
+  //closetitemId: string;
+  itemDetails: {
+    category: string;
+  };
+}

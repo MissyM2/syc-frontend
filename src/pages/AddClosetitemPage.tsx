@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { addClosetitemFormSchema } from '@/schemas/addClosetitemFormSchema.ts';
-import type { AddClosetitemFormSchemaType } from '@/schemas/addClosetitemFormSchema.ts';
+import { closetitemFormSchema } from '@/schemas/closetitemFormSchema';
+import type { closetitemFormSchemaType } from '@/schemas/closetitemFormSchema';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState, AppDispatch } from '@/app/store.ts';
@@ -50,9 +50,9 @@ const AddClosetitemPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  // 2. Initialize React Hook Form with Zod resolver
-  const form = useForm<z.infer<typeof addClosetitemFormSchema>>({
-    resolver: zodResolver(addClosetitemFormSchema),
+  // Initialize React Hook Form with Zod resolver
+  const form = useForm<z.infer<typeof closetitemFormSchema>>({
+    resolver: zodResolver(closetitemFormSchema),
     defaultValues: {
       userId: userId,
       closetType: 'personal',
@@ -73,7 +73,7 @@ const AddClosetitemPage: React.FC = () => {
   });
 
   // Define the submit handler
-  const onSubmit = async (data: AddClosetitemFormSchemaType) => {
+  const onSubmit = async (data: closetitemFormSchemaType) => {
     try {
       const response = await dispatch(addClosetitem(data));
       if (response) {
@@ -106,39 +106,6 @@ const AddClosetitemPage: React.FC = () => {
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 space-y-3"
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        {/* Closet Type Input Field */}
-        {/* <FormField
-          control={form.control}
-          name="closetType"
-          render={({ field }) => (
-            <FormItem className="space-y-2">
-              <FormLabel>Select your closet type</FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="flex flex-col md:flex-row space-y-1"
-                >
-                  {closetTypes.map((type) => (
-                    <FormItem
-                      key={type.value}
-                      className="flex items-center gap-3"
-                    >
-                      <FormControl>
-                        <RadioGroupItem value={type.value} />
-                      </FormControl>
-                      <FormLabel className="font-normal">
-                        {type.label}
-                      </FormLabel>
-                    </FormItem>
-                  ))}
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        /> */}
-
         <div>Add Your Closet item</div>
 
         {/* Item Name Input Field */}
