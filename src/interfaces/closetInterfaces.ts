@@ -16,7 +16,7 @@ export interface ClosetState {
 
 export interface ClosetitemDetails {
   category: string;
-  //seasons: string[];
+  seasons: string[];
   size: string;
   color: string;
   occasion: string;

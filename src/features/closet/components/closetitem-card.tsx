@@ -16,7 +16,7 @@ import { FaMinus } from 'react-icons/fa6';
 import { Button } from '@/components/ui/button';
 //import { FaRegSave } from 'react-icons/fa';
 import RoundButtonSmall from './RoundButtonSmall.tsx';
-import { ItemDetailsForm } from '@/features/closet/components/ItemDetailsForm.tsx';
+import { ClosetitemDetailsForm } from '@/features/closet/components/closetitem-details-form.tsx';
 import ClosetitemFormField from '@/features/closet/components/closetitem-form-field.tsx';
 import ClosetitemDropdownBox from '@/features/closet/components/closetitem-dropdown-box.tsx';
 
@@ -59,7 +59,7 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
       itemName: closetitem.itemName,
       itemDetails: {
         category: closetitem.itemDetails?.category || '',
-        //   seasons: closetitem.itemDetails.seasons,
+        seasons: closetitem.itemDetails.seasons,
         size: closetitem.itemDetails.size,
         color: closetitem.itemDetails.color,
         occasion: closetitem.itemDetails.occasion,
@@ -85,7 +85,6 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
   // Define the submit handler
   const onSubmit = async (data: closetitemFormValues) => {
     try {
-      console.log('Submitting form with data:', data);
       const updatePayload: UpdateClosetitemArgs = {
         ...data,
         updatedAt: new Date().toISOString(), // Add the missing updatedAt property
@@ -105,11 +104,8 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
 
   return (
     <FormProvider {...form}>
-      <form
-        className="bg-white shadow-md rounded px-2 pt-2 pb-2 mb-4 space-y-0 "
-        onSubmit={form.handleSubmit(onSubmit)}
-      >
-        <Card className="w-full max-w-sm">
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <Card className="w-full max-w-sm p-4">
           <div className="flex justify-end">
             <div className="ps-1 pe-1">
               <RoundButtonSmall onClick={handleDelete}>
@@ -144,7 +140,7 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
                   items={closetTypes}
                 />
 
-                <ItemDetailsForm />
+                <ClosetitemDetailsForm />
 
                 {/* Additional Description */}
                 <div>
@@ -158,16 +154,16 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
               </div>
             </div>
           </CardContent>
+          <div className="mb-6">
+            <Button
+              type="submit"
+              className="relative text-sm p-2 bg-red-200 text-black-500 rounded-sm ease-in-out"
+              //disabled={loading}
+            >
+              Update Closet Item
+            </Button>
+          </div>
         </Card>
-        <div className="mb-6">
-          <Button
-            type="submit"
-            className="relative text-sm p-2 bg-red-200 text-black-500 rounded-sm ease-in-out"
-            //disabled={loading}
-          >
-            Update Closet Item
-          </Button>
-        </div>
       </form>
     </FormProvider>
   );

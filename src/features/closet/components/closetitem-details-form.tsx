@@ -4,15 +4,16 @@ import { useFormContext } from 'react-hook-form';
 
 import {
   categoryItems,
-  // seasonItems,
+  seasonItems,
   sizeItems,
   colorItems,
   occasionTypes,
   ratingItems,
 } from '@/features/closet/Closetitem-datas';
 import ClosetitemDropdownBox from './closetitem-dropdown-box';
+import ClosetitemCheckboxGroup from './closetitem-checkbox-group';
 
-export const ItemDetailsForm: React.FC = () => {
+export const ClosetitemDetailsForm: React.FC = () => {
   const { control } = useFormContext();
 
   return (
@@ -26,41 +27,14 @@ export const ItemDetailsForm: React.FC = () => {
       />
 
       {/* Seasons */}
-      {/* <div className="flex justify-between p-0">
-        <Label
-          className="text-gray-700 text-xs"
-          htmlFor="{closetitem.itemDetails.seasons.join(', ')}"
-        >
-          Seasons
-        </Label>
-        <FormField
-          control={control}
-          name="itemDetails.seasons"
-          render={({ field }) => (
-            <FormItem>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl className="text-xs md:text-sm text-muted-foreground">
-                  <SelectTrigger className="border-none outline-none shadow-none focus:ring-0 focus:ring-offset-0 p-0">
-                    <SelectValue className="" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent className="">
-                  {seasonItems.map((item) => (
-                    <SelectItem
-                      className="text-xs md:text-sm"
-                      key={item.value}
-                      value={item.value}
-                    >
-                      {item.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div> */}
+
+      <ClosetitemCheckboxGroup
+        control={control}
+        name="itemDetails.seasons"
+        label="Seasons"
+        description="Select seasons"
+        items={seasonItems}
+      />
 
       {/* Size */}
       <ClosetitemDropdownBox

@@ -40,7 +40,6 @@ export default function ClosetitemDropdownBox<
   label,
   description,
   items,
-  ...inputProps // Pass any extra props to CustomInput
 }: ClosetitemDropdownBoxProps<TFieldValues>) {
   return (
     <div>

@@ -96,12 +96,6 @@ export const updateClosetitem = createAsyncThunk<
 >(
   'closet/updateclosetitem',
   async (updatedClosetitem: UpdateClosetitemArgs, { rejectWithValue }) => {
-    console.log(
-      'closetactions:updateClosetitem: ' + JSON.stringify(updatedClosetitem)
-    );
-    console.log(
-      'updatedClosetitem.closetitemId: ' + updatedClosetitem.closetitemId
-    );
     try {
       const response = await api.put<Closetitem>(
         `${URL}/api/closet/update-closetitem/${updatedClosetitem.closetitemId}`,

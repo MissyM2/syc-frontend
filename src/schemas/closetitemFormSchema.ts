@@ -35,9 +35,9 @@ export type closetitemFormValues = z.infer<typeof closetitemFullFormSchema>;
 
 export const itemDetailsSchema = z.object({
   category: z.string().min(1, { message: 'Category is required' }),
-  // seasons: z.array(z.string()).refine((value) => value.some((item) => item), {
-  //   message: 'You have to select at least one season.',
-  // }),
+  seasons: z.array(z.string()).refine((value) => value.some((item) => item), {
+    message: 'You have to select at least one season.',
+  }),
   size: z.string().min(1, { message: 'Size is required' }),
   color: z.string().min(1, { message: 'Color is required' }),
   occasion: z.string().min(1, { message: 'Occasion is required' }),

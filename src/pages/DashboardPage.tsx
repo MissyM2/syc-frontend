@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { SearchBox } from '@/features/closet/components/SearchBox.tsx';
 import { CollapsibleOptionGroup } from '@/features/closet/components/CollapsibleOptionGroup.tsx';
 //import { CheckboxGroup } from '@/features/closet/components/CheckboxGroup.tsx';
-import { OutputListClosetitems } from '@/components/OutputListClosetitems.tsx';
+import { ClosetitemOutputList } from '@/features/closet/components/closetitem-output-list.tsx';
 
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '../app/store.ts';
@@ -38,7 +38,7 @@ const DashboardPage: React.FC = () => {
         </RoundButton>
       </div>
 
-      <OutputListClosetitems data={closetitems} />
+      <ClosetitemOutputList data={closetitems} />
     </div>
   );
 };
