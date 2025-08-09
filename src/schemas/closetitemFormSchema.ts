@@ -64,7 +64,7 @@ export const closetitemFullFormSchema = z.object({
   //     message: 'Only image files are allowed.',
   //   }),
   // imageId: z.string().min(1, { message: 'Image ID is required' }),
-  // imageUrl: z.string().min(1, { message: 'Image URL is required' }),
+  imageUrl: z.string().min(1, { message: 'Image URL is required' }),
 });
 
 export type closetitemFullFormValues = z.infer<typeof closetitemFullFormSchema>;
