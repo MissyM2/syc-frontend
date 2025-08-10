@@ -2,15 +2,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '../../../app/store.ts';
 import { useForm, FormProvider } from 'react-hook-form';
 import { deleteClosetitem } from '../closetActions.ts';
-import { closetitemFullFormSchema } from '@/schemas/closetitemFormSchema.ts';
-import type { closetitemFormValues } from '@/schemas/closetitemFormSchema.ts';
+import { UpdateClosetitemSchema } from '@/schemas/closetSchemas.ts';
+import type {
+  BaseClosetitemType,
+  UpdateClosetitemInput,
+} from '@/schemas/closetSchemas.ts';
 import { updateClosetitem } from '@/features/closet/closetActions.ts';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import type {
-  Closetitem,
-  UpdateClosetitemArgs,
-} from '../../../interfaces/closetInterfaces.ts';
 import { FaMinus } from 'react-icons/fa6';
 //import { FaEdit } from 'react-icons/fa';
 import { Button } from '@/components/ui/button';
@@ -33,12 +32,13 @@ import {
 } from '@/components/ui/card';
 
 import { closetTypes } from '@/features/closet/Closetitem-datas';
+import type { IUpdateClosetitem } from '@/interfaces/closetTypes.ts';
 
-interface ClosetitemProps {
-  closetitem: Closetitem;
+interface ClosetitemCardProps {
+  closetitem: BaseClosetitemType;
 }
 
-export const ClosetitemCard: React.FC<ClosetitemProps> = ({
+export const ClosetitemCard: React.FC<ClosetitemCardProps> = ({
   closetitem,
 }): React.JSX.Element => {
   const dispatch = useDispatch<AppDispatch>();
@@ -47,10 +47,10 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
   //const { control } = useFormContext();
 
   // Initialize React Hook Form with Zod resolver
-  const form = useForm<z.infer<typeof closetitemFullFormSchema>>({
-    resolver: zodResolver(closetitemFullFormSchema),
+  const form = useForm<z.infer<typeof UpdateClosetitemSchema>>({
+    resolver: zodResolver(UpdateClosetitemSchema),
     defaultValues: {
-      closetitemId: closetitem._id,
+      _id: closetitem._id,
       //userId: closetitem.userId,
       closetType: closetitem.closetType as
         | 'personal'
@@ -77,7 +77,7 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
     //console.log('inside handleDelete');
     dispatch(
       deleteClosetitem({
-        closetitemId: closetitem._id,
+        _id: closetitem._id,
         userId: closetitem.userId,
         imageId: closetitem.imageId,
       })
@@ -93,19 +93,46 @@ export const ClosetitemCard: React.FC<ClosetitemProps> = ({
   };
 
   // Define the submit handler
-  const onSubmit = async (data: closetitemFormValues) => {
+  const onSubmit = async (data: UpdateClosetitemInput) => {
+    console.log('Submitting form with data:', JSON.stringify(data));
+    console.log('Closetitem ID:', closetitem._id);
+    console.log('what is closetitem:', JSON.stringify(closetitem));
     try {
-      const updatePayload: UpdateClosetitemArgs = {
+      const updatePayload: IUpdateClosetitem = {
         ...data,
-        updatedAt: new Date().toISOString(), // Add the missing updatedAt property
-        // Add any other missing required properties
-        closetitemId: closetitem._id, // If this is required and not in your form
+        _id: closetitem._id, // If this is required and not in your form
       };
+      // const updatePayload: IUpdateClosetitem = {
+      //   _id: closetitem._id, // Ensure ID is set
+      //   userId: closetitem.userId, // Use existing userId
+      //   closetType: data.closetType || closetitem.closetType,
+      //   itemName: data.itemName || closetitem.itemName,
+      //   itemDetails: {
+      //     category:
+      //       data.itemDetails?.category ||
+      //       closetitem.itemDetails?.category ||
+      //       '',
+      //     seasons:
+      //       data.itemDetails?.seasons || closetitem.itemDetails?.seasons || [],
+      //     size: data.itemDetails?.size || closetitem.itemDetails?.size || '',
+      //     color: data.itemDetails?.color || closetitem.itemDetails?.color || '',
+      //     occasion:
+      //       data.itemDetails?.occasion ||
+      //       closetitem.itemDetails?.occasion ||
+      //       '',
+      //     rating:
+      //       data.itemDetails?.rating || closetitem.itemDetails?.rating || '',
+      //   },
+      //   additionalDesc: data.additionalDesc || closetitem.additionalDesc || '',
+      //   imageId: closetitem.imageId, // Preserve existing imageId
+      //   imageUrl: data.imageUrl || closetitem.imageUrl,
+      // };
+
+      console.log('Update payload:', JSON.stringify(updatePayload));
       const response = await dispatch(updateClosetitem(updatePayload));
       if (response) {
-        console.log(
-          'show closetitem state after adding item. ' + JSON.stringify(response)
-        );
+        console.log('Update successful:', response);
+        return response;
       }
     } catch (error) {
       alert('Submitting form failed!');

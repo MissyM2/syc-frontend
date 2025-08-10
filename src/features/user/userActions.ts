@@ -15,7 +15,7 @@ import type {
   UserClosetitemReferenceArgs,
   RegistrationSubmissionArgs,
   UpdateSubmissionArgs,
-} from '../../interfaces/userInterfaces.ts';
+} from '../../interfaces/userTypes.ts';
 
 import {
   getPresignedUrlForUpload,

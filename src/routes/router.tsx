@@ -10,7 +10,7 @@ import ProtectedRoute from '../routing/ProtectedRoutes.tsx';
 import RootLayout from '../components/RootLayout';
 import UnauthorizedPage from '../pages/UnauthorizedPage.tsx';
 import { protectedLoader } from './loaders';
-import { UserRole } from '../interfaces/types';
+import { UserRole } from '../interfaces/otherTypes.ts';
 
 export const router = createBrowserRouter([
   {

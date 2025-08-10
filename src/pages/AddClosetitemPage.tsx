@@ -3,17 +3,20 @@ import { useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { closetitemFormSchema } from '@/schemas/closetitemFormSchema';
-import type { closetitemFormSchemaType } from '@/schemas/closetitemFormSchema';
+import { AddClosetitemSchema } from '@/schemas/closetSchemas';
+import type { AddClosetitemInput } from '@/schemas/closetSchemas';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState, AppDispatch } from '@/app/store.ts';
 import { addClosetitem } from '@/features/closet/closetActions.ts';
-import type { AddClosetitemArgs } from '@/interfaces/closetInterfaces';
+import type { AddClosetitemArgs } from '@/interfaces/closetTypes';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
+//import ClosetitemFormField from '@/features/closet/components/closetitem-form-field.tsx';
+import { ClosetitemDetailsForm } from '@/features/closet/components/closetitem-details-form.tsx';
+
 import {
   Form,
   FormControl,
@@ -23,26 +26,26 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+// import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+// import {
+//   Select,
+//   SelectContent,
+//   SelectGroup,
+//   SelectItem,
+//   SelectLabel,
+//   SelectTrigger,
+//   SelectValue,
+// } from '@/components/ui/select';
 
-import {
-  closetTypes,
-  categoryItems,
-  seasonItems,
-  sizeItems,
-  colorItems,
-  occasionTypes,
-  ratingItems,
-} from '@/features/closet/Closetitem-datas';
+// import {
+//   closetTypes,
+//   categoryItems,
+//   seasonItems,
+//   sizeItems,
+//   colorItems,
+//   occasionTypes,
+//   ratingItems,
+// } from '@/features/closet/Closetitem-datas';
 
 const AddClosetitemPage: React.FC = () => {
   const userId = useSelector((state: RootState) => state.user.currentUser?._id);
@@ -51,8 +54,8 @@ const AddClosetitemPage: React.FC = () => {
   const navigate = useNavigate();
 
   // Initialize React Hook Form with Zod resolver
-  const form = useForm<z.infer<typeof closetitemFormSchema>>({
-    resolver: zodResolver(closetitemFormSchema),
+  const form = useForm<z.infer<typeof AddClosetitemSchema>>({
+    resolver: zodResolver(AddClosetitemSchema),
     defaultValues: {
       userId: userId,
       closetType: 'personal',
@@ -73,7 +76,7 @@ const AddClosetitemPage: React.FC = () => {
   });
 
   // Define the submit handler
-  const onSubmit = async (data: closetitemFormSchemaType) => {
+  const onSubmit = async (data: AddClosetitemInput) => {
     try {
       const response = await dispatch(addClosetitem(data));
       if (response) {
@@ -109,6 +112,7 @@ const AddClosetitemPage: React.FC = () => {
         <div>Add Your Closet item</div>
 
         {/* Item Name Input Field */}
+
         <FormField
           control={form.control}
           name="itemName"
@@ -124,9 +128,10 @@ const AddClosetitemPage: React.FC = () => {
         />
 
         {/* Item Details Section */}
+        <ClosetitemDetailsForm />
 
         {/* category */}
-        <FormField
+        {/* <FormField
           control={form.control}
           name="itemDetails.category"
           render={({ field }) => (
@@ -149,10 +154,10 @@ const AddClosetitemPage: React.FC = () => {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         {/* Seasons */}
-        <FormField
+        {/* <FormField
           control={form.control}
           name="itemDetails.seasons"
           render={() => (
@@ -198,10 +203,10 @@ const AddClosetitemPage: React.FC = () => {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         {/* size */}
-        <FormField
+        {/* <FormField
           control={form.control}
           name="itemDetails.size"
           render={({ field }) => (
@@ -224,10 +229,10 @@ const AddClosetitemPage: React.FC = () => {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         {/* Color */}
-        <FormField
+        {/* <FormField
           control={form.control}
           name="itemDetails.color"
           render={({ field }) => (
@@ -257,10 +262,10 @@ const AddClosetitemPage: React.FC = () => {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         {/* occasion */}
-        <FormField
+        {/* <FormField
           control={form.control}
           name="itemDetails.occasion"
           render={({ field }) => (
@@ -283,10 +288,10 @@ const AddClosetitemPage: React.FC = () => {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         {/* Rating */}
-        <FormField
+        {/* <FormField
           control={form.control}
           name="itemDetails.rating"
           render={({ field }) => (
@@ -316,7 +321,7 @@ const AddClosetitemPage: React.FC = () => {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         {/* Additional Description Field */}
         <FormField

@@ -1,6 +1,6 @@
 // src/utils/auth.ts
 import { jwtDecode } from 'jwt-decode'; // Install jwt-decode
-import type { UserRole } from '../interfaces/types.ts';
+import type { UserRole } from '../interfaces/otherTypes.ts';
 
 interface DecodedToken {
   id: string;

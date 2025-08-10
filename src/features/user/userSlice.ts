@@ -5,7 +5,7 @@ import type {
   AuthState,
   UserState,
   //UserClosetitemReferencePayload,
-} from '../../interfaces/userInterfaces';
+} from '../../interfaces/userTypes';
 //import type { TUserList } from './userTypes';
 
 import {

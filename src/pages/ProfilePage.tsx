@@ -2,12 +2,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import type { RootState, AppDispatch } from '@/app/store';
-import type { User } from '@/interfaces/userInterfaces';
+import type { User } from '@/interfaces/userTypes';
 import { updateUser } from '@/features/user/userActions';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { UpdateSubmissionArgs } from '@/interfaces/userInterfaces';
+import { UpdateSubmissionArgs } from '@/interfaces/userTypes';
 
 import {
   Card,

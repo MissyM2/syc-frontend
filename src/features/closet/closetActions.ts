@@ -2,12 +2,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 import type { AppDispatch, RootState } from '@/app/store';
 import type {
-  Closetitem,
-  AddClosetitemArgs,
-  ClosetDataResponse,
-  DeleteClosetitemArgs,
-  UpdateClosetitemArgs,
-} from '../../interfaces/closetInterfaces.ts';
+  IClosetitem,
+  IAddClosetitem,
+  IUpdateClosetitem,
+  IDeleteClosetitem,
+  IReadClosetitem,
+  IReadClosetitemsQueryParams,
+} from '../../interfaces/closetTypes.ts';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '../../index.tsx';
 import axios, { AxiosError } from 'axios';
@@ -28,12 +29,12 @@ const URL = 'http://localhost:3000';
 
 // CREATE A CLOSETITEM WITH IMAGE FOR A SPECIFIC USER
 export const addClosetitem = createAsyncThunk<
-  Closetitem, // ReturnType: value returned by the fulfilled action's payload
-  AddClosetitemArgs, // PayloadCreatorArgumentType: argument passed to the payload creator function when dispatching the thunk.
+  IClosetitem, // ReturnType: value returned by the fulfilled action's payload
+  IAddClosetitem, // PayloadCreatorArgumentType: argument passed to the payload creator function when dispatching the thunk.
   { state: RootState; rejectValue: AxiosError } // ThunkApiConfig: an object for configuring types related to rejectWithValue, state and dispatch
 >(
   'closet/addclosetitem',
-  async (newClosetitem: AddClosetitemArgs, { rejectWithValue }) => {
+  async (newClosetitem: IAddClosetitem, { rejectWithValue }) => {
     try {
       // 1.  PREP THE IMAGE
       // sanitize image file name
@@ -81,7 +82,7 @@ export const addClosetitem = createAsyncThunk<
         closetitemToSend
       );
 
-      return postClosetitemToAtlasRes.data as Closetitem; // Assuming the successful response data structure is ClosetClosetitem
+      return postClosetitemToAtlasRes.data as IClosetitem; // Assuming the successful response data structure is ClosetClosetitem
     } catch (error: any) {
       return rejectWithValue(error.response.data);
     }
@@ -90,15 +91,19 @@ export const addClosetitem = createAsyncThunk<
 
 // CREATE A CLOSETITEM WITH IMAGE FOR A SPECIFIC USER
 export const updateClosetitem = createAsyncThunk<
-  Closetitem,
-  UpdateClosetitemArgs,
+  IClosetitem,
+  IUpdateClosetitem,
   { state: RootState; rejectValue: AxiosError } // ThunkApiConfig: an object for configuring types related to rejectWithValue, state and dispatch
 >(
   'closet/updateclosetitem',
-  async (updatedClosetitem: UpdateClosetitemArgs, { rejectWithValue }) => {
+  async (updatedClosetitem: IUpdateClosetitem, { rejectWithValue }) => {
+    console.log(
+      'closetactions:updateClosetitem: ' + JSON.stringify(updatedClosetitem)
+    );
+    console.log('updatedClosetitem._id: ' + updatedClosetitem._id);
     try {
-      const response = await api.put<Closetitem>(
-        `${URL}/api/closet/update-closetitem/${updatedClosetitem.closetitemId}`,
+      const response = await api.put<IClosetitem>(
+        `${URL}/api/closet/update-closetitem/${updatedClosetitem._id}`,
         updatedClosetitem
       );
       return response.data;
@@ -161,7 +166,7 @@ export const updateClosetitem = createAsyncThunk<
 
 // GET ALL CLOSETITEMS FOR SPECIFIC USER
 export const fetchClosetitems = createAsyncThunk<
-  Closetitem[],
+  IClosetitem[],
   string,
   { rejectValue: AxiosError }
 >('closet/fetchClosetitems', async (args, { rejectWithValue }) => {
@@ -206,11 +211,11 @@ export const fetchClosetitems = createAsyncThunk<
 // DELETE SPECIFIC CLOSETITEM
 export const deleteClosetitem = createAsyncThunk<
   string,
-  DeleteClosetitemArgs,
+  IDeleteClosetitem,
   { state: RootState; dispatch: AppDispatch; rejectValue: AxiosError }
 >(
   'closet/deleteclosetitem',
-  async (args: DeleteClosetitemArgs, { dispatch, rejectWithValue }) => {
+  async (args: IDeleteClosetitem, { dispatch, rejectWithValue }) => {
     try {
       // 1. DELETE IMAGE FROM S3
       await deleteSingleImageFromS3ByUser(args.userId, args.imageId);

@@ -1,5 +1,5 @@
 import { ClosetitemCard } from '../features/closet/components/closetitem-card.tsx';
-import type { Closetitem } from '../interfaces/closetInterfaces.ts';
+import type { Closetitem } from '../interfaces/closetTypes.ts';
 
 interface OutputListClosetitemsProps {
   data: Closetitem[];

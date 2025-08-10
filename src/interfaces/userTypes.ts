@@ -1,4 +1,4 @@
-import type { Closetitem } from './closetInterfaces.ts';
+import type { IClosetitem } from './closetTypes.ts';
 
 export type TUserList = User[];
 export interface Address {
@@ -19,7 +19,7 @@ export interface User {
   userRole: 'user' | 'admin' | null;
   profileImageId: string;
   profileImageUrl: string;
-  closetitems: Closetitem[];
+  closetitems: IClosetitem[];
   createdAt: string;
   updatedAt: string;
 }

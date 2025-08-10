@@ -6,7 +6,7 @@ import Error from '@/components/Error';
 import Spinner from '@/components/Spinner';
 import { registerUser } from '@/features/user/userActions';
 import type { RootState, AppDispatch } from '@/app/store';
-import type { RegistrationFormArgs } from '@/interfaces/userInterfaces';
+import type { RegistrationFormArgs } from '@/interfaces/userTypes';
 
 const RegisterPage: React.FC = () => {
   const [customError, setCustomError] = useState<string>('');

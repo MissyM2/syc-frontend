@@ -22,7 +22,7 @@ import {
 // import Spinner from '@/components/Spinner';
 
 import { addClosetitem } from '@/features/closet/closetActions.ts';
-import type { AddClosetitemArgs } from '@/interfaces/closetInterfaces';
+import type { AddClosetitemArgs } from '@/interfaces/closetTypes';
 
 //import { resetSlice } from '@/features/closet/closetSlice.ts';
 

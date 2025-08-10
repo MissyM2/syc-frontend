@@ -1,7 +1,7 @@
 // components/form/form-field.tsx
 import type { Control, FieldValues, Path } from 'react-hook-form';
 import { Checkbox } from '@/components/ui/checkbox';
-import type { Option } from '@/interfaces/types.tsx';
+import type { Option } from '@/interfaces/otherTypes';
 
 import {
   FormControl,

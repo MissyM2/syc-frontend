@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 //import axios from 'axios';
-import type { User } from '@/interfaces/userInterfaces.tsx';
+import type { User } from '@/interfaces/userTypes';
 
 import { OutputList } from '@/features/user/components/OutputList.tsx';
 //import { getAllUsers } from '@/features/users/user-api.ts';

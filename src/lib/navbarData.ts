@@ -1,4 +1,4 @@
-import type { User } from '../interfaces/userInterfaces.ts';
+import type { User } from '../interfaces/userTypes.ts';
 
 interface NavLinkType {
   label: string;

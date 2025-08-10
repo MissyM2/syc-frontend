@@ -1,9 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
-import type {
-  Closetitem,
-  ClosetState,
-} from '../../interfaces/closetInterfaces';
+import type { Closetitem, ClosetState } from '../../interfaces/closetTypes';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import {
   //getAllClosetitems,
