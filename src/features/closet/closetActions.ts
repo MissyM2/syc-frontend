@@ -97,6 +97,7 @@ export const updateClosetitem = createAsyncThunk<
 >(
   'closet/updateclosetitem',
   async (updatedClosetitem: IUpdateClosetitem, { rejectWithValue }) => {
+    let closetitemToSend;
     try {
       console.log(
         'updateClosetitem called with:',
@@ -110,73 +111,64 @@ export const updateClosetitem = createAsyncThunk<
       console.log('what is updatedClosetitem:', updatedClosetitem);
 
       // IF THE IMAGE FILE IS DIRTY, HANDLE THE NEW IMAGE FILE
-      if (
-        !updatedClosetitem.imageFile ||
-        updatedClosetitem.imageFile.length === 0
-      ) {
-        return rejectWithValue('Image file is required');
+      if (updatedClosetitem.imageFile) {
+        // 1.  PREP THE IMAGE
+        // sanitize image file name
+        const originalFilename = updatedClosetitem.imageFile?.[0]?.name;
+        const sanitizedFilename = originalFilename.replace(/\s/g, '_');
+
+        // add a unique identifier to the beginning of the filename
+        const uniqueId = uuidv4();
+        const newFilename = `${uniqueId}_${sanitizedFilename}`;
+
+        // 2.  GET THE PRESIGNED URL FOR UPLOAD
+        const presignedUrlForUploadRes = await getPresignedUrlForUpload(
+          updatedClosetitem.userId,
+          newFilename,
+          updatedClosetitem.imageFile[0].type
+        );
+
+        // 3. UPLOAD THE IMAGE
+        await uploadImageToS3(
+          presignedUrlForUploadRes,
+          updatedClosetitem.imageFile[0]
+        );
+
+        // 4. GET PRESIGNED IMAGE FOR DOWNLOAD
+        const getPresignedUrlForDownloadRes = await getPresignedUrlForDownload(
+          updatedClosetitem.userId,
+          newFilename
+        );
+
+        if (getPresignedUrlForDownloadRes) {
+          updatedClosetitem.imageUrl = getPresignedUrlForDownloadRes;
+        }
+
+        // Now, that you have the presigned URL for download, you can safely delete the old image from S3
+
+        await deleteSingleImageFromS3ByUser(
+          updatedClosetitem.userId,
+          updatedClosetitem.imageId
+        );
+
+        // 4. CREATE THE CLOSET ITEM IN ATLAS
+        // Create a new object with all the same properties as the ClosetitemSubmitted but
+        // change the image URL and the sanitized filename
+        closetitemToSend = {
+          ...updatedClosetitem,
+          imageUrl: getPresignedUrlForDownloadRes,
+          imageId: newFilename, // add this field if needed by backend
+        };
+      } else {
+        closetitemToSend = updatedClosetitem;
       }
-
-      // 1.  PREP THE IMAGE
-      // sanitize image file name
-      const originalFilename = updatedClosetitem.imageFile?.[0]?.name;
-      const sanitizedFilename = originalFilename.replace(/\s/g, '_');
-
-      // add a unique identifier to the beginning of the filename
-      const uniqueId = uuidv4();
-      const newFilename = `${uniqueId}_${sanitizedFilename}`;
-
-      // 2.  GET THE PRESIGNED URL FOR UPLOAD
-      const presignedUrlForUploadRes = await getPresignedUrlForUpload(
-        updatedClosetitem.userId,
-        newFilename,
-        updatedClosetitem.imageFile[0].type
-      );
-
-      // 3. UPLOAD THE IMAGE
-      await uploadImageToS3(
-        presignedUrlForUploadRes,
-        updatedClosetitem.imageFile[0]
-      );
-
-      // 4. GET PRESIGNED IMAGE FOR DOWNLOAD
-      const getPresignedUrlForDownloadRes = await getPresignedUrlForDownload(
-        updatedClosetitem.userId,
-        newFilename
-      );
-
-      if (getPresignedUrlForDownloadRes) {
-        updatedClosetitem.imageUrl = getPresignedUrlForDownloadRes;
-      }
-
-      // Now, that you have the presigned URL for download, you can safely delete the old image from S3
-
-      await deleteSingleImageFromS3ByUser(
-        updatedClosetitem.userId,
-        updatedClosetitem.imageId
-      );
-      console.log('deleteClosetitem, after delete image');
-
-      // 4. CREATE THE CLOSET ITEM IN ATLAS
-      // Create a new object with all the same properties as the ClosetitemSubmitted but
-      // change the image URL and the sanitized filename
-      const closetitemToSend = {
-        ...updatedClosetitem,
-        imageUrl: getPresignedUrlForDownloadRes,
-        imageId: newFilename, // add this field if needed by backend
-      };
-
-      console.log(
-        'what is closetitemToSend?',
-        JSON.stringify(closetitemToSend)
-      );
 
       const response = await api.put<IClosetitem>(
         `${URL}/api/closet/update-closetitem/${updatedClosetitem._id}`,
         closetitemToSend
       );
 
-      return response.data as IClosetitem; // Assuming the successful response data structure is ClosetClosetitem
+      return response.data as IClosetitem;
     } catch (error: any) {
       console.log('Error in updateClosetitem:', error.response.data);
       return rejectWithValue(error.response.data);

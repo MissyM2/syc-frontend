@@ -14,7 +14,7 @@ import { z } from 'zod';
 import { FaMinus } from 'react-icons/fa6';
 //import { FaEdit } from 'react-icons/fa';
 import { Button } from '@/components/ui/button';
-//import { FaRegSave } from 'react-icons/fa';
+import { FaRegSave } from 'react-icons/fa';
 import RoundButtonSmall from './RoundButtonSmall.tsx';
 import { ClosetitemDetailsForm } from '@/features/closet/components/closetitem-details-form.tsx';
 import ClosetitemFormField from '@/features/closet/components/closetitem-form-field.tsx';
@@ -190,11 +190,12 @@ export const ClosetitemCard: React.FC<ClosetitemCardProps> = ({
                   <FaMinus className="h-4 w-4" />
                 </RoundButtonSmall>
               </div>
-              {/* <div className="ps-1 pe-1">
-              <RoundButtonSmall onClick={handleSave}>
-                <FaRegSave className="h-4 w-4" />
-              </RoundButtonSmall>
-            </div> */}
+              <div className="mb-6"></div>
+              <div className="ps-1 pe-1">
+                <RoundButtonSmall onClick={form.handleSubmit(onSubmit)}>
+                  <FaRegSave className="h-4 w-4" />
+                </RoundButtonSmall>
+              </div>
             </div>
             <CardHeader>
               {/* Item Name */}
@@ -229,19 +230,22 @@ export const ClosetitemCard: React.FC<ClosetitemCardProps> = ({
                 name="imageFile"
                 render={({ field: { onChange, ...field } }) => (
                   <FormItem className="space-y-2">
-                    <FormLabel>Upload Image</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => {
-                          handleImageChange(e);
-                          onChange(e.target.files); // Update React Hook Form
-                        }}
-                        {...field}
-                        value={undefined} // File inputs should not have a controlled value
-                      />
-                    </FormControl>
+                    <div className="flex flex-row justify-between">
+                      <FormLabel>Change Image</FormLabel>
+                      <FormControl>
+                        <Input
+                          className="w-50"
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            handleImageChange(e);
+                            onChange(e.target.files); // Update React Hook Form
+                          }}
+                          {...field}
+                          value={undefined} // File inputs should not have a controlled value
+                        />
+                      </FormControl>
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -274,15 +278,6 @@ export const ClosetitemCard: React.FC<ClosetitemCardProps> = ({
                 </div>
               </div>
             </CardContent>
-            <div className="mb-6">
-              <Button
-                type="submit"
-                className="relative text-sm p-2 bg-red-200 text-black-500 rounded-sm ease-in-out"
-                //disabled={loading}
-              >
-                Update Closet Item
-              </Button>
-            </div>
           </Card>
         </form>
       </FormProvider>
