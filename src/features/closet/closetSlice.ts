@@ -6,7 +6,7 @@ import {
   //getAllClosetitems,
   fetchClosetitems,
   addClosetitem,
-  //updateClosetitem,
+  updateClosetitem,
   deleteClosetitem,
 } from './closetActions';
 
@@ -48,6 +48,28 @@ const closetSlice = createSlice({
         }
       )
       .addCase(addClosetitem.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Unknown error';
+      })
+      .addCase(updateClosetitem.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(
+        updateClosetitem.fulfilled,
+        (state, action: PayloadAction<IClosetitem>) => {
+          state.status = 'succeeded';
+          console.log(
+            'updateClosetitem.fulfilled called, what is payload? ' +
+              JSON.stringify(action.payload)
+          );
+          const updatedItem = action.payload;
+          state.closetitems = state.closetitems.map((item) =>
+            item._id === updatedItem._id ? updatedItem : item
+          );
+        }
+      )
+      .addCase(updateClosetitem.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message || 'Unknown error';
       })
