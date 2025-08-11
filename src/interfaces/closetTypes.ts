@@ -11,7 +11,7 @@ export interface ClosetitemDetails {
 
 export interface IClosetitem {
   _id: string;
-  closetType: string;
+  closetType: 'personal' | 'personalOnly' | 'donation' | 'sharing';
   itemName: string;
   itemDetails: ClosetitemDetails;
   additionalDesc: string;
@@ -25,7 +25,15 @@ export interface IAddClosetitem extends Omit<IClosetitem, '_id'> {}
 
 // Interface for updating an existing ClosetItem (all fields are optional as not all fields might be updated)
 export interface IUpdateClosetitem extends Partial<IClosetitem> {
-  _id: string; // The ID is required to specify which item to update.
+  updateData: IClosetitem;
+  imageId: string; // The imageId is required to identify the image being updated
+  //imageFile: FileList;
+}
+
+export interface IUpdateClosetitemProperty extends Partial<IClosetitem> {
+  _id: string;
+  property: string;
+  value: string;
 }
 
 // Interface for deleting a ClosetItem
@@ -61,6 +69,7 @@ export interface Closet {
 
 export interface ClosetState {
   closetitems: IClosetitem[];
+  selectedClosetitemId: string | null; // ID of the currently selected closet item
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
   success: boolean;

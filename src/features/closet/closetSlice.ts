@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
-import type { Closetitem, ClosetState } from '../../interfaces/closetTypes';
+import type { IClosetitem, ClosetState } from '../../interfaces/closetTypes';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import {
   //getAllClosetitems,
@@ -11,7 +11,8 @@ import {
 } from './closetActions';
 
 const initialState: ClosetState = {
-  closetitems: [] as Closetitem[],
+  closetitems: [] as IClosetitem[],
+  selectedClosetitemId: null,
   status: 'idle',
   error: null,
   success: false,
@@ -21,6 +22,9 @@ const closetSlice = createSlice({
   name: 'closet',
   initialState,
   reducers: {
+    selectClosetitem: (state, action: PayloadAction<string>) => {
+      state.selectedClosetitemId = action.payload;
+    },
     clearClosetitems: (state) => {
       console.log('clearClosetitems called');
       state.closetitems = [];
@@ -38,7 +42,7 @@ const closetSlice = createSlice({
       })
       .addCase(
         addClosetitem.fulfilled,
-        (state, action: PayloadAction<Closetitem>) => {
+        (state, action: PayloadAction<IClosetitem>) => {
           state.status = 'succeeded';
           state.closetitems.push(action.payload);
         }
@@ -53,7 +57,7 @@ const closetSlice = createSlice({
       })
       .addCase(
         fetchClosetitems.fulfilled,
-        (state, action: PayloadAction<Closetitem[]>) => {
+        (state, action: PayloadAction<IClosetitem[]>) => {
           state.status = 'succeeded';
           state.closetitems = action.payload;
         }
@@ -96,5 +100,6 @@ const closetSlice = createSlice({
   },
 });
 
-export const { clearClosetitems, resetSlice } = closetSlice.actions;
+export const { clearClosetitems, resetSlice, selectClosetitem } =
+  closetSlice.actions;
 export default closetSlice.reducer;

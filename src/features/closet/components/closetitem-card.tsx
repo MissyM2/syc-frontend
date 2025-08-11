@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '../../../app/store.ts';
 import { useForm, FormProvider } from 'react-hook-form';
@@ -18,8 +19,17 @@ import RoundButtonSmall from './RoundButtonSmall.tsx';
 import { ClosetitemDetailsForm } from '@/features/closet/components/closetitem-details-form.tsx';
 import ClosetitemFormField from '@/features/closet/components/closetitem-form-field.tsx';
 import ClosetitemDropdownBox from '@/features/closet/components/closetitem-dropdown-box.tsx';
-import ClosetitemImage from '@/features/closet/components/closetitem-image.tsx';
-import ClosetitemImageSelectField from '@/features/closet/components/closetitem-image-select-field.tsx';
+// import ClosetitemImage from '@/features/closet/components/closetitem-image.tsx';
+// import ClosetitemImageSelectField from '@/features/closet/components/closetitem-image-select-field.tsx';
+import { Input } from '@/components/ui/input';
+import {
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 
 import {
   Card,
@@ -32,10 +42,13 @@ import {
 } from '@/components/ui/card';
 
 import { closetTypes } from '@/features/closet/Closetitem-datas';
-import type { IUpdateClosetitem } from '@/interfaces/closetTypes.ts';
+import type {
+  IClosetitem,
+  IUpdateClosetitem,
+} from '@/interfaces/closetTypes.ts';
 
 interface ClosetitemCardProps {
-  closetitem: BaseClosetitemType;
+  closetitem: IClosetitem;
 }
 
 export const ClosetitemCard: React.FC<ClosetitemCardProps> = ({
@@ -43,35 +56,32 @@ export const ClosetitemCard: React.FC<ClosetitemCardProps> = ({
 }): React.JSX.Element => {
   const dispatch = useDispatch<AppDispatch>();
   const { currentUser } = useSelector((state: RootState) => state.user);
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
 
   //const { control } = useFormContext();
 
   // Initialize React Hook Form with Zod resolver
-  const form = useForm<z.infer<typeof UpdateClosetitemSchema>>({
-    resolver: zodResolver(UpdateClosetitemSchema),
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   formState: { dirtyFields },
+  //   watch,
+  // } = useForm<IClosetitem>({
+  const form = useForm<UpdateClosetitemInput>({
     defaultValues: {
       _id: closetitem._id,
-      //userId: closetitem.userId,
-      closetType: closetitem.closetType as
-        | 'personal'
-        | 'personalOnly'
-        | 'donation'
-        | 'sharing',
-
+      closetType: closetitem.closetType,
       itemName: closetitem.itemName,
-      itemDetails: {
-        category: closetitem.itemDetails?.category || '',
-        seasons: closetitem.itemDetails.seasons,
-        size: closetitem.itemDetails.size,
-        color: closetitem.itemDetails.color,
-        occasion: closetitem.itemDetails.occasion,
-        rating: closetitem.itemDetails.rating,
-      },
+      itemDetails: closetitem.itemDetails,
       additionalDesc: closetitem.additionalDesc,
-      // imageId: closetitem.imageId,
       imageUrl: closetitem.imageUrl,
+      userId: closetitem.userId,
     },
   });
+
+  const {
+    formState: { dirtyFields },
+  } = form;
 
   const handleDelete = () => {
     //console.log('inside handleDelete');
@@ -84,55 +94,85 @@ export const ClosetitemCard: React.FC<ClosetitemCardProps> = ({
     );
   };
 
-  const handleSelectDifferentImage = () => {
-    console.log('inside handleSelectDifferentImage');
-    // dispatch an action
-    // select a different image
-    // delete current image from S3
-    // update the closetitem with the new image fileName and URL
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('handleImageChange: Image file selected:', e.target.files);
+    if (e.target.files && e.target.files.length > 0) {
+      setSelectedImageFile(e.target.files[0]);
+    } else {
+      setSelectedImageFile(null);
+    }
   };
 
   // Define the submit handler
   const onSubmit = async (data: UpdateClosetitemInput) => {
-    console.log('Submitting form with data:', JSON.stringify(data));
-    console.log('Closetitem ID:', closetitem._id);
-    console.log('what is closetitem:', JSON.stringify(closetitem));
     try {
-      const updatePayload: IUpdateClosetitem = {
-        ...data,
-        _id: closetitem._id, // If this is required and not in your form
-      };
-      // const updatePayload: IUpdateClosetitem = {
-      //   _id: closetitem._id, // Ensure ID is set
-      //   userId: closetitem.userId, // Use existing userId
-      //   closetType: data.closetType || closetitem.closetType,
-      //   itemName: data.itemName || closetitem.itemName,
-      //   itemDetails: {
-      //     category:
-      //       data.itemDetails?.category ||
-      //       closetitem.itemDetails?.category ||
-      //       '',
-      //     seasons:
-      //       data.itemDetails?.seasons || closetitem.itemDetails?.seasons || [],
-      //     size: data.itemDetails?.size || closetitem.itemDetails?.size || '',
-      //     color: data.itemDetails?.color || closetitem.itemDetails?.color || '',
-      //     occasion:
-      //       data.itemDetails?.occasion ||
-      //       closetitem.itemDetails?.occasion ||
-      //       '',
-      //     rating:
-      //       data.itemDetails?.rating || closetitem.itemDetails?.rating || '',
-      //   },
-      //   additionalDesc: data.additionalDesc || closetitem.additionalDesc || '',
-      //   imageId: closetitem.imageId, // Preserve existing imageId
-      //   imageUrl: data.imageUrl || closetitem.imageUrl,
-      // };
+      // Build update payload with only changed fields
+      const updatePayload: Partial<IUpdateClosetitem> = {};
+
+      // Check each field individually with proper type safety
+      if (dirtyFields.closetType) {
+        updatePayload.closetType = data.closetType;
+      }
+
+      if (dirtyFields.itemName) {
+        updatePayload.itemName = data.itemName;
+      }
+
+      if (dirtyFields.itemDetails) {
+        updatePayload.itemDetails = {
+          category:
+            data.itemDetails?.category ||
+            closetitem.itemDetails?.category ||
+            '',
+          seasons:
+            data.itemDetails?.seasons || closetitem.itemDetails?.seasons || [],
+          size: data.itemDetails?.size || closetitem.itemDetails?.size || '',
+          color: data.itemDetails?.color || closetitem.itemDetails?.color || '',
+          occasion:
+            data.itemDetails?.occasion ||
+            closetitem.itemDetails?.occasion ||
+            '',
+          rating:
+            data.itemDetails?.rating || closetitem.itemDetails?.rating || '',
+        };
+      }
+
+      if (dirtyFields.additionalDesc) {
+        updatePayload.additionalDesc = data.additionalDesc;
+      }
+
+      if (dirtyFields.imageFile && selectedImageFile) {
+        // Create a new FileList with the selected file
+        const fileList = new DataTransfer();
+        fileList.items.add(selectedImageFile);
+        updatePayload.imageFile = fileList.files;
+      }
+
+      // Ensure required fields are present
+      const itemId = data._id || closetitem._id;
+      if (!itemId) {
+        throw new Error('Item ID is required for update');
+      }
+      // Ensure required fields are present
+      const imageId = data.imageId || closetitem.imageId;
+      if (!imageId) {
+        throw new Error('Image ID is required for update');
+      }
+
+      // Always include required fields
+      updatePayload._id = itemId;
+      updatePayload.userId = closetitem.userId;
+      updatePayload.imageId = imageId;
+      //updatePayload.updatedAt = new Date().toISOString();
 
       console.log('Update payload:', JSON.stringify(updatePayload));
-      const response = await dispatch(updateClosetitem(updatePayload));
+
+      const response = await dispatch(
+        updateClosetitem(updatePayload as IUpdateClosetitem)
+      );
+
       if (response) {
-        console.log('Update successful:', response);
-        return response;
+        console.log('Is Update successful:', response);
       }
     } catch (error) {
       alert('Submitting form failed!');
@@ -167,13 +207,44 @@ export const ClosetitemCard: React.FC<ClosetitemCardProps> = ({
             </CardHeader>
             {/* Closetitem Image */}
             <div className="border-b border-gray-200 pt-2pb-2 mb-2">
-              <ClosetitemImage
+              {/* <ClosetitemImage
                 imageUrl={closetitem.imageUrl}
                 itemName={closetitem.itemName}
               />
               <ClosetitemImageSelectField
                 name="imageFile"
                 label="Select different image"
+              /> */}
+              <div className="grid w-full place-items-center overflow-x-scroll aspect-square bg-gray-200">
+                {closetitem.imageUrl && (
+                  <img
+                    className=""
+                    src={closetitem.imageUrl}
+                    alt={closetitem.itemName}
+                  />
+                )}
+              </div>
+              <FormField
+                control={form.control}
+                name="imageFile"
+                render={({ field: { onChange, ...field } }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel>Upload Image</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          handleImageChange(e);
+                          onChange(e.target.files); // Update React Hook Form
+                        }}
+                        {...field}
+                        value={undefined} // File inputs should not have a controlled value
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
             </div>
 
