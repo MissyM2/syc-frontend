@@ -1,4 +1,5 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
+import store from '../app/store.ts';
 
 import ProfilePage from '../pages/ProfilePage.tsx';
 import DashboardPage from '../pages/DashboardPage.tsx';
@@ -11,6 +12,14 @@ import RootLayout from '../components/RootLayout';
 import UnauthorizedPage from '../pages/UnauthorizedPage.tsx';
 import { protectedLoader } from './loaders';
 import { UserRole } from '../interfaces/otherTypes.ts';
+
+// const adminLoader = () => {
+//   const { user } = store.getState(); // Access Redux state directly
+//   if (user.userRole !== 'admin') {
+//     throw new Response('Unauthorized', { status: 403 }); // Or redirect to UnauthorizedPage
+//   }
+//   return null; // Continue with the route
+// };
 
 export const router = createBrowserRouter([
   {

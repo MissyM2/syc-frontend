@@ -21,7 +21,6 @@ import {
 const initialState: UserState = {
   currentUser: null,
   allUsers: [],
-  userRole: '',
   status: 'idle',
   error: null,
   success: false,
@@ -82,7 +81,6 @@ const userSlice = createSlice({
         (state, action: PayloadAction<UserState>) => {
           state.status = 'succeeded';
           state.currentUser = action.payload.currentUser;
-          state.userRole = action.payload.userRole;
           state.error = null;
           state.success = true;
           state.userToken = action.payload.userToken;

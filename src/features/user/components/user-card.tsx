@@ -50,20 +50,20 @@ export const UserCard: React.FC<UserProps> = ({ user }): React.JSX.Element => {
     minute: '2-digit',
   });
 
-  // const handleDelete = () => {
-  //   //console.log('inside handleDelete');
-  //   dispatch(
-  //     deleteClosetitem({
-  //       closetitemId: closetitem._id,
-  //       userId: closetitem.userId,
-  //       imageId: closetitem.imageId,
-  //     })
-  //   );
-  // };
+  const handleDelete = () => {
+    console.log('inside handleDelete');
+    // dispatch(
+    //   deleteClosetitem({
+    //     closetitemId: closetitem._id,
+    //     userId: closetitem.userId,
+    //     imageId: closetitem.imageId,
+    //   })
+    // );
+  };
 
-  // const handleClickEdit = () => {
-  //   alert('Delete button clicked!');
-  // };
+  const handleClickEdit = () => {
+    alert('Edit button clicked!');
+  };
 
   const columns = [
     { key: 'itemName', label: 'itemName' },
@@ -111,15 +111,15 @@ export const UserCard: React.FC<UserProps> = ({ user }): React.JSX.Element => {
       {/* <Card className="w-full max-w-sm bg-blue-200"> */}
       <div className="flex justify-end bg-green-200">
         {/* <div className="ps-1 pe-1">
-            <RoundButtonSmall onClick={handleDelete}>
-              <FaMinus className="h-4 w-4" />
-            </RoundButtonSmall>
-          </div>
-          <div className="ps-1 pe-1">
-            <RoundButtonSmall onClick={handleClickEdit}>
-              <FaEdit className="h-4 w-4" />
-            </RoundButtonSmall>
-          </div> */}
+          <RoundButtonSmall onClick={handleDelete}>
+            <FaMinus className="h-4 w-4" />
+          </RoundButtonSmall>
+        </div>
+        <div className="ps-1 pe-1">
+          <RoundButtonSmall onClick={handleClickEdit}>
+            <FaEdit className="h-4 w-4" />
+          </RoundButtonSmall>
+        </div> */}
       </div>
       <CardFooter className="flex-row bg-red-50">
         <div className="flex flex-col gap-2">

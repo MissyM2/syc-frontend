@@ -20,7 +20,19 @@ const ManageUsersPage: React.FC = () => {
     (state: RootState) => state.user
   );
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.user.isAuthenticated
+  );
+  const userRole = useSelector(
+    (state: RootState) => state.user.currentUser?.userRole
+  );
   const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    if (isAuthenticated && userRole === 'admin') {
+      dispatch(fetchUsers());
+    }
+  }, [dispatch]);
 
   const navigate = useNavigate();
 
@@ -32,34 +44,15 @@ const ManageUsersPage: React.FC = () => {
     return <div>Error: {error}</div>;
   }
 
-  const handleClick = () => {
-    const res = dispatch(fetchUsers());
-    console.log('Fetch Users Response:', JSON.stringify(res));
-  };
-
   return (
     <div className="w-full">
       <div>User Administration</div>
-      <div>Current User: {currentUser?.email}</div>
-      <div>Status: {status}</div>
-      <div>User Role: {currentUser?.userRole}</div>
-      <div>
-        <RoundButton onClick={handleClick}>
-          <div>Users</div>
-        </RoundButton>
-      </div>
+
       <div>
         Users are fetched from Atlas. Number of users: {allUsers.length}
       </div>
 
       <div className="flex justify-end p-4"></div>
-      {/* <ul>
-        {allUsers.map((user) => (
-          <li key={user._id}>
-            {user.userName} - {user.email}
-          </li>
-        ))}
-      </ul> */}
 
       <OutputListUsers data={allUsers} />
     </div>

@@ -6,9 +6,6 @@ interface OutputListUsersProps {
 }
 
 export const OutputListUsers: React.FC<OutputListUsersProps> = ({ data }) => {
-  // for (const i of data) {
-  //   console.log(i._id);
-  // }
   if (data.length == 0) {
     return <h1>There are no items to show.</h1>;
   }

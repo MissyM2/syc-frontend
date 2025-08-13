@@ -27,7 +27,6 @@ export interface User {
 export interface UserState {
   currentUser: User | null;
   allUsers: User[];
-  userRole: string;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
   success: boolean;
@@ -44,7 +43,6 @@ export interface UserState {
 export interface AuthState {
   status: string;
   currentUser: User | null;
-  userRole: string;
   error: string | null;
   success: boolean;
   userToken: string | null;
