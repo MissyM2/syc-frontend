@@ -1,5 +1,5 @@
-import { UserCard } from './UserCard.tsx';
-import type { User } from '../interfaces/userTypes.ts';
+import { UserCard } from './user-card.tsx';
+import type { User } from '../../../interfaces/userTypes.ts';
 
 interface OutputListUsersProps {
   data: User[];

@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '../../../app/store.ts';
 import { deleteUser } from '../userActions.ts';
-import ownerImg from '../assets/ownerImg.jpg';
+import ownerImg from '@/assets/ownerImg.jpg';
 
 import { Link } from 'react-router-dom';
-import type { User } from '../interfaces/userTypes.ts';
+import type { User } from '../../../interfaces/userTypes.ts';
 import { Label } from '@/components/ui/label';
 // import { FaMinus } from 'react-icons/fa6';
 // import { FaEdit } from 'react-icons/fa';
@@ -19,6 +19,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+
+// import {
+//   createColumnHelper,
+//   flexRender,
+//   getCoreRowModel,
+//   useReactTable,
+// } from '@tanstack/react-table'
 
 interface UserProps {
   user: User;
@@ -60,13 +67,43 @@ export const UserCard: React.FC<UserProps> = ({ user }): React.JSX.Element => {
 
   const columns = [
     { key: 'itemName', label: 'itemName' },
+    { key: 'category', label: 'category' },
     { key: 'seasons', label: 'seasons' },
     { key: 'size', label: 'size' },
-    { key: 'addDesc', label: 'Additional Desc' },
+    { key: 'color', label: 'color' },
+    { key: 'occasion', label: 'occasion' },
     { key: 'rating', label: 'rating' },
-    { key: 'ImageId', label: 'ImageId' },
-    { key: 'ImageUrl', label: 'ImageUrl' },
+    { key: 'addDesc', label: 'Additional Desc' },
+    { key: 'imageId', label: 'ImageId' },
+    { key: 'imageUrl', label: 'ImageUrl' },
   ];
+
+  const renderCellContent = (key: string, item: any) => {
+    switch (key) {
+      case 'itemName':
+        return item.itemName;
+      case 'category':
+        return item.itemDetails?.category || 'N/A';
+      case 'seasons':
+        return item.itemDetails?.seasons?.join(', ') || 'N/A';
+      case 'size':
+        return item.itemDetails?.size || 'N/A';
+      case 'color':
+        return item.itemDetails?.color || 'N/A';
+      case 'occasion':
+        return item.itemDetails?.occasion || 'N/A';
+      case 'rating':
+        return item.itemDetails?.rating || 'N/A';
+      case 'addDesc':
+        return item.additionalDesc || 'N/A';
+      case 'imageId':
+        return item.imageId;
+      case 'imageUrl':
+        return item.imageUrl;
+      default:
+        return 'N/A';
+    }
+  };
 
   return (
     // <Link to={`/user-detail-page/${user._id}`} className="w-full">
@@ -84,50 +121,6 @@ export const UserCard: React.FC<UserProps> = ({ user }): React.JSX.Element => {
             </RoundButtonSmall>
           </div> */}
       </div>
-
-      <CardHeader>
-        <CardTitle>{user.userName}</CardTitle>
-        <CardDescription>{user.email}</CardDescription>
-      </CardHeader>
-
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              {columns.map((column) => (
-                <th
-                  key={column.key}
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  {column.label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {user.closetitems.map((row) => (
-              <tr key={row._id}>
-                {columns.map((column) => (
-                  <td
-                    key={column.key}
-                    className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-                  >
-                    {column.key === 'itemName' && row.itemName}
-                    {column.key === 'Seasons' &&
-                      row.itemDetails.seasons.join(', ')}
-                    {column.key === 'AddDesc' && row.additionalDesc}
-                    {column.key === 'Size' && row.itemDetails.size}
-                    {column.key === 'Rating' && row.itemDetails.rating}
-                    {column.key === 'ImageId' && row.imageId}
-                    {column.key === 'ImageUrl' && row.imageUrl}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
       <CardFooter className="flex-row bg-red-50">
         <div className="flex flex-col gap-2">
           <div className="flex flex-col md:flex-row items-left">
@@ -148,6 +141,53 @@ export const UserCard: React.FC<UserProps> = ({ user }): React.JSX.Element => {
           </div>
         </div>
       </CardFooter>
+
+      <CardHeader>
+        <CardTitle>{user.userName}</CardTitle>
+        <div className="flex flex-row items-center gap-2">
+          <CardDescription>{user.email}</CardDescription>
+          <CardDescription>{user.homeAddress.street1}</CardDescription>
+          <CardDescription>
+            {user.homeAddress.city}, {user.homeAddress.state}{' '}
+            {user.homeAddress.zipCode}{' '}
+          </CardDescription>
+        </div>
+      </CardHeader>
+
+      <div className="overflow-x-auto">
+        {user.closetitems && user.closetitems.length > 0 ? (
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                {columns.map((column) => (
+                  <th
+                    key={column.key}
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    {column.label}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {user.closetitems.map((item) => (
+                <tr key={item._id}>
+                  {columns.map((column) => (
+                    <td
+                      key={column.key}
+                      className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      {renderCellContent(column.key, item)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <div className="p-4 text-gray-500">No closet items available.</div>
+        )}
+      </div>
     </Card>
     // </Link>
   );

@@ -1,6 +1,6 @@
 //import { CheckboxGroup } from '../features/closet/components/CheckboxGroup.tsx';
 import { useEffect } from 'react';
-import { OutputListUsers } from '@/components/OutputListUsers.tsx';
+import { OutputListUsers } from '@/features/user/components/users-output-list';
 import { fetchUsers } from '@/features/user/userActions';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -33,7 +33,8 @@ const ManageUsersPage: React.FC = () => {
   }
 
   const handleClick = () => {
-    dispatch(fetchUsers());
+    const res = dispatch(fetchUsers());
+    console.log('Fetch Users Response:', JSON.stringify(res));
   };
 
   return (

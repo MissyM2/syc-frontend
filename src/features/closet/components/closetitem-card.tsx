@@ -15,7 +15,7 @@ import { FaMinus } from 'react-icons/fa6';
 //import { FaEdit } from 'react-icons/fa';
 import { Button } from '@/components/ui/button';
 import { FaRegSave } from 'react-icons/fa';
-import RoundButtonSmall from './RoundButtonSmall.tsx';
+import RoundButtonSmall from '../../../components/RoundButtonSmall.tsx';
 import { ClosetitemDetailsForm } from '@/features/closet/components/closetitem-details-form.tsx';
 import ClosetitemFormField from '@/features/closet/components/closetitem-form-field.tsx';
 import ClosetitemDropdownBox from '@/features/closet/components/closetitem-dropdown-box.tsx';
