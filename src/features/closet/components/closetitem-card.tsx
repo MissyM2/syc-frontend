@@ -146,6 +146,8 @@ export const ClosetitemCard: React.FC<ClosetitemCardProps> = ({
         const fileList = new DataTransfer();
         fileList.items.add(selectedImageFile);
         updatePayload.imageFile = fileList.files;
+      } else {
+        updatePayload.imageFile = closetitem.imageFile;
       }
 
       // Ensure required fields are present
